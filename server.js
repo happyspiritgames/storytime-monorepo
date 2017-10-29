@@ -6,7 +6,7 @@ var express = require('express'),
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var routes = require('./api/routes/storytimeRoutes'); //importing route
+var routes = require('./src/routes/storytimeRoutes'); //importing route
 routes(app); //register the routes
 
 app.listen(port);
