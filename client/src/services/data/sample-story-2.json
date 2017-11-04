@@ -1,0 +1,46 @@
+{
+  "summary": {
+    "key": "kikjw092",
+    "title": "Travels of a Desert Nomad",
+    "author": "Bubba Gumpzzz",
+    "tagLine": "You want to read this.",
+    "about": "Sometimes life compels you great things.  And sometimes you'd rather play this game.",
+    "firstScene": "ke8jfk0w"
+  },
+  "scenes": {
+    "ke8jfk0w": {
+      "title": "The Wishing Well",
+      "prose": "<p><span><img className="pull-right" src="/img/desert-wishing-well.jpg" alt="The Wishing Well" width="150px" />You are a
+      desert wanderer. Some would call you a nomad. The fact that you were once the Crowned Prince of Azkaban
+      goes unnoticed by the babbling brook of buyers and sellers as you slip through the local bazaar.
+      </span></p>
+      <p>You are heading for your favorite childhood stop, the Wishing Well. Oh, that the mighty Ewah will grant
+      this one wish, to return even a fraction of your royal lifestyle. </p>",
+      "signpost": {
+        "prompt": "What is your wish?",
+        "choices": [
+          {
+            "destination": "d9wkk92l",
+            "teaser": "I wish to have lots of gold."
+          },
+          {
+            "destination": "d9wkk92l",
+            "teaser": "I wish to be king of the world."
+          },
+          {
+            "destination": "ii23klod",
+            "teaser": "I wish to return to the palace."
+          }
+        ]
+      }
+    },
+    "d9wkk92l": {
+      "title": "You Win!",
+      "prose": "You read the signs correctly, so you win.  Doesn't that feel great?"
+    },
+    "ii23klod": {
+      "title": "You Lose.",
+      "prose": "Well that was predictable."
+    }
+  }
+}
