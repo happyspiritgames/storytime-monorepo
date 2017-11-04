@@ -1,0 +1,170 @@
+swagger: '2.0'
+info:
+  description: Interface to the StoryTime Reader service, supporting consumers of stories.
+  version: 1.0.0
+  title: StoryTime Reader API
+  contact:
+    email: support@happyspiritgames.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Happy-Spirit-Games/StoryTimeReaderAPI/1.0.0
+schemes:
+ - https
+
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+
+paths:
+  /ping:
+    get:
+      tags:
+      - developers
+      summary: pings the service
+      operationId: ping
+      description: Check for signs of life.
+      produces:
+      - application/json
+      responses:
+        200:
+          description: message of the day
+          schema:
+            $ref: '#/definitions/Pong'
+  /stories:
+    get:
+      tags:
+      - developers
+      summary: searches catalog of published stories or gets a list of recommendations
+      operationId: searchInventory
+      description: |
+        Finds a list of stories based on search criteria, or a short list of recommendations by default.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: match
+        description: |
+          --NOT IMPLEMENTED-- an optional search string for looking up stories.
+        required: false
+        type: string
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SearchResults'
+        400:
+          description: bad input parameter
+  /stories/{storyKey}:
+    get:
+      description: Get published story for the given storyKey
+      tags:
+        - developers
+      operationId: getPublishedStory
+      parameters:
+        - name: storyKey
+          in: path
+          description: unique identifier of the story to retrieve
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/StorySummary"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /stories/{storyKey}/scenes/{sceneKey}:
+    get:
+      description: Gets a scene.
+      tags:
+        - developers
+      operationId: getStoryScene
+      parameters:
+        - name: storyKey
+          in: path
+          description: story key
+          required: true
+          type: string
+        - name: sceneKey
+          in: path
+          description: scene key
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Scene"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  Destination:
+    type: object
+    properties:
+      sceneKey:
+        type: string
+      teaser:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  Pong:
+    type: object
+    properties:
+      salutation:
+        type: string
+  Scene:
+    type: object
+    properties:
+      key:
+        type: string
+      title:
+        type: string
+      prose:
+        type: string
+      signPost:
+        type: array
+        items:
+          $ref: '#/definitions/Destination'
+  SearchResults:
+    required:
+      - stories
+    properties:
+      stories:
+        type: array
+        items:
+          $ref: '#/definitions/StorySummary'
+  StorySummary:
+    type: object
+    properties:
+      storyKey:
+        type: string
+      title:
+        type: string
+      penName:
+        type: string
+      tagLine:
+        type: string
+      about:
+        type: string
+      firstScene:
+        type: string
+      publishedAt:
+        type: string
+        format: date-time
