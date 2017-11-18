@@ -1,13 +1,11 @@
-"use strict";
-
-var fs = require('fs');
+const fs = require('fs');
 
 exports.getStories = function() {
     console.log('looking for stories');
-    var stories = [];
+    const stories = [];
     fs.readdir('./storyRepo', function(err, items) {
-        for(var i = 0; i < items.length; i++) {
-            var story = fs.load(items[0] + '/story.json');
+        for(let i = 0; i < items.length; i++) {
+            const story = fs.load(items[0] + '/story.json');
             stories.push(story);
         }
     });

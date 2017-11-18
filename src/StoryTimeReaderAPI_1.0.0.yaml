@@ -41,7 +41,7 @@ paths:
       tags:
       - developers
       summary: searches catalog of published stories or gets a list of recommendations
-      operationId: searchInventory
+      operationId: searchStories
       description: |
         Finds a list of stories based on search criteria, or a short list of recommendations by default.
       produces:
@@ -67,7 +67,7 @@ paths:
       description: Get published story for the given storyKey
       tags:
         - developers
-      operationId: getPublishedStory
+      operationId: getPublishedStorySummary
       parameters:
         - name: storyKey
           in: path
@@ -85,7 +85,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /stories/{storyKey}/scenes/{sceneKey}:
     get:
-      description: Gets a scene.
+      description: Gets a scene of a story.
       tags:
         - developers
       operationId: getStoryScene
@@ -132,7 +132,7 @@ definitions:
   Scene:
     type: object
     properties:
-      key:
+      sceneKey:
         type: string
       title:
         type: string

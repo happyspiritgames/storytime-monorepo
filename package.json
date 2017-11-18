@@ -10,6 +10,8 @@
   "author": "Happy Spirit Games",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.2",
     "nodemon": "^1.12.1"
   },
   "dependencies": {
