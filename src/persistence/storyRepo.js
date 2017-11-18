@@ -1,3 +1,5 @@
+const localPersistence = require('./persistToLocalFile');
+
 const sampleStory1 = {
   summary: {
     storyKey: '10101010-1010-4000-a000-101010101010',
@@ -44,11 +46,20 @@ exports.getRecommendedStories = (maxResults = 10) => {
 };
 
 exports.getPublishedStorySummary = (storyKey) => {
-  console.log('storyRepo.getPublishedStorySummary: asked for story', storyKey);
-  return sampleStory1.summary;
+  const story = localPersistence.loadStory(storyKey);
+  console.log('story in repo with given storyKey:', storyKey, 'found:', story);
+  if (story) {
+    return story.summary;
+  }
+  return sampleStory1.summary;  // for now make sure something comes out
 };
 
 exports.getStoryScene = (storyKey, sceneKey) => {
-  console.log('storyRepo.getStoryScene: asked for scene', sceneKey, 'of story', storyKey);
-  return sampleStory1.scenes[sceneKey];
-}
+    console.log('storyRepo.getStoryScene: asked for scene', sceneKey, 'of story', storyKey);
+    const story = localPersistence.loadStory(storyKey);
+    console.log('story in repo with given storyKey:', storyKey, 'found:', story);
+    if (story) {
+        return story.scenes[sceneKey];
+    }
+    return sampleStory1.scenes[sampleStory1.summary.firstScene];  // for now make sure something comes out
+};

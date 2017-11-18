@@ -29,7 +29,6 @@
       "title": "Intermediate Step",
       "prose": "This is to test dialogue. [p]\"Look out,\" said the bandit. \"Here comes the posse.\" [p]Sometimes we want to us [i]italics[/i]",
       "signpost": {
-        // prompt is optional -- client should have a default prompt
         "options": [
           {
             "destination": "4",
@@ -66,6 +65,6 @@
           }
         ]
       }
-    },
+    }
   }
 }
