@@ -1,14 +1,14 @@
+import fetch from 'fetch';
+
 const storySummaryMock = {
     summary: {
-        key: 'o9s0toym',
+        storyKey: 'o9s0toym',
         title: 'The Cave',
-        author: 'Bubba Gumpzzz',
+        penName: 'Bubba Gumpzzz',
         tagLine: 'You want to read this.',
         about: 'Sometimes life compels you great things.  And sometimes you\'d rather play this game.',
-        firstScene: 'ke8jfk0w'
-    },
-    stats: {
-        likes: 42
+        firstScene: 'ke8jfk0w',
+        publishedAt: '2017-11-11T22:23:54.396Z'
     }
 };
 
@@ -39,6 +39,13 @@ const sceneMock = {
         title: 'You Lose.',
         prose: 'Well that was predictable.'
     }
+};
+
+export const getRecommendations = () => {
+    console.log('getRecommendations');
+    fetch('http://localhost:3000/stories').then(response => {
+        return JSON.parse(response);
+    });
 };
 
 export const getStoryInfo = (storyKey) => {

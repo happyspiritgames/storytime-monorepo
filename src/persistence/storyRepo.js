@@ -2,7 +2,7 @@ const localPersistence = require('./persistToLocalFile');
 
 const sampleStory1 = {
   summary: {
-    storyKey: '10101010-1010-4000-a000-101010101010',
+    storyKey: 'sampleStory1',
     title: 'Sample Story 1',
     penName: 'Betty Wrightsalot',
     tagLine: 'Best darn story this side of yesterday',
