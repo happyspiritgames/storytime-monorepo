@@ -5,6 +5,7 @@ exports.ping = (req, res) => {
 };
 
 exports.searchStories = (req, res) => {
+    console.log('searchStories called')
   res.send(repo.getRecommendedStories());
 };
 

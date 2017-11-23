@@ -150,6 +150,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/StorySummary'
+  # TODO add SignPost: optional prompt plus options (array of Destination)
   StorySummary:
     type: object
     properties:

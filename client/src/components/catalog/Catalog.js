@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { getRecommendations } from '../services/storyTimeServiceApi';
 
 export default class Catalog extends Component {
 
@@ -9,19 +8,17 @@ export default class Catalog extends Component {
         this.state = {
             stories: []
         };
-        this.fetchStories();
     }
 
-    fetchStories() {
-        getRecommendations().then(summaries => {
-            this.setState({ stories: summaries });
-        }).catch(err => {
-            console.log('Failed to find stories.', err);
-        });
+    componentDidMount() {
+        fetch('/stories')
+            .then(res => res.json())
+            .then(summaries => this.setState({ stories: summaries }))
+            .catch(err => console.log('Failed to find stories.', err));
     }
 
-    renderCard(summary) {
-        console.log(summary);
+    static renderCard(summary) {
+        console.log('summary to render as card', summary);
         return (
             <div className="story-card" key={ summary.storyKey }>
                 <div className="story-title">{ summary.title }</div>
@@ -36,7 +33,8 @@ export default class Catalog extends Component {
 
     render() {
         const { stories } = this.state;
-        const cards = stories.map(story => this.renderCard(story.summary));
+        console.log('rendering stories', this.state.stories);
+        const cards = stories.map(story => Catalog.renderCard(story));
         return (
             <div id="catalog">
                 {cards}
