@@ -7,7 +7,7 @@ const sampleStory1 = {
     penName: 'Betty Wrightsalot',
     tagLine: 'Best darn story this side of yesterday',
     about: 'This is something you really want to read.  Let me tell you why it\'s so good.',
-    firstScene: 'scene001',
+    firstSceneKey: 'scene001',
     publishedAt: '2017-11-11T22:23:54.396Z'
   },
   scenes: {
@@ -15,16 +15,19 @@ const sampleStory1 = {
       sceneKey: 'scene001',
       title: 'It All Starts Here',
       prose: 'Our story begins in a small town on the outskirts of civilization.',
-      signPost: [
-        {
-          sceneKey: 'scene002',
-          teaser: 'Take the conservative approach.  You can never be too careful.'
-        },
-        {
-          sceneKey: 'scene003',
-          teaser: 'Go crazy.  You only live once, you know.'
-        }
-      ]
+      signPost: {
+        prompt: 'Choose what to do next',
+        options: [
+          {
+            sceneKey: 'scene002',
+            teaser: 'Take the conservative approach.  You can never be too careful.'
+          },
+          {
+            sceneKey: 'scene003',
+            teaser: 'Go crazy.  You only live once, you know.'
+          }
+        ]
+      }
     },
     scene002: {
       key: 'scene002',
@@ -42,7 +45,7 @@ const sampleStory1 = {
 };
 
 exports.getRecommendedStories = (maxResults = 10) => {
-  return [ sampleStory1.summary ];
+  return localPersistence.loadStorySummaries();
 };
 
 exports.getPublishedStorySummary = (storyKey) => {
@@ -55,11 +58,11 @@ exports.getPublishedStorySummary = (storyKey) => {
 };
 
 exports.getStoryScene = (storyKey, sceneKey) => {
-    console.log('storyRepo.getStoryScene: asked for scene', sceneKey, 'of story', storyKey);
-    const story = localPersistence.loadStory(storyKey);
-    console.log('story in repo with given storyKey:', storyKey, 'found:', story);
-    if (story) {
-        return story.scenes[sceneKey];
-    }
-    return sampleStory1.scenes[sampleStory1.summary.firstScene];  // for now make sure something comes out
+  console.log('storyRepo.getStoryScene: asked for scene', sceneKey, 'of story', storyKey);
+  const story = localPersistence.loadStory(storyKey);
+  console.log('story in repo with given storyKey:', storyKey, 'found:', story);
+  if (story) {
+    return story.scenes[sceneKey];
+  }
+  return sampleStory1.scenes[sampleStory1.summary.firstScene];  // for now make sure something comes out
 };
