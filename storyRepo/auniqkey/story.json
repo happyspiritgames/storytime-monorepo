@@ -5,7 +5,7 @@
     "penName": "Bubba Gumpzzz",
     "tagLine": "You want to read this.",
     "about": "Sometimes life compels you great things.  And sometimes you'd rather play this game.",
-    "firstScene": "ke8jfk0w",
+    "firstSceneKey": "ke8jfk0w",
     "publishedAt": "2017-11-11T22:23:54.396Z"
   },
   "scenes": {
@@ -17,11 +17,11 @@
         "prompt": "What would you like to do?",
         "options": [
           {
-            "destination": "d9wkk92l",
+            "sceneKey": "d9wkk92l",
             "teaser": "Winners choose this path."
           },
           {
-            "destination": "ii23klod",
+            "sceneKey": "ii23klod",
             "teaser": "Losers never win."
           }
         ]

@@ -5,7 +5,7 @@
     "penName": "Wanda the Storyteller",
     "tagLine": "This is a test tagline.",
     "about": "This story is all about testing Storytime.  Want a real adventure?  Choose one of the other stories.  If you want to see how things are supposed to work, keep using this story.",
-    "firstScene": "1",
+    "firstSceneKey": "1",
     "publishedAt": "2017-11-11T22:23:54.396Z"
   },
   "scenes": {
@@ -17,11 +17,11 @@
         "prompt": "What would you like to do?",
         "options": [
           {
-            "destination": "2",
+            "sceneKey": "2",
             "teaser": "Test continuing path."
           },
           {
-            "destination": "3",
+            "sceneKey": "3",
             "teaser": "Test a loser."
           }
         ]
@@ -34,15 +34,15 @@
       "signpost": {
         "options": [
           {
-            "destination": "4",
+            "sceneKey": "4",
             "teaser": "Test a winner."
           },
           {
-            "destination": "3",
+            "sceneKey": "3",
             "teaser": "Test a loser."
           },
           {
-            "destination": "5",
+            "sceneKey": "5",
             "teaser": "Test a loop."
           }
         ]
@@ -66,7 +66,7 @@
         "prompt": "What would you like to do?",
         "options": [
           {
-            "destination": "2",
+            "sceneKey": "2",
             "teaser": "Back to previous step. (could be anywhere)"
           }
         ]

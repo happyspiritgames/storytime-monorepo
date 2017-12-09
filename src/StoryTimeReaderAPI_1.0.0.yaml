@@ -138,10 +138,8 @@ definitions:
         type: string
       prose:
         type: string
-      signPost:
-        type: array
-        items:
-          $ref: '#/definitions/Destination'
+      signpost:
+        $ref: '#/definitions/Signpost'
   SearchResults:
     required:
       - stories
@@ -150,7 +148,15 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/StorySummary'
-  # TODO add SignPost: optional prompt plus options (array of Destination)
+  Signpost:
+    type: object
+    properties:
+      prompt:
+        type: string
+      options:
+        type: array
+        items:
+          $ref: '#/definitions/Destination'
   StorySummary:
     type: object
     properties:
@@ -164,7 +170,7 @@ definitions:
         type: string
       about:
         type: string
-      firstScene:
+      firstSceneKey:
         type: string
       publishedAt:
         type: string
