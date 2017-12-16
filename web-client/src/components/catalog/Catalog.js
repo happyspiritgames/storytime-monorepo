@@ -26,7 +26,7 @@ export default class Catalog extends Component {
                 <div className="story-tagLine">{ summary.tagLine }</div>
                 <div className="story-about">{ summary.about }</div>
                 <div className="story-publishedAt">{ summary.publishedAt }</div>
-                <a href={`/stories/${ summary.storyKey }/scenes/${ summary.firstScene }`}>Read It!</a>
+                <a href={`/stories/${ summary.storyKey }/scenes/${ summary.firstSceneKey }`}>Read It!</a>
             </div>
         )
     }
