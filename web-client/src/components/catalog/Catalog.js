@@ -11,7 +11,7 @@ export default class Catalog extends Component {
     }
 
     componentDidMount() {
-        fetch('/stories')
+        fetch('/api/stories')
             .then(res => res.json())
             .then(summaries => this.setState({ stories: summaries }))
             .catch(err => console.log('Failed to find stories.', err));

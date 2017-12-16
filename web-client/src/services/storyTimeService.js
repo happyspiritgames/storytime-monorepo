@@ -1,6 +1,6 @@
 export const getCatalog = () => {
     console.log('getCatalog');
-    return fetch('/stories')
+    return fetch('/api/stories')
         .then(response => {
             return response.json;
         });
