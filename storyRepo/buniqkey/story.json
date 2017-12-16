@@ -1,71 +1,76 @@
 {
   "summary": {
-    "key": "buniqkey",
+    "storyKey": "buniqkey",
     "title": "Test Story",
-    "author": "Wanda the Storyteller",
+    "penName": "Wanda the Storyteller",
     "tagLine": "This is a test tagline.",
     "about": "This story is all about testing Storytime.  Want a real adventure?  Choose one of the other stories.  If you want to see how things are supposed to work, keep using this story.",
-    "firstScene": "1"
+    "firstSceneKey": "1",
+    "publishedAt": "2017-11-11T22:23:54.396Z"
   },
   "scenes": {
     "1": {
+      "sceneKey": "1",
       "title": "The Cave",
       "prose": "First it's a good idea to set the scene.  What is going on?  Who is here?  Is there anything that stands out or seems odd. [p]This is supposed to be a new paragraph.",
       "signpost": {
         "prompt": "What would you like to do?",
         "options": [
           {
-            "destination": "2",
+            "sceneKey": "2",
             "teaser": "Test continuing path."
           },
           {
-            "destination": "3",
+            "sceneKey": "3",
             "teaser": "Test a loser."
           }
         ]
       }
     },
     "2": {
+      "sceneKey": "2",
       "title": "Intermediate Step",
       "prose": "This is to test dialogue. [p]\"Look out,\" said the bandit. \"Here comes the posse.\" [p]Sometimes we want to us [i]italics[/i]",
       "signpost": {
-        // prompt is optional -- client should have a default prompt
         "options": [
           {
-            "destination": "4",
+            "sceneKey": "4",
             "teaser": "Test a winner."
           },
           {
-            "destination": "3",
+            "sceneKey": "3",
             "teaser": "Test a loser."
           },
           {
-            "destination": "5",
+            "sceneKey": "5",
             "teaser": "Test a loop."
           }
         ]
       }
     },
     "3": {
+      "sceneKey": "3",
       "title": "You Lose",
       "prose": "Well that was predictable.  Try again and see if you can make better choices next time."
     },
     "4": {
+      "sceneKey": "4",
       "title": "You Win",
       "prose": "Well what do you know.  Why not start over and try a different path.  It might be fun."
     },
     "5": {
+      "sceneKey": "5",
       "title": "Loop Test",
       "prose": "The point of this step is to make a loop back into the story.",
       "signpost": {
         "prompt": "What would you like to do?",
         "options": [
           {
-            "destination": "2",
+            "sceneKey": "2",
             "teaser": "Back to previous step. (could be anywhere)"
           }
         ]
       }
-    },
+    }
   }
 }

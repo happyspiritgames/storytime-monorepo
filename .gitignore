@@ -1,6 +1,8 @@
 # IDEA
-.idea
+.idea/
 *.iml
+
+generated/
 
 # Logs
 logs
@@ -61,5 +63,3 @@ typings/
 
 # dotenv environment variables file
 .env
-
-.idea/
