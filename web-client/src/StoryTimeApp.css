@@ -1,7 +1,12 @@
-.story-author {
+.byline {
   font-style: italic;
+  font-size: smaller;
 }
 
 .author {
   font-weight: bold;
+}
+
+.story-about {
+  margin-top: 1em;
 }

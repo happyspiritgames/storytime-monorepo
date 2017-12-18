@@ -3,13 +3,13 @@ import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText, Button } 
 
 export default class Catalog extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       stories: []
     };
-    this.handleSelectStory.bind(this);
+    // this.handleSelectStory = this.handleSelectStory.bind(this);
   }
 
   componentDidMount() {
@@ -19,28 +19,36 @@ export default class Catalog extends Component {
       .catch(err => console.log('Failed to find stories.', err));
   }
 
-  handleSelectStory = (event) => {
-    console.log('clicked', event);
+  handleSelectStory(selectedStoryKey) {
+    console.log('clicked', selectedStoryKey);
+    this.setState({ selectedStoryKey });
   }
 
-  static renderCard(summary) {
+  renderCard(summary) {
     return (
       <Card key={summary.storyKey}>
         <CardBody>
           <CardTitle>{summary.title}</CardTitle>
-          <CardSubtitle className="story-author">by <span className="author">{summary.penName}</span></CardSubtitle>
-          <CardText>{summary.about}</CardText>
-          <Button color="primary" onClick={ this.handleSelectStory }>{summary.tagLine}</Button>
+          <CardSubtitle className="byline">by <span className="author">{ summary.penName }</span></CardSubtitle>
+          <CardText className="story-about">{summary.about}</CardText>
+          <Button color="primary" onClick={this.handleSelectStory.bind(this, summary.storyKey)}>{ summary.tagLine }</Button>
+          <button onClick={this.handleSelectStory}>Click Me</button>
         </CardBody>
       </Card>
     )
   }
 
   render() {
-    const { stories } = this.state;
-    const cards = stories.map(story => Catalog.renderCard(story));
+    console.log(this.state);
+    const { stories, selectedStoryKey } = this.state;
+    const cards = stories.map(story => this.renderCard(story));
+    const message = (selectedStoryKey)
+      ? `You have selected a story (key=${selectedStoryKey}).`
+      : 'Select a story to read.';
+
     return (
       <Container fluid={ true }>
+        <h1>{ message }</h1>
         {cards}
       </Container>
     );
