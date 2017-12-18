@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Catalog from './components/catalog/Catalog';
 
-class App extends Component {
+class StoryTimeApp extends Component {
   render() {
     return (
       <Catalog />
@@ -9,4 +9,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default StoryTimeApp;
