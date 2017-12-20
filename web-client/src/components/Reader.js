@@ -68,8 +68,11 @@ const Scene = props => {
 
 export default class Reader extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    console.log(props.match);
+
     const story = getStoryInfo('blargy');
     const scene = getScene(story.summary.key, story.summary.firstScene);
     this.state = {

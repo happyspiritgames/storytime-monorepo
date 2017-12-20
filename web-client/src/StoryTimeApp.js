@@ -6,11 +6,11 @@ import Reader from './components/Reader';
 const StoryTimeApp = () => (
   <div>
     <nav>
-      <Link to="/library">Library</Link> | <Link to="/reader">Reader</Link>
+      <Link to="/library">Library</Link>
     </nav>
     <div>
       <Route path="/library" component={Library} />
-      <Route path="/reader" component={Reader} />
+      <Route path="/reader/:storyKey" component={Reader} />
     </div>
   </div>
 );

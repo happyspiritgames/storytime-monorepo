@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText, Button } from 'reactstrap';
 
 export default class Library extends Component {
@@ -28,13 +29,14 @@ export default class Library extends Component {
   }
 
   renderCard(summary) {
+    const storyPath = `/reader/${summary.storyKey}`;
     return (
       <Card key={summary.storyKey}>
         <CardBody>
           <CardTitle>{summary.title}</CardTitle>
           <CardSubtitle className="byline">by <span className="author">{ summary.penName }</span></CardSubtitle>
           <CardText className="story-about">{summary.about}</CardText>
-          <Button color="primary" onClick={this.handleSelectStory.bind(this, summary.storyKey)}>{ summary.tagLine }</Button>
+          <Link to={storyPath}>{ summary.tagLine }</Link>
         </CardBody>
       </Card>
     )
