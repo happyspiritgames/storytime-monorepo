@@ -45,7 +45,6 @@ export default class Library extends Component {
   }
 
   render() {
-    console.log(this.state);
     const { stories, selectedStoryKey } = this.state;
     const cards = stories.map(story => this.renderCard(story));
     const message = (selectedStoryKey)

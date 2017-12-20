@@ -7,12 +7,18 @@ import Scene from './Scene';
 export default class Reader extends Component {
   constructor(props) {
     super(props);
-    console.log(props.match);
-    const storyKey = props.match.storyKey;
+    const { params } = props.match;
+    const storyKey = params.storyKey;
     this.state = {
       storyKey
     };
+    this.processSummary = this.processSummary.bind(this);
+    this.processScene = this.processScene.bind(this);
     this.handleSceneChange = this.handleSceneChange.bind(this);
+  }
+
+  processScene = scene => {
+    this.setState({ scene });
   }
 
   processSummary = summary => {
@@ -20,25 +26,34 @@ export default class Reader extends Component {
     getScene(summary.storyKey, summary.firstSceneKey, this.processScene);
   }
 
-  processScene = scene => {
-    this.setState({ scene });
-  }
-
   handleSceneChange = sceneKey => {
     getScene(this.state.storyKey, sceneKey, this.processScene);
   };
 
   componentDidMount() {
-    if (this.state.storySummary === undefined) {
-      getSummary(this.state.storyKey);
+    if (this.state.summary === undefined) {
+      getSummary(this.state.storyKey, this.processSummary);
     }
   }
 
   render() {
     const { summary, scene } = this.state;
+    if (!summary) {
+      return (
+        <Container id="reader" fluid={ true }>
+          <h1 id="story-title">Loading story...please wait.</h1>
+        </Container>
+      );
+    } else if (!scene) {
+      return (
+        <Container id="reader" fluid={ true }>
+          <h1 id="story-title">Loading first scene...please wait.</h1>
+        </Container>
+      );
+    }
     return (
       <Container id="reader" fluid={ true }>
-        <h1 id="story-title">{ summary.title }, by { summary.author }</h1>
+        <h1 id="story-title">{ summary.title }, by { summary.penName }</h1>
         <Scene scene={ scene }/>
         <Signpost signpost={ scene.signpost } onSceneChange={ this.handleSceneChange }/>
       </Container>
