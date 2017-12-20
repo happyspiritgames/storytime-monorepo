@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText, Button } from 'reactstrap';
 
-export default class Catalog extends Component {
+export default class Library extends Component {
+
+  // TODO turn this into the top-level container that redux is plugged into.
+  // TODO extract CardCatalog component for searching stories.
 
   constructor(props) {
     super(props);

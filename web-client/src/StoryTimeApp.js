@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Catalog from './components/catalog/Catalog';
+import Library from './components/library/Library';
 
 class StoryTimeApp extends Component {
   render() {
     return (
-      <Catalog />
+      <Library />
     );
   }
 }
