@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText, Button } from 'reactstrap';
+import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap';
+import { getStorySummaries } from '../services/storyTimeService';
 
 export default class Library extends Component {
 
@@ -17,10 +18,11 @@ export default class Library extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/stories')
-      .then(res => res.json())
-      .then(summaries => this.setState({ stories: summaries }))
-      .catch(err => console.log('Failed to find stories.', err));
+    getStorySummaries(this.loadSummaries);
+  }
+
+  loadSummaries = (summaries) => {
+    this.setState({ stories: summaries });
   }
 
   handleSelectStory(selectedStoryKey) {
