@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Col, Row, Card, CardText, CardBody, CardTitle, ListGroup, ListGroupItem } from 'reactstrap';
-import { getStoryInfo, getScene } from "../../services/storyTimeService";
+import { getStoryInfo, getScene } from "../services/storyTimeService";
 
 class SignOption extends Component {
   handleSceneChange = () => {

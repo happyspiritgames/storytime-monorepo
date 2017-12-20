@@ -35,7 +35,6 @@ export default class Library extends Component {
           <CardSubtitle className="byline">by <span className="author">{ summary.penName }</span></CardSubtitle>
           <CardText className="story-about">{summary.about}</CardText>
           <Button color="primary" onClick={this.handleSelectStory.bind(this, summary.storyKey)}>{ summary.tagLine }</Button>
-          <button onClick={this.handleSelectStory}>Click Me</button>
         </CardBody>
       </Card>
     )
