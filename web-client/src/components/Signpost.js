@@ -10,7 +10,7 @@ class SignOption extends Component {
   render() {
     const { teaser } = this.props;
     return (
-      <ListGroupItem color="primary" action={ true } onClick={ this.handleSceneChange }>
+      <ListGroupItem color="default" action={ true } onClick={ this.handleSceneChange }>
         { teaser }
       </ListGroupItem>
     );
