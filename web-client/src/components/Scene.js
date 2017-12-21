@@ -3,14 +3,14 @@ import { Card, CardText, CardBody, CardTitle } from 'reactstrap';
 
 const Scene = props => {
   const { title, prose } = props.scene;
-  const formatted = prose.split('\n').map(paragraph => {
-    return <div>{ paragraph }</div>;
+  const formatted = prose.split('\n').map((paragraph, index) => {
+    return <CardText key={index}>{ paragraph }</CardText>;
   });
   return (
     <Card id="scene">
       <CardBody>
         <CardTitle>{ title }</CardTitle>
-        <CardText>{ formatted }</CardText>
+        { formatted }
       </CardBody>
     </Card>
   );
