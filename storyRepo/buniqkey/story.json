@@ -1,7 +1,7 @@
 {
   "summary": {
     "storyKey": "buniqkey",
-    "title": "Test Story",
+    "title": "Badoongie Face",
     "penName": "Wanda the Storyteller",
     "tagLine": "This is a test tagline.",
     "about": "This story is all about testing Storytime.  Want a real adventure?  Choose one of the other stories.  If you want to see how things are supposed to work, keep using this story.",
@@ -11,7 +11,7 @@
   "scenes": {
     "1": {
       "sceneKey": "1",
-      "title": "The Cave",
+      "title": "Blargy",
       "prose": "First it's a good idea to set the scene.  What is going on?  Who is here?  Is there anything that stands out or seems odd. [p]This is supposed to be a new paragraph.",
       "signpost": {
         "prompt": "What would you like to do?",

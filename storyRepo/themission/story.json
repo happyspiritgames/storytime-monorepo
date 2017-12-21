@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "storyKey": "themission",
+    "title": "The Mission",
+    "penName": "The Happy Spirit",
+    "tagLine": "The life of a secret agent is hard. That's why you love it.",
+    "about": "You and only you can retrieve the golden bars and complete the mission.  It is too late now to go back, but why would you?  You are a top agent of the secret spy organization, and you never walk away from a job.  Today is no different.",
+    "firstSceneKey": "1",
+    "publishedAt": "2017-12-20T16:51:37.000Z"
+  },
+  "scenes": {
+    "1": {
+      "sceneKey": "1",
+      "title": "Your Mission",
+      "prose": "You are 10 years old.  You are no ordinary 10-year old.  You are a trusted agent of an elite spy network, and you are on a mission to recover the golden bars from a high-security warehouse in a location that you know only too well.  The mission leader has equipped you with a handful of ancient coins and notes that are used by the locals of this region to exchange for valuables.  Your mission is to enter the warehouse, locate the golden bars, bride the security guard with the coins and notes, and return to Command Central.\nShould you be captured in pursuit of your mission, there is no telling what foul consequences await you.  It is best not to be seen.  Your knack for blending in and ability to disappear in a whisper are, without a doubt, why you were chosen for this mission.\nAs you dismount the stairs that lead from headquarters to the main street, you face your first decision.  Should you play it cool and loose and head down the street directly toward your objective?  Or would it be better to sneak around to the back and take the abandoned trail of the ancients?",
+      "signpost": {
+        "prompt": "What would you like to do?",
+        "options": [
+          {
+            "sceneKey": "2",
+            "teaser": "Walk directly yet casually toward the location where the golden bars were last spotted."
+          },
+          {
+            "sceneKey": "5",
+            "teaser": "Go behind the house and walk along the pathway of the ancients"
+          }
+        ]
+      }
+    },
+    "2": {
+      "sceneKey": "2",
+      "title": "In Broad Daylight",
+      "prose": "The sun is shining brightly, with just a few wisps of clouds in the sky.  The air is cool and refreshing, not cold.  As you breathe in, details in the scene about you begin to pop.  Across the street, some of the locals are deep in conversation. They are smiling and laughing, nothing to worry about.  Others are going about their business.  A few cars pass by up and down the two-lane street.  The usual.\nOn the next block, you bump into some friends of yours, Bob and Angel.  You go to school together, but that’s not the half of it.  They are also members of the spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day./nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
+      "signpost": {
+        "prompt": "What do you say?",
+        "options": [
+          {
+            "sceneKey": "3",
+            "teaser": "Keep walking toward your objective."
+          },
+          {
+            "sceneKey": "8",
+            "teaser": "Go with Bob and Angel on a side mission to liberate some jewels."
+          }
+        ]
+      }
+    },
+    "3": {
+      "sceneKey": "3",
+      "title": "Into the Marketplace",
+      "prose": "You buy the butter.",
+      "signpost": {
+        "prompt": "What do you say?",
+        "options": [
+          {
+            "sceneKey": "4",
+            "teaser": "Head directly back to Command Central."
+          },
+          {
+            "sceneKey": "12",
+            "teaser": "Just to be sure you are not followed, take the Forgotten Trail behind the warehouse."
+          }
+        ]
+      }
+    },
+    "4": {
+      "sceneKey": "4",
+      "title": "Mission Accomplished",
+      "prose": "Your mission complete, you take off your gear and sit down for some hard-earned game time.  Before long, you take a break to eat some butter cookies and milk.  But wait, you are out of the White Elixir of Life.  Ready for another mission?"
+    },
+    "5": {
+      "sceneKey": "5",
+      "title": "Sky Tower.",
+      "prose": "Climb into the neighborhood tree house and survey the scene.",
+      "signpost": {
+        "prompt": "What do you say?",
+        "options": [
+          {
+            "sceneKey": "7",
+            "teaser": "Go on a limb."
+          },
+          {
+            "sceneKey": "6",
+            "teaser": "You have seen enough.  Continue toward your objective."
+          }
+        ]
+      }
+    },
+    "6": {
+      "sceneKey": "6",
+      "title": "Approach from the Back",
+      "prose": "Sneaking up to the back of the building, you notice the jeweler's next door.  Looks like you're in for a sweet reward.",
+      "signpost": {
+        "prompt": "Take a small detour?",
+        "options": [
+          {
+            "sceneKey": "8",
+            "teaser": "Sneak around to the right."
+          },
+          {
+            "sceneKey": "3",
+            "teaser": "Sneak around to the left."
+          }
+        ]
+      }
+    },
+    "7": {
+      "sceneKey": "7",
+      "title": "The Fall",
+      "prose": "You slip and fall, spraining your ankle.  Hobble back home.  No cookies for you."
+    },
+    "8": {
+      "sceneKey": "8",
+      "title": "Dazzling Jewels of all Shapes and Sizes",
+      "prose": "Welcome to the Candy Emporium.",
+      "signpost": {
+        "prompt": "What do you want to do?",
+        "options": [
+          {
+            "sceneKey": "11",
+            "teaser": "Invest in jewels."
+          },
+          {
+            "sceneKey": "9",
+            "teaser": "Get back to your mission."
+          }
+        ]
+      }
+    },
+    "9": {
+      "sceneKey": "9",
+      "title": "Return to the Mission",
+      "prose": "Say something that gets you back to the Warehouse / Marketplace",
+      "signpost": {
+        "prompt": "Your destiny is already set.",
+        "options": [
+          {
+            "sceneKey": "3",
+            "teaser": "Continue"
+          }
+        ]
+      }
+    },
+    "10": {
+      "sceneKey": "10",
+      "title": "A Chance Meeting",
+      "prose": "Connecting scene where you meet up with Bob and Angel as they head into the candy store.",
+      "signpost": {
+        "prompt": "What do you do?",
+        "options": [
+          {
+            "sceneKey": "8",
+            "teaser": "Go in, you fool."
+          },
+          {
+            "sceneKey": "3",
+            "teaser": "Stay on your mission, you fool."
+          }
+        ]
+      }
+    },
+    "11": {
+      "sceneKey": "11",
+      "title": "Mission Aborted",
+      "prose": "As you walk out of the candy store, you realize you have spent all of your rare coins and notes.  You head back to Command Central and get chewed out for wasting the money on candy.  No cookies today.  (Good thing you already had candy.  *URP*)"
+    },
+    "12": {
+      "sceneKey": "12",
+      "title": "Behind Enemy Lines",
+      "prose": "Sneaking back along the abandoned railroad bed.",
+      "signpost": {
+        "prompt": "What do you do?",
+        "options": [
+          {
+            "sceneKey": "13",
+            "teaser": "Go to Sky Tower and look for other spies."
+          },
+          {
+            "sceneKey": "4",
+            "teaser": "Go back to Command Central and complete the mission."
+          }
+        ]
+      }
+    },
+    "13": {
+      "sceneKey": "13",
+      "title": "Sky Tower with Golden Bars",
+      "prose": "See some interesting things, but can’t quite make them out.  Change of perspective might help.",
+      "signpost": {
+        "prompt": "",
+        "options": [
+          {
+            "sceneKey": "7",
+            "teaser": "Leave bag of golden bars in the tower, and go out on a limb."
+          },
+          {
+            "sceneKey": "4",
+            "teaser": "Climb down and return to Command Central."
+          }
+        ]
+      }
+    }
+  }
+}

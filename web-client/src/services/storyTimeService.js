@@ -1,17 +1,20 @@
-export const getCatalog = () => {
-    console.log('getCatalog');
-    return fetch('/api/stories')
-        .then(response => {
-            return response.json;
-        });
+export const getStorySummaries = (processResponse) => {
+    fetch('/api/stories')
+        .then(res => res.json())
+        .then(summaries => processResponse(summaries))
+        .catch(err => console.log('Failed to find stories.', err));
 };
 
-// export const getStoryInfo = (storyKey) => {
-//     console.log('requesting story for key', storyKey);
-//     return storySummaryMock;
-// };
-//
-// export const getScene = (storyKey, sceneKey) => {
-//     console.log('requesting scene', sceneKey, 'for story', storyKey);
-//     return sceneMock[sceneKey];
-// };
+export const getSummary = (storyKey, processResponse) => {
+    fetch(`/api/stories/${storyKey}`)
+        .then(res => res.json())
+        .then(summaries => processResponse(summaries))
+        .catch(err => console.log('Failed to find story with key:', storyKey, err));
+};
+
+export const getScene = (storyKey, sceneKey, processResponse) => {
+    fetch(`/api/stories/${storyKey}/scenes/${sceneKey}`)
+        .then(res => res.json())
+        .then(summaries => processResponse(summaries))
+        .catch(err => console.log('Failed to find story with key:', storyKey, err));
+};
