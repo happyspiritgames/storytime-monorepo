@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText } from 'reactstrap';
 import { getStorySummaries } from '../services/storyTimeService';
+import { buildStoryPath } from './Reader';
 
 export default class Library extends Component {
 
@@ -10,11 +11,9 @@ export default class Library extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       stories: []
     };
-    // this.handleSelectStory = this.handleSelectStory.bind(this);
   }
 
   componentDidMount() {
@@ -25,20 +24,14 @@ export default class Library extends Component {
     this.setState({ stories: summaries });
   }
 
-  handleSelectStory(selectedStoryKey) {
-    console.log('clicked', selectedStoryKey);
-    this.setState({ selectedStoryKey });
-  }
-
   renderCard(summary) {
-    const storyPath = `/reader/${summary.storyKey}`;
     return (
       <Card key={summary.storyKey}>
         <CardBody>
           <CardTitle>{summary.title}</CardTitle>
           <CardSubtitle className="byline">by <span className="author">{ summary.penName }</span></CardSubtitle>
           <CardText className="story-about">{summary.about}</CardText>
-          <Link to={storyPath}>{ summary.tagLine }</Link>
+          <Link to={buildStoryPath(summary.storyKey)}>{ summary.tagLine }</Link>
         </CardBody>
       </Card>
     )

@@ -4,6 +4,10 @@ import { getSummary, getScene } from '../services/storyTimeService';
 import Signpost from './Signpost';
 import Scene from './Scene';
 
+export function buildStoryPath(storyKey) {
+  return `/reader/${storyKey}`;
+}
+
 export default class Reader extends Component {
   constructor(props) {
     super(props);
