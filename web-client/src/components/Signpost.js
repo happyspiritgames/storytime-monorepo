@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Col, Row, Card, CardBody, CardTitle, CardText, ListGroup, ListGroupItem } from 'reactstrap';
+import { format } from '../util/formatter';
 
 class SignOption extends Component {
   handleSceneChange = () => {
@@ -9,9 +10,10 @@ class SignOption extends Component {
 
   render() {
     const { teaser } = this.props;
+    const formatted = format(teaser);
     return (
       <ListGroupItem color="default" action={ true } onClick={ this.handleSceneChange }>
-        { teaser }
+        { formatted }
       </ListGroupItem>
     );
   }
