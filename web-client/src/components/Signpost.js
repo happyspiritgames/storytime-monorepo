@@ -63,9 +63,10 @@ export default class Signpost extends Component {
         onClick={onSceneChange}
       />
     ));
+    const promptToRender = signpost.prompt || 'Choose your destiny.';
     return (
       <div>
-        <h5>{signpost.prompt}</h5>
+        <h5>{promptToRender}</h5>
         <ListGroup>
           {nextSceneOptions}
         </ListGroup>

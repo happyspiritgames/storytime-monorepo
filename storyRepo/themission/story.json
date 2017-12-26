@@ -4,7 +4,7 @@
     "title": "The Mission",
     "penName": "The Happy Spirit",
     "tagLine": "The life of a secret agent is hard. That's why you love it.",
-    "about": "You and only you can retrieve the golden bars and complete the mission.  It is too late now to go back, but why would you?  You are a top agent of the secret spy organization, and you never walk away from a job.  Today is no different.",
+    "about": "You and only you can retrieve the Golden Bars and complete the mission.  It is too late now to go back, but why would you?  You are a top agent of the secret spy organization, and you never walk away from a job.  Today is no different.",
     "firstSceneKey": "1",
     "publishedAt": "2017-12-21T14:51:37.000Z"
   },
@@ -30,7 +30,7 @@
     "2": {
       "sceneKey": "2",
       "title": "In Broad Daylight",
-      "prose": "The sun is shining brightly, with just a few wisps of clouds in the sky.  The air is cool and refreshing, not cold.  As you breathe in, details in the scene about you begin to pop.  Across the street, some of the locals are deep in conversation. They are smiling and laughing, nothing to worry about.  Others are going about their business.  A few cars pass by up and down the two-lane street.  The usual.\nOn the next block, you bump into some friends of yours, Bob and Angel.  You go to school together, but that’s not the half of it.  They are also members of the spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day./nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
+      "prose": "The sun is shining brightly, with just a few wisps of clouds in the sky.  The air is cool and refreshing, not cold.  As you breathe in, details in the scene about you begin to pop.  Across the street, some of the locals are deep in conversation. They are smiling and laughing, nothing to worry about.  Others are going about their business.  A few cars pass by up and down the two-lane street.  The usual.\nOn the next block, you bump into some friends of yours, Bob and Angel.  You go to school together, but that’s not the half of it.  They are also members of the spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day.\nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
       "signpost": {
         "prompt": "What do you say?",
         "options": [

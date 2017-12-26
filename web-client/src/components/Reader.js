@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import SceneCard from './SceneCard';
+import ReaderNavBar from './ReaderNavBar';
 import { getSummary, getScene } from '../services/storyTimeService';
 
 export function buildStoryPath(storyKey) {
@@ -46,34 +47,28 @@ export default class Reader extends Component {
     }
   }
 
-  renderNavBar(title) {
-    return (
-      <nav>
-        <div className="navbar-brand">{ title }</div>
-      </nav>
-    )
-  }
-
   render() {
     const { summary, scene } = this.state;
+    let title = 'Loading'
+    let content;
     if (!summary) {
-      return (
-        <Container id="reader" fluid={ true }>
-          <h1 id="story-title">Loading story...please wait.</h1>
-        </Container>
+      content = (
+        <h1 id="story-title">Loading story...please wait.</h1>
       );
     } else if (!scene) {
-      return (
-        <Container id="reader" fluid={ true }>
-          <h1 id="story-title">Loading first scene...please wait.</h1>
-        </Container>
+      content = (
+        <h1 id="story-title">Loading first scene...please wait.</h1>
       );
+    } else {
+      title = summary.title;
+      content = (
+        <SceneCard scene={scene} onSceneChange={this.handleSceneChange} />
+      )
     }
-    const navBar = this.renderNavBar(summary.title);
     return (
-      <Container id="reader" fluid={ true }>
-        { navBar }
-        <SceneCard scene={ scene } onSceneChange={ this.handleSceneChange } />
+      <Container id="reader" fluid={true}>
+        <ReaderNavBar title={title} />
+        {content}
       </Container>
     );
   }
