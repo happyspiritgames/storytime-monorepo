@@ -2,11 +2,15 @@
   font-style: italic;
   font-size: smaller;
 }
-
 .author {
   font-weight: bold;
 }
-
 .story-about {
   margin-top: 1em;
+}
+.prose-italic {
+  font-style: italic;
+}
+.prose-bold {
+  font-weight: bold;
 }
