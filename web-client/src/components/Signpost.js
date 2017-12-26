@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Col, Row, Card, CardBody, CardTitle, CardText, ListGroup, ListGroupItem } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { ListGroup, ListGroupItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import { format } from '../util/formatter';
+import { FIRST_SCENE } from './Reader';
 
 class SignOption extends Component {
   handleSceneChange = () => {
@@ -10,49 +13,63 @@ class SignOption extends Component {
 
   render() {
     const { teaser } = this.props;
-    const formatted = format(teaser);
+    const formattedTeaser = format(teaser);
     return (
-      <ListGroupItem color="default" action={ true } onClick={ this.handleSceneChange }>
-        { formatted }
+      <ListGroupItem color="default" action={true} onClick={this.handleSceneChange}>
+        {formattedTeaser}
       </ListGroupItem>
     );
   }
 }
 
-const Signpost = props => {
-  const { signpost, onSceneChange } = props;
-  if (signpost === undefined || signpost.options === undefined || signpost.options.length === 0) {
+const isTheEnd = (signpost) => {
+  return !signpost || !signpost.options || signpost.options.length === 0;
+}
+
+export default class Signpost extends Component {
+  static propTypes = {
+    signpost: PropTypes.object,
+    onSceneChange: PropTypes.func
+  }
+
+  renderTheEnd() {
     return (
-      <div>The End</div>
+      <div>
+        <h5>The End</h5>
+        <ListGroup>
+          <SignOption
+            key={FIRST_SCENE}
+            teaser="Start over"
+            destination={FIRST_SCENE}
+            onClick={this.props.onSceneChange}
+          />
+          <ListGroupItem color="default" action={true} onClick={this.handleSceneChange}>
+            <Link to="/library">Find another story to try.</Link>
+          </ListGroupItem>
+        </ListGroup>
+      </div>
     );
   }
 
-  const nextSceneOptions = signpost.options;
-  const options = nextSceneOptions.map(option => (
-    <SignOption key={ option.sceneKey }
-                teaser={ option.teaser }
-                destination={ option.sceneKey }
-                onClick={ onSceneChange }
-    />
-  ));
-  const optionList = (
-    <ListGroup>
-      { options }
-    </ListGroup>
-  );
-  return (
-    <Card>
-      <CardBody>
-        <CardTitle>{ signpost.prompt }</CardTitle>
-        <CardText tag="div">
-          <Row>
-            <Col xs="2"><img src="/img/signpost.jpg" className="img-fluid" alt="Choose a direction"/></Col>
-            <Col>{ optionList }</Col>
-          </Row>
-        </CardText>
-      </CardBody>
-    </Card>
-  );
+  render() {
+    const { signpost, onSceneChange } = this.props;
+    if (isTheEnd(signpost)) {
+      return this.renderTheEnd();
+    }
+    const nextSceneOptions = signpost.options.map(option => (
+      <SignOption key={option.sceneKey}
+        teaser={option.teaser}
+        destination={option.sceneKey}
+        onClick={onSceneChange}
+      />
+    ));
+    return (
+      <div>
+        <h5>{signpost.prompt}</h5>
+        <ListGroup>
+          {nextSceneOptions}
+        </ListGroup>
+      </div>
+    );
+  }
 };
-
-export default Signpost;

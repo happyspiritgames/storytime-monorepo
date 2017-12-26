@@ -50,7 +50,6 @@ exports.getRecommendedStories = (maxResults = 10) => {
 
 exports.getPublishedStorySummary = (storyKey) => {
   const story = localPersistence.loadStory(storyKey);
-  console.log('story in repo with given storyKey:', storyKey, 'found:', story);
   if (story) {
     return story.summary;
   }
@@ -58,9 +57,7 @@ exports.getPublishedStorySummary = (storyKey) => {
 };
 
 exports.getStoryScene = (storyKey, sceneKey) => {
-  console.log('storyRepo.getStoryScene: asked for scene', sceneKey, 'of story', storyKey);
   const story = localPersistence.loadStory(storyKey);
-  console.log('story in repo with given storyKey:', storyKey, 'found:', story);
   if (story) {
     return story.scenes[sceneKey];
   }

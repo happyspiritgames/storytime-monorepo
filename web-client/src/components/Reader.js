@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
+import SceneCard from './SceneCard';
 import { getSummary, getScene } from '../services/storyTimeService';
-import Signpost from './Signpost';
-import Scene from './Scene';
 
 export function buildStoryPath(storyKey) {
   return `/reader/${storyKey}`;
 }
+
+// alias to indicate first scene of story
+export const FIRST_SCENE = '__FIRST_SCENE__';
 
 export default class Reader extends Component {
   constructor(props) {
@@ -31,13 +33,25 @@ export default class Reader extends Component {
   }
 
   handleSceneChange = sceneKey => {
-    getScene(this.state.storyKey, sceneKey, this.processScene);
+    let sceneKeyToUse = sceneKey;
+    if (sceneKey === FIRST_SCENE) {
+      sceneKeyToUse = this.state.summary.firstSceneKey;
+    }
+    getScene(this.state.storyKey, sceneKeyToUse, this.processScene);
   };
 
   componentDidMount() {
     if (this.state.summary === undefined) {
       getSummary(this.state.storyKey, this.processSummary);
     }
+  }
+
+  renderNavBar(title) {
+    return (
+      <nav>
+        <div className="navbar-brand">{ title }</div>
+      </nav>
+    )
   }
 
   render() {
@@ -55,11 +69,11 @@ export default class Reader extends Component {
         </Container>
       );
     }
+    const navBar = this.renderNavBar(summary.title);
     return (
       <Container id="reader" fluid={ true }>
-        <h1 id="story-title">{ summary.title }, by { summary.penName }</h1>
-        <Scene scene={ scene }/>
-        <Signpost signpost={ scene.signpost } onSceneChange={ this.handleSceneChange }/>
+        { navBar }
+        <SceneCard scene={ scene } onSceneChange={ this.handleSceneChange } />
       </Container>
     );
   }
