@@ -35,16 +35,16 @@ export default class Signpost extends Component {
   renderTheEnd() {
     return (
       <div>
-        <h5>The End</h5>
+        <h5 className="text-center">The End</h5>
         <ListGroup>
           <SignOption
             key={FIRST_SCENE}
-            teaser="Start over"
+            teaser="Play again. Try a different path, and see what else can happen."
             destination={FIRST_SCENE}
             onClick={this.props.onSceneChange}
           />
-          <ListGroupItem color="default" action={true} onClick={this.handleSceneChange}>
-            <Link to="/library">Find another story to try.</Link>
+          <ListGroupItem color="default" action={true}>
+            <Link to="/library">Go to the StoryTime library, and play another story.</Link>
           </ListGroupItem>
         </ListGroup>
       </div>
@@ -63,9 +63,10 @@ export default class Signpost extends Component {
         onClick={onSceneChange}
       />
     ));
+    const promptToRender = signpost.prompt || 'Choose your destiny.';
     return (
       <div>
-        <h5>{signpost.prompt}</h5>
+        <h5>{promptToRender}</h5>
         <ListGroup>
           {nextSceneOptions}
         </ListGroup>
