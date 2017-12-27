@@ -10,19 +10,12 @@ export default class ReaderNavBar extends Component {
   render() {
     const { title } = this.props;
     return (
-      <Nav pills>
-        <NavItem>{ title }</NavItem>
+      <Nav tabs justified className="reader-nav">
         <NavItem>
-          <NavLink href="/library">Library</NavLink>
+          <NavLink active>{title}</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="#back">Go Back</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="#bookmark">Bookmark</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="#share">Share</NavLink>
+          <NavLink href="/library">Return to Library</NavLink>
         </NavItem>
       </Nav>
     );

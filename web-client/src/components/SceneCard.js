@@ -20,7 +20,7 @@ export default class SceneCard extends Component {
     });
 
     return (
-      <Card id="scene">
+      <Card id="scene" outline color="info">
         <CardHeader>
           <h5 className="mb-0">{ title }</h5>
         </CardHeader>
