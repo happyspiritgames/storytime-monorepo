@@ -5,8 +5,7 @@
     "penName": "Wanda the Storyteller",
     "tagLine": "This is a test tagline.",
     "about": "This story is all about testing Storytime.  Want a real adventure?  Choose one of the other stories.  If you want to see how things are supposed to work, keep using this story.",
-    "firstSceneKey": "1",
-    "publishedAt": "2017-11-11T22:23:54.396Z"
+    "firstSceneKey": "1"
   },
   "scenes": {
     "1": {
