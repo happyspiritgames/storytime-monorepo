@@ -39,15 +39,16 @@ export default class Signpost extends Component {
         <ListGroup>
           <SignOption
             key={FIRST_SCENE}
-            teaser="Play again. Try a different path, and see what else can happen."
+            teaser="Click or tap here to play again."
             destination={FIRST_SCENE}
             onClick={this.props.onSceneChange}
           />
-          <ListGroupItem color="default" action={true}>
-            <Link to="/library">Go to the StoryTime library, and play another story.</Link>
-          </ListGroupItem>
-          <ListGroupItem color="default" action={true}>
-            <a href="https://www.surveymonkey.com/r/DNXPPJG" target="_blank">Give feedback about StoryTime.</a>
+          <ListGroupItem>
+            When you are finished exploring this story, try something else.
+            <ul>
+              <li><Link to="/library">Choose another story from the library.</Link></li>
+              <li><a href="https://www.surveymonkey.com/r/DNXPPJG">Take a quick survey, and give feedback about StoryTime.</a></li>
+            </ul>
           </ListGroupItem>
         </ListGroup>
       </div>
