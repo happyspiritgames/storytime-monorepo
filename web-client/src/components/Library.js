@@ -28,9 +28,9 @@ export default class Library extends Component {
     const cards = stories.map(story => <StoryCard summary={story} />);
 
     return (
-      <Container id="library" fluid={ true }>
-        <h1>Welcome to the StoryTime Library.</h1>
-        <h3 className="font-weight-light font-italic">Find something to read.</h3>
+      <Container id="library" fluid={ true } className="storytime-page">
+        <h1 className="text-center">Welcome to the StoryTime Library.</h1>
+        <h3 className="text-center font-weight-light font-italic">Find something to read.</h3>
         {cards}
       </Container>
     );

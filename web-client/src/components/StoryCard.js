@@ -13,10 +13,10 @@ export default class StoryCard extends Component {
     const { summary } = this.props;
 
     return (
-      <Card key={summary.storyKey} outline color="info" className="story-card">
+      <Card key={summary.storyKey} id={summary.storyKey} outline color="info" className="story-card">
         <CardBody>
           <CardTitle>{summary.title}</CardTitle>
-          <CardSubtitle className="byline">by <span className="author">{summary.penName}</span></CardSubtitle>
+          <CardSubtitle className="font-italic byline">by <span className="font-weight-bold">{summary.penName}</span></CardSubtitle>
           <CardText className="story-about">{summary.about}</CardText>
           <Link to={buildStoryPath(summary.storyKey)}>{summary.tagLine}</Link>
         </CardBody>

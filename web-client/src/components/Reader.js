@@ -66,7 +66,7 @@ export default class Reader extends Component {
       )
     }
     return (
-      <Container id="reader" fluid={true}>
+      <Container id="reader" fluid={true} className="storytime-page">
         <ReaderNavBar title={title} />
         {content}
       </Container>

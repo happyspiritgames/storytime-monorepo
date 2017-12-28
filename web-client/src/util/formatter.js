@@ -4,12 +4,12 @@ const formats = [
   {
     startTag: '[i]',
     endTag: '[/i]',
-    style: 'prose-italic'
+    style: 'font-italic'
   },
   {
     startTag: '[b]',
     endTag: '[/b]',
-    style: 'prose-bold'
+    style: 'font-bold'
   }
 ];
 
