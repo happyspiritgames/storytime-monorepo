@@ -3,8 +3,8 @@
     "storyKey": "themission",
     "title": "The Mission",
     "penName": "The Happy Spirit",
-    "tagLine": "The life of a secret agent is hard. That's why you love it.",
-    "about": "You and only you can retrieve the Golden Bars and complete the mission.  It is too late now to go back, but why would you?  You are a top agent of the secret spy organization, and you never walk away from a job.  Today is no different.",
+    "tagLine": "The life of a secret agent is hard. That's why you love it. (Click to play.)",
+    "about": "You and only you can retrieve the Golden Bars and complete the mission. It is too late now to go back, but why would you?  You are a top agent of a secret spy organization, and you never walk away from a job. Today is no different.",
     "firstSceneKey": "1",
     "publishedAt": "2017-12-21T14:51:37.000Z"
   },
@@ -12,17 +12,17 @@
     "1": {
       "sceneKey": "1",
       "title": "Your Mission",
-      "prose": "You are 10 years old.  You are no ordinary 10-year old.  You are a trusted agent of an elite spy network, and you are on a mission to recover the golden bars from a high-security warehouse in a location that you know only too well.  The mission leader has equipped you with a handful of ancient coins and notes that are used by the locals of this region to exchange for valuables.  Your mission is to enter the warehouse, locate the Golden Bars, bribe the security guard, and return to Command Central.\nShould you be captured in pursuit of your mission, there is no telling what foul consequences await you.  It is best not to be seen.  Your knack for blending in and ability to disappear in a whisper are, without a doubt, why you were chosen for this mission.\nAs you dismount the stairs that lead from headquarters to the main street, you face your first decision.  Should you play it cool and loose and head down the street directly toward your objective?  Or would it be better to sneak around to the back and take the Forgotten Trail?",
+      "prose": "You are 10 years old.  You are no ordinary 10-year-old.  You are a trusted agent of an elite spy network, and you are on a mission to recover the Golden Bars from a high-security warehouse in a location that you know only too well.  The Supreme Commander has equipped you with a handful of coins and notes that are used by the locals of this region to exchange for valuables.  Your mission is to enter the warehouse, locate the Golden Bars, bribe the security guard, and return to Headquarters.\nShould you be captured in pursuit of your mission, there is no telling what foul consequences await you.  It is best not to be seen.  Your knack for blending in and ability to disappear in a whisper are, without a doubt, why you were chosen for this mission.\nAs you dismount the stairs that lead from Headquarters to the main street, you face your first decision.  Should you head down the street toward your objective or sneak around to the back and take the Forgotten Trail?",
       "signpost": {
-        "prompt": "What would you like to do?",
+        "prompt": "What would you like to do? (Click or tap one of the choices below.)",
         "options": [
           {
             "sceneKey": "2",
-            "teaser": "Walk directly yet casually toward the location where the Golden Bars were last spotted."
+            "teaser": "Play it cool, and walk directly toward the location where the Golden Bars were last spotted."
           },
           {
             "sceneKey": "5",
-            "teaser": "Go behind Headquarters, and walk along the lost pathway of the ancients."
+            "teaser": "Use the Forgotten Trail behind Headquarters so that you are less likely to be seen."
           }
         ]
       }
@@ -30,17 +30,16 @@
     "2": {
       "sceneKey": "2",
       "title": "In Broad Daylight",
-      "prose": "The sun is shining brightly, with just a few wisps of clouds in the sky.  The air is cool and refreshing, not cold.  As you breathe in, details in the scene about you begin to pop.  Across the street, some of the locals are deep in conversation. They are smiling and laughing, nothing to worry about.  Others are going about their business.  A few cars pass by up and down the two-lane street.  The usual.\nOn the next block, you bump into some friends of yours, Bob and Angel.  You go to school together, but that’s not the half of it.  They are also members of the spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day.\nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
+      "prose": "The sun is shining brightly, with just a few wisps of clouds in the sky. The air is cool and refreshing. As you breathe in, the scene about you begins to pop. Across the street, some of the locals are deep in conversation. They are smiling and laughing, nothing to worry about. Others are going about their business. A few cars pass by up and down the slow, two-lane street. The usual.\nOn the next block, you bump into some friends of yours, Bob and Angel. You go to school together, but that’s not the half of it. They are also agents in your spy network. In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly. But that’s a story for another day.\nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland. They invite you to join them. The reward will be sweet.",
       "signpost": {
-        "prompt": "What do you say?",
         "options": [
           {
             "sceneKey": "8",
-            "teaser": "Go with Bob and Angel on a side mission to liberate some jewels."
+            "teaser": "Take a side mission with Bob and Angel to liberate the jewels."
           },
           {
             "sceneKey": "3",
-            "teaser": "Keep walking toward your objective."
+            "teaser": "Stay the course, and keep walking toward your objective."
           }
         ]
       }
@@ -48,17 +47,17 @@
     "3": {
       "sceneKey": "3",
       "title": "Into the Warehouse",
-      "prose": "You know where your priorities lie.  After all, you are one of the top agents, not some fly-by-night, and success is critical to ensure tranquility.  Bravely, you approach the entrance of the warehouse, glance left and right, and step through the broad, inviting doors knowing only too well that this might be a trap.\nThe warehouse is surprisingly well lit.  As you glance across the aisles, you notice that each is labeled.  It seems that someone has grouped the items in storage by category: bread, baking,  canned goods.  You remember that the golden bars are kept somewhere along the warehouse walls: produce, meat, dairy.  Eureka, you have found the golden bars.  2 packages, that’s what the Supreme Commander instructed.  You grab the bars and head for the front to make your escape.\nSure enough, you are going to have to get past the guards.  You put the packages of Golden Bars on the beltway for scanning, reach into your pocket, and hand the guard the ancient coins and notes.  She returns some of the coins along with a slip of paper, no doubt an encrypted message for the Supreme Commander.  You put the coins and message into your pocket while the guard hides the golden bars in a plain paper sack.  Good idea.  You wouldn’t want anyone to know what you are carrying.\nAs you leave the warehouse, it occurs to you that you might have been followed.  Perhaps you should take a different route back to Command Central.",
+      "prose": "You know where your priorities lie. After all, you are one of the top agents, not some fly-by-night, and success is critical to ensure tranquility. Bravely, you approach the entrance of the warehouse, glance left and right, and step through the broad, inviting doors knowing only too well that this might be a trap.\nThe warehouse is surprisingly well lit. As you glance across the aisles, you notice that each is labeled. It seems that someone has grouped the items in storage by category: bread, baking,  canned goods, and so on. You remember that the Golden Bars are kept along the outer walls that are also labeled: produce, meat, dairy. Eureka, you have found the Golden Bars. 2 packages will do. Now to make your escape.\nSure enough, as you approach the exit, you see that you are going to have to get past the guards. Placing the packages of Golden Bars on the beltway for a scanning, you reach into your pocket, and hand the guard the coins and notes. She returns some of the coins along with a slip of paper, no doubt an encrypted message for the Supreme Commander. The coins and message go into your pocket while the guard hides the Golden Bars in a plain paper sack.  Good thinking.  You wouldn’t want anyone to know what you are carrying.\nAs you leave the warehouse, it occurs to you that you might have been spotted by the enemy. Perhaps you should take a different route back to Headquarters.",
       "signpost": {
-        "prompt": "What do you say?",
+        "prompt": "What will you do?",
         "options": [
           {
             "sceneKey": "4",
-            "teaser": "Don’t be paranoid.  Your mission is nearly over, and you need to return quickly."
+            "teaser": "Stop being so paranoid. Your mission is nearly over, and you need to return quickly."
           },
           {
             "sceneKey": "12",
-            "teaser": "Better safe than sorry.  Take the Forgotten Trail that runs behind the warehouse."
+            "teaser": "Better safe than sorry. Take the Forgotten Trail that runs behind the warehouse."
           }
         ]
       }
@@ -66,22 +65,22 @@
     "4": {
       "sceneKey": "4",
       "title": "Mission Accomplished",
-      "prose": "Bob and Angel are still in the candy shop as you walk past.  You will see them on another mission at another time.\nAs you walk into Command Central, the Supreme Commander looks up from her mission plans and greets you with a smile that betrays her confidence in you.  You hand her the satchel with the golden bars and start to head for the spy lounge when she asks if you have any leftover coins.  This commander sure runs a tight ship.  You hand her what’s in your pocket and dash for the lounge, where you flip on the televisor, grab a control set, and get back to playing your favorite game, [i]Spy Lords of the Multiverse[/i].\nAfter an hour that passes in an instant, you break to enjoy some fresh butter cookies and milk.  Uh oh, you are out of the White Elixir of Life.  Are you ready for another mission?"
+      "prose": "Bob and Angel are still hanging around the Emporium as you walk past. You will see them on another mission at another time.\nAs you burst into Headquarters, the Supreme Commander looks up from her mission plans and greets you with a smile that betrays her relief at your safe return. You hand her the satchel with the Golden Bars and head for the spy lounge when she asks if you have any leftover coins.  The commander sure runs a tight ship. You hand her the contents of your pocket and dash for the lounge, where you flip on the televisor, grab a controller, and return to your favorite game, [i]Spy Lords of the Multiverse[/i].\nAfter an hour that feels like an instant, you break to enjoy some fresh butter cookies and milk. Uh oh, the Supreme Commander notices that you have run out of the White Elixir of Life. Are you ready for another mission?"
     },
     "5": {
       "sceneKey": "5",
-      "title": "The Forgotten Trail of the Ancients",
-      "prose": "You glance down the street to see if anyone is looking.  The coast is clear.  Quickly you dash behind the building and slide through a gap in the wooden fence behind Headquarters.  You jump over a narrow ditch and land on the raised edge of the Trail of the Ancients.  The trail is covered in small rocks.  On occasion, you have found a few rusty 10-inch spikes, no doubt the preferred tool of the ancients for hunting.  Today the path is clear.\nWalking down the Forgotten Trail, you approach one of your favorite outposts, the Sky Tower.  From there you can get the lay of the land, and watch the locals going about their business.  It occurs to you that it would be a good idea to see who is about.  You want to avoid contact with any counter-agents.\nSo you climb the ladder that leads to Sky Tower and push open the trapdoor.  The Tower is empty.  From its windows, you see the backside of Headquarters along with other buildings.  You can also see the back of the warehouse, where people are coming and going.  Next to the warehouse is the Jewel Emporium.  Standing outside the Emporium, you spot two agents in your spy network.  They must be on a mission of their own.  The building is blocking your view, so it is difficult to make out what they are up to.\nOutside a window of Sky Tower, there is a pole that reaches to the right.  If you slide along the pole, you might be able to see what’s going on.",
+      "title": "The Forgotten Trail",
+      "prose": "You glance down the street to see if anyone is looking.  The coast is clear.  Quickly you dash behind the building and slide through a gap in the wooden fence behind Headquarters.  You jump over a narrow ditch and land on the raised edge of the Forgotten Trail of the Ancients.  The trail is covered in small rocks.  On occasion, you have found a few rusty 10-inch spikes, no doubt the preferred tool of the ancients for hunting.  Today the path is clear.\nWalking down the Forgotten Trail, you approach one of your favorite outposts, Sky Tower.  From there you can get the lay of the land, and watch the locals going about their business.  It occurs to you that it would be a good idea to see who is about.  You want to avoid contact with any counter agents.\nSo you climb the ladder that leads to Sky Tower and push open the trapdoor.  The tower is empty.  From its windows, you see the backside of Headquarters along with other buildings.  You also see the back of the warehouse, where people are coming and going.  Next to the warehouse is the Jewel Emporium.  Standing outside the Emporium, you spot two agents in your spy network, Bob and Angel.  They must be on a mission of their own.  The building is blocking your view, so it is difficult to make out what they are up to.\nOutside a window of Sky Tower, there is a pole that reaches to the right.  If you slide along the pole, you might be able to see what’s going on.",
       "signpost": {
-        "prompt": "What do you say?",
+        "prompt": "Do you dare?",
         "options": [
           {
             "sceneKey": "7",
-            "teaser": "Go out on a limb and get a better view.  This might be important."
+            "teaser": "Go out on a limb, and get a better view.  This might be important."
           },
           {
             "sceneKey": "6",
-            "teaser": "You have a mission of your own, and the Supreme Leader is counting on you.  Better get back to it."
+            "teaser": "You have no time to lose. Continue on with to your mission."
           }
         ]
       }
@@ -89,13 +88,12 @@
     "6": {
       "sceneKey": "6",
       "title": "Approach from the Back",
-      "prose": "Not one to be distracted for too long, you climb down the ladder, closing the trap door above you, and get back on the trail that runs behind the row of buildings.  It is a nice day, cool but not too cold, with wispy clouds high in the sky.  Before long, you are behind the Jewel Emporium where you saw Bob and Angel.  Next to the Emporium is the warehouse, the target of your mission.\nAlthough the mission is important, you cannot help but think of the treasures in the Emporium, and you wonder about the mission of your fellow spies.  As you walk up to the gap between the buildings, your instincts lead you to your decision.",
+      "prose": "Not one to be distracted for too long, you climb down the ladder, closing the trap door above you, and get back on the trail that runs behind the row of buildings.  It is a nice day, cool but not too cold, with wispy clouds high in the sky.  Before long, you are behind the Jewel Emporium where you saw Bob and Angel.  Next to the Emporium is the warehouse, the target of your mission.\nAlthough the mission is important, you cannot help but think of the untold treasures within the Emporium, and you wonder about the mission of your fellow spies.  As you walk up to the gap between the buildings, your instincts lead you to your decision.",
       "signpost": {
-        "prompt": "Take a small detour?",
         "options": [
           {
             "sceneKey": "10",
-            "teaser": "Sneak around to the right, toward the Jewelry Emporium."
+            "teaser": "Sneak around to the right, toward the Emporium."
           },
           {
             "sceneKey": "3",
@@ -107,18 +105,18 @@
     "7": {
       "sceneKey": "7",
       "title": "The Fall",
-      "prose": "Climbing out on the pole, your fingers grasp the wood where the bark has been worn down.  Clearly, you are not the first to go out on this limb.  You decide it would be best to hang below the pole, so you drop your legs down.  So far so good.  The pole gives a little as you slide farther out, just a bit more to see what’s happening.\nYour brain whirs into high gear as you realize you have gone too far and lose your grip.  As you fall, your cat-like reflexes help you twist, and when you hit the ground you roll just a bit.  Although you have prevented the worst, your left ankle took most of the weight of impact.\nKnowing defeat when it snears in your face, you hobble back to Headquarters.  The Supreme Commander pulls an ice pack from cold storage and applies it to your ankle that is now the size of a grapefruit.  There may be a trip to the medic in your future.\nUntil then, you get to sit in front of the spy lounge televisor and play your favorite game, [i]Spy Lords of the Multiverse[/i].  Too bad you don’t have any cookies to enjoy."
+      "prose": "Climbing out on the pole, your fingers grasp the wood where the bark has been worn down.  Clearly, you are not the first to go out on [i]this[/i] limb.  You decide it would be best to hang below the pole, so you drop your legs down.  So far so good.  The pole gives a little as you slide farther out, just a bit more to see what’s happening.\nYour brain whirs into high gear as you realize you have gone too far and lose your grip.  As you fall, your cat-like reflexes help you twist, and when you hit the ground you roll just a bit.  Although you have prevented the worst, your left ankle took most of the weight of impact.\nKnowing defeat when it snears in your face, you hobble back to Headquarters.  The Supreme Commander pulls an ice pack from cold storage and applies it to your ankle, which is now the size of a grapefruit.  There may be a trip to the medic in your future.\nUntil then, you get to sit in front of the spy lounge televisor and play your favorite game, [i]Spy Lords of the Multiverse[/i].  Too bad you don’t have any cookies to enjoy."
     },
     "8": {
       "sceneKey": "8",
       "title": "Dazzling Jewels of all Shapes and Sizes",
-      "prose": "You decide to join Bob and Angel on their mission.  This shouldn’t take too long, and then you can return to your prime objective.  The three of you head into the Emporium, with Angel in the lead and Bob behind you.  Your eyes take in the dazzling assortment of jewels, and an amazingly sweet smell fills your nose.\nNow that you have joined them, Bob and Angel confess that one problem remains.  They do not have any of the ancient coins or notes they need to make a fair exchange.  You reach into your pocket and realize that you have the solution to the problem.  On one hand, you want to help their mission succeed, since you will get a share of the reward.  On the other hand, you have your own mission to complete.",
+      "prose": "You decide to join Bob and Angel on their mission.  This shouldn’t take too long, and then you can return to your prime objective.  The three of you head into the Emporium, with Angel in the lead and Bob behind you.  Your eyes take in the dazzling assortment of jewels, and an amazingly sweet smell fills your nose.\nNow that you have joined them, Bob and Angel confess that one problem remains.  They do not have any of the coins or notes they need to make a fair exchange.  You reach into your pocket and realize that you have the solution to their problem.  On one hand, you want to help their mission succeed, since you will get a share of the reward.  On the other hand, you have your own mission to complete.",
       "signpost": {
-        "prompt": "What do you want to do?",
+        "prompt": "What do you do?",
         "options": [
           {
             "sceneKey": "11",
-            "teaser": "Exchange your coins and notes for jewels."
+            "teaser": "Help your friends. Exchange your coins and notes for jewels."
           },
           {
             "sceneKey": "3",
@@ -130,13 +128,13 @@
     "10": {
       "sceneKey": "10",
       "title": "A Chance Meeting",
-      "prose": "As you round the building, Bob and Angel call out and approach you with a warm greeting.  You go to school together, but that’s not the half of it.  They are also members of the spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day.\nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
+      "prose": "As you round the building, Bob and Angel call out and approach you with a warm greeting.  You go to school together, but that’s not the half of it.  They are also members of your spy network.  In fact, for your last mission, the three of you invaded Sky Tower and brought back crucial intelligence that led to the take-down of The Big Ugly.  But that’s a story for another day.\nToday, Bob and Angel are on a mission of their own, to liberate the Jewels of Rockland.  They invite you to join them.  The reward will be sweet.",
       "signpost": {
         "prompt": "What do you choose?",
         "options": [
           {
             "sceneKey": "8",
-            "teaser": "Sure, join forces, and you may end up with two notches on your belt instead of one."
+            "teaser": "Sure, join forces, and you may end up with two wins instead of one."
           },
           {
             "sceneKey": "3",
@@ -147,33 +145,32 @@
     },
     "11": {
       "sceneKey": "11",
-      "title": "Mission Aborted",
-      "prose": "As you walk out of the Emporium with sacks of jewels, you pop one into your mouth.  Mmmm, candy.  After exchanging fist-bumps with Bob and Angel, they take off and you turn toward the warehouse.  Although your mouth is happy, your stomach is overcome with a sinking feeling.  You just spent all of the ancient coins and notes.  Now there is no way to escape the warehouse with the Golden Bars.  Your mission has been thwarted.\nSadly and slowly, you walk down the sidewalk, back to Headquarters.  The Supreme Commander stops you as you attempt to slide past toward the spy lounge.  At this point, you just want to get back to your favorite game, Spy Lords of the Multiverse.  Instead, the Supreme Leader sends you to your quarters to think about your failed mission.\nLater at snacktime, your mom serves you carrot sticks.  As you crunch away, you smile on the inside, remembering the rock candy you enjoyed."
+      "title": "Win Some, Lose Some",
+      "prose": "As you walk out of the Emporium with sacks of jewels, you pop one into your mouth.  Mmmm, yummy. After exchanging fist-bumps with Bob and Angel, they take off, and you turn toward the warehouse. Although your mouth is happy, your stomach is overcome with a sinking feeling. You just spent all of the ancient coins and notes. Now there is no way to escape the warehouse with the Golden Bars. Your mission has been thwarted.\nReluctantly, you walk down the sidewalk back to Headquarters. The Supreme Commander stops you as you attempt to sneak past her toward the spy lounge. At this point, you just want to get back to your favorite game, [i]Spy Lords of the Multiverse[/i].  Instead, the Supreme Leader sends you to your bunk to think about your failed mission.\nLater at snack time, you eat carrot sticks, not the butter cookies you had hoped for. You can't win them all."
     },
     "12": {
       "sceneKey": "12",
       "title": "Behind Enemy Lines",
-      "prose": "As you exit the warehouse, your suspicions are up.  Better to take the Forgotten Trail back to Headquarters, just to be sure you are not being followed.  You press against the wall and slide toward the back.  Make a dash for the trail, jumping the ditch, and landing just shy of the bed of rocks that line the trail.  Whew.  From here, you should be able to proceed undetected.\nAs you stroll down the trail you think of stories from when this route was an active railroad.  Train cars full of goods were brought to the general store, and local smugglers had their piece of the action.  Different times, long before the town became lousy with spies.\nThinking of spies, you happened to be passing Sky Tower, a great place to search the landscape for counter agents.  Before making your approach to headquarters, you might do well to take a quick look around.",
+      "prose": "As you exit the warehouse, your suspicions are up.  Better to take the Forgotten Trail back to Headquarters, just to be sure you are not being followed.  You press against the wall and slide toward the back.  Make a dash for the trail, jumping the ditch, and landing just shy of the bed of rocks that line the trail.  Whew.  From here, you should be able to proceed undetected.\nAs you stroll down the trail you think of stories from when this route was an active railroad.  Train cars full of goods were brought to the general store, and local smugglers had their piece of the action.  Different times, long before the town became lousy with spies.\nThinking of spies, you happened to be passing Sky Tower, a great place to search the landscape for counter agents.  Before making your approach to Headquarters, you might do well to take a quick look around.",
       "signpost": {
         "prompt": "What do you do?",
         "options": [
           {
-            "sceneKey": "13",
-            "teaser": "Go to Sky Tower and look for spies."
+            "sceneKey": "4",
+            "teaser": "Hurry straight back to Headquarters, and complete the mission."
           },
           {
-            "sceneKey": "4",
-            "teaser": "Forget it.  There no time to waste.  Take the risk, go straight back to Command Central, and complete the mission."
+            "sceneKey": "13",
+            "teaser": "Just to be safe, climb Sky Tower, and make sure the coast is clear."
           }
         ]
       }
     },
     "13": {
       "sceneKey": "13",
-      "title": "Sky Tower with Golden Bars",
-      "prose": "You need both hands to climb the ladder that leads into Sky Tower, so you grip the bag with your teeth.  For the most part, the view from the tower is terrific.  However, you know that spies like to hang out in shadows, and the buildings offer plenty of hiding spots.  To be sure, you can hang from a wooden pole that sticks out from the side of the tower.",
+      "title": "Sky Tower",
+      "prose": "You need both hands to climb the ladder that leads into Sky Tower, so you grip the bag with your teeth. You push open the trap door in the floor, and heave yourself into the single room of the tower.\nFor the most part, the view from the tower is terrific. You spot Bob and Angel, still hanging around the Emporium. Everything else seems to be normal. Almost [i]too[/i] normal. You know that spies like to hang out in shadows, and the buildings offer plenty of hiding spots. To be sure, you can hang from a wooden pole that sticks out from the side of the tower.",
       "signpost": {
-        "prompt": "",
         "options": [
           {
             "sceneKey": "7",
@@ -181,7 +178,7 @@
           },
           {
             "sceneKey": "4",
-            "teaser": "Listen to that nagging feeling telling you to go home.  Climb down and return to Headquarters."
+            "teaser": "Listen to that nagging feeling telling you to return to Headquarters."
           }
         ]
       }
