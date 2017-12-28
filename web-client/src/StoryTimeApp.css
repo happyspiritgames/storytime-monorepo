@@ -13,6 +13,11 @@
 .story-about {
   margin-top: 1em;
 }
+#message {
+  margin-top: 3em;
+  padding: 1em;
+  background-color:#bfd9bf
+}
 
 /* reader styles */
 .reader-nav {

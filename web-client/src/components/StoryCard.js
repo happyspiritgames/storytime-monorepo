@@ -16,7 +16,7 @@ export default class StoryCard extends Component {
       <Card key={summary.storyKey} id={summary.storyKey} outline color="info" className="story-card">
         <CardBody>
           <CardTitle>{summary.title}</CardTitle>
-          <CardSubtitle className="font-italic byline">by <span className="font-weight-bold">{summary.penName}</span></CardSubtitle>
+          <CardSubtitle className="font-italic byline">by <strong>{summary.penName}</strong></CardSubtitle>
           <CardText className="story-about">{summary.about}</CardText>
           <Link to={buildStoryPath(summary.storyKey)}>{summary.tagLine}</Link>
         </CardBody>
