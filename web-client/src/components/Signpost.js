@@ -46,6 +46,9 @@ export default class Signpost extends Component {
           <ListGroupItem color="default" action={true}>
             <Link to="/library">Go to the StoryTime library, and play another story.</Link>
           </ListGroupItem>
+          <ListGroupItem color="default" action={true}>
+            <a href="https://www.surveymonkey.com/r/DNXPPJG" target="_blank">Give feedback about StoryTime.</a>
+          </ListGroupItem>
         </ListGroup>
       </div>
     );

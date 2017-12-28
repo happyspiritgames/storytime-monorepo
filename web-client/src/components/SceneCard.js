@@ -21,7 +21,7 @@ export default class SceneCard extends Component {
 
     return (
       <Card id="scene" outline color="info">
-        <CardHeader>
+        <CardHeader className="text-center">
           <h5 className="mb-0">{ title }</h5>
         </CardHeader>
         <CardBody>
