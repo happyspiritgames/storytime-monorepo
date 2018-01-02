@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
-import './StoryTimeApp.css';
-import StoryTimeApp from './StoryTimeApp';
+import './components/StoryTimeApp.css';
+import StoryTimeApp from './components/StoryTimeApp';
 // import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render((

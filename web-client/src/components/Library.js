@@ -25,7 +25,7 @@ export default class Library extends Component {
 
   render() {
     const { stories } = this.state;
-    const cards = stories.map(story => <StoryCard summary={story} />);
+    const cards = stories.map(story => <StoryCard key={story.storyKey} summary={story} />);
 
     return (
       <Container id="library" fluid={true} className="storytime-page">

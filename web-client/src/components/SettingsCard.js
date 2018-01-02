@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter } from 'reactstrap';
-import FacebookLogin from 'react-facebook-login';
+import { Card, CardHeader, CardBody, CardFooter, Row, Col } from 'reactstrap';
 import FacebookIdentity from './FacebookIdentity';
 
 export default class SettingsCard extends Component {
@@ -12,18 +11,20 @@ export default class SettingsCard extends Component {
     return (
       <Card id="scene" outline color="info">
         <CardHeader className="text-center">
-          <h5 className="mb-0">Identity</h5>
+          <h5 className="mb-0">About You</h5>
         </CardHeader>
         <CardBody>
-          <FacebookLogin
-            appId="871780702991547"
-            autoLoad={true}
-            field="name,email,picture"
-            callback={this.handleLoginResponse}
-            cssClass="my-facebook-button-class"
-            icon="fa-facebook"
-          />
-          <FacebookIdentity showFaces={true} continueAs={true} />
+          <Row>
+            <Col>
+              <FacebookIdentity showFaces={true} continueAs={true} />
+            </Col>
+            <Col>
+              <p><em>(only shown when logged in)</em></p>
+              <div><strong>Member since:</strong> July 4, 2017</div>
+              <div><strong>Pen Names:</strong> The Happy Spirit, Bubba</div>
+              <div><strong>Status:</strong> Excellent</div>
+            </Col>
+          </Row>
         </CardBody>
         <CardFooter>
           WIP
