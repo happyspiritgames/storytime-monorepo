@@ -1,7 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html>
 
 <head>
+  <title>Facebook Login JavaScript Example</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
   <script>
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
@@ -32,12 +37,12 @@
 
     window.fbAsyncInit = function () {
       FB.init({
-        appId: '871780702991547',
-        cookie: true,
-        xfbml: true,
-        version: 'v2.11'
+        appId: '{your-app-id}',
+        cookie: true,  // enable cookies to allow the server to access
+        // the session
+        xfbml: true,  // parse social plugins on this page
+        version: 'v2.8' // use graph api version 2.8
       });
-      FB.AppEvents.logPageView();
 
       // Now that we've initialized the JavaScript SDK, we call
       // FB.getLoginStatus().  This function gets the state of the
@@ -54,11 +59,13 @@
       FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
       });
+
     };
 
+    // Load the SDK asynchronously
     (function (d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) { return; }
+      if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
@@ -69,39 +76,24 @@
     function testAPI() {
       console.log('Welcome!  Fetching your information.... ');
       FB.api('/me', function (response) {
-        console.log(response);
         console.log('Successful login for: ' + response.name);
-        document.getElementById('fbLoginStatus').innerHTML =
+        document.getElementById('status').innerHTML =
           'Thanks for logging in, ' + response.name + '!';
       });
     }
   </script>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
-  <!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-  <title>StoryTime - Let's Go!</title>
-</head>
+  <!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
 
-<body>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
-  <div id="root"></div>
+  <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+  </fb:login-button>
+
+  <div id="status">
+  </div>
 </body>
 
 </html>
