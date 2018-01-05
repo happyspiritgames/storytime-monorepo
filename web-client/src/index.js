@@ -5,12 +5,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import './components/StoryTimeApp.css';
 import StoryTimeApp from './components/StoryTimeApp';
-// import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render((
   <BrowserRouter>
     <StoryTimeApp />
   </BrowserRouter>
 ), document.getElementById('root'));
-
-// registerServiceWorker();
