@@ -10,7 +10,6 @@ const StoryTimeApp = () => (
     <Route path="/library" component={Library} />
     <Route path="/reader/:storyKey" component={Reader} />
     <Route path="/account" component={Account} />
-    <div id="fbLoginStatus"></div>
   </div>
 );
 
