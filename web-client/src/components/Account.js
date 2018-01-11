@@ -1,16 +1,31 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 import MemberInfoCard from './MemberInfoCard';
+
+const GOOGLE = 'google';
+const FACEBOOK = 'facebook';
 
 export default class Account extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoggedIn: false,
       memberProps: {}
     };
+  }
+
+  isLoggedInWithGoogle = () => {
+    return this.state.loggedInWith === GOOGLE;
+  }
+
+  isLoggedInWithFacebook = () => {
+    return this.state.loggedInWith === FACEBOOK;
+  }
+
+  isLoggedIn = () => {
+    return this.isLoggedInWithFacebook() || this.isLoggedInWithGoogle();
   }
 
   handleGoogleLogin = (googleUser) => {
@@ -24,7 +39,7 @@ export default class Account extends Component {
       profilePicUrl: profile.getImageUrl()
     };
     this.setState({
-      isLoggedIn: true,
+      loggedInWith: GOOGLE,
       memberProps: memberProps
     })
   }
@@ -32,7 +47,8 @@ export default class Account extends Component {
   handleGoogleLogout = (result) => {
     console.log('handleGoogleLogout', result);
     this.setState({
-      isLoggedIn: false
+      loggedInWith: undefined,
+      memberProps: {}
     });
   }
 
@@ -40,29 +56,61 @@ export default class Account extends Component {
     console.log('handleGoogleFailure error', error);
   }
 
+  handleFacebookLogin = (result) => {
+    console.log('Logged in with Facebook', result);
+    const memberProps = {
+      email: 'someone@somewhere.com',
+      nickname: result.name,
+      membersOnlyComms: true,
+      profilePicUrl: undefined
+    };
+    this.setState({
+      loggedInWith: FACEBOOK,
+      memberProps: memberProps
+    })
+  }
+
+  handleFacebookLogout = () => {
+    console.log('Logged out with Facebook');
+    this.setState({
+      loggedInWith: undefined,
+      memberProps: {}
+    });
+  }
+
   renderAuthButtons() {
-    if (this.state.isLoggedIn) {
+    if (this.isLoggedInWithGoogle()) {
       return (
         <GoogleLogout
           buttonText="Logout of Google"
           onLogoutSuccess={this.handleGoogleLogout}
         />
       );
+    } else if (this.isLoggedInWithFacebook()) {
+      return <button onClick={this.handleFacebookLogout}>Logout of Facebook</button>;
     } else {
       return (
-        <GoogleLogin
-          clientId="611755432334-tpl4ejet5kubkn6tcch7ci0ogigajtg8.apps.googleusercontent.com"
-          buttonText="Login w/Google"
-          onSuccess={this.handleGoogleLogin}
-          onFailure={this.handleGoogleFailure}
-        />
+        <div>
+          <GoogleLogin
+            clientId="611755432334-tpl4ejet5kubkn6tcch7ci0ogigajtg8.apps.googleusercontent.com"
+            buttonText="Login w/Google"
+            onSuccess={this.handleGoogleLogin}
+            onFailure={this.handleGoogleFailure}
+          />
+          <FacebookLogin
+            appId="871780702991547"
+            version="2.11"
+            callback={this.handleFacebookLogin}
+          />
+        </div>
       );
     }
   }
 
   render() {
-    const pageHeading = (this.state.isLoggedIn) ? 'All About You' : 'Who Are You?';
-    const memberInfo = (!this.state.isLoggedIn) ? undefined :
+    const loggedIn = this.isLoggedIn();
+    const pageHeading = loggedIn ? 'All About You' : 'Who Are You?';
+    const memberInfo = !loggedIn ? undefined :
       <MemberInfoCard {...this.state.memberProps}/>;
 
     return (
