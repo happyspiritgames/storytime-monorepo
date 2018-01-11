@@ -102,6 +102,7 @@ export default class Account extends Component {
             version="2.11"
             callback={this.handleFacebookLogin}
           />
+          <a href="/auth/facebook">Login with Facebook</a>
         </div>
       );
     }

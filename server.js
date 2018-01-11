@@ -1,7 +1,27 @@
+// includes
 const express = require('express');
 const path = require('path');
 const routes = require('./src/routes');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+// constants
 const appClientBuildPath = 'web-client/build';
+
+// configure authentication
+passport.use(new FacebookStrategy({
+    clientID: '871780702991547',
+    clientSecret: '80abbf1fb20c8ad21a9d5633bc59673f',
+    callbackURL: 'http://localhost:3000/auth/facebook/callback'
+  },
+  function(accessToken, refreshToken, profile, done) {
+    console.log('Now what?');
+    console.log(accessToken);
+    console.log(refreshToken);
+    console.log(profile);
+    done(null, {userID: 'blargy'});
+  }
+));
 
 const app = express(),
   port = process.env.PORT || 3001,
@@ -10,6 +30,13 @@ const app = express(),
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, `${appClientBuildPath}`)));
+
+// configure auth routes
+// for authentication  TODO place in its own file at some point?
+app.route('/auth/facebook').get(passport.authenticate('facebook'));
+app.route('/auth/facebook/callback')
+  .get(passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/login' })
+);
 
 routes(app);
 
