@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import StoryTimePage from './StoryTimePage';
 import MemberInfoCard from './MemberInfoCard';
+import { isLoggedIn } from '../services/authService';
+import { getOwnProfile } from '../services/storyTimeService';
 
 export default class Account extends Component {
   constructor(props) {
@@ -11,22 +13,23 @@ export default class Account extends Component {
     };
   }
 
+  loadProfile(profile) {
+    this.setState({ playerProfile: profile });
+  }
+
   componentDidMount() {
-    this.setState({
-      playerProfile: {
-        email: 'bubba@happyspiritgames.com',
-        nickname: 'Bubba',
-        membersOnlyComms: true,
-        profilePicUrl: 'http://localhost:3000/blargy.png'
-      }
-    })
+    getOwnProfile(this.loadProfile);
   }
 
   render() {
     const { profile } = this.state.playerProfile;
-    return (
+    return (isLoggedIn()) ? (
       <StoryTimePage id="account" heading="Player Profile">
         <MemberInfoCard {...profile} />
+      </StoryTimePage>
+    ) : (
+      <StoryTimePage id="account" heading="Who Are You?">
+        <h3>Please sign in to see this information.</h3>
       </StoryTimePage>
     );
   }

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { requireAuth } from '../services/authService';
 import Library from './Library';
 import Login from './Login';
 import Reader from './Reader';
 import Account from './Account';
+import Callback from './Callback';
 
 export default class StoryTimeApp extends Component {
 
@@ -15,6 +17,7 @@ export default class StoryTimeApp extends Component {
         <Route path="/library" component={Library} />
         <Route path="/reader/:storyKey" component={Reader} />
         <Route path="/account" component={Account} />
+        <Route path="/callback" component={Callback} />
       </div>
     );
   }

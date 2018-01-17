@@ -18,3 +18,10 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
         .then(summaries => processResponse(summaries))
         .catch(err => console.log('Failed to find story with key:', storyKey, err));
 };
+
+export const getOwnProfile = (processResponse) => {
+    fetch('/api/players/profile')
+        .then(res => res.json())
+        .then(profile => processResponse(profile))
+        .catch(err => console.log('Failed to get player\'s own profile', err));
+};

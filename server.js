@@ -1,50 +1,49 @@
 // includes
 const express = require('express');
 const path = require('path');
-const routes = require('./src/routes');
-const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
+const apiRoutes = require('./src/api/routes');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-// constants
+const app = express();
+const port = process.env.PORT || 3001;
+
 const appClientBuildPath = 'web-client/build';
 
-// configure authentication
-passport.use(new FacebookStrategy({
-    clientID: '871780702991547',
-    clientSecret: '80abbf1fb20c8ad21a9d5633bc59673f',
-    callbackURL: '/auth/facebook/callback'
-  },
-  function(accessToken, refreshToken, profile, done) {
-    console.log('Now what?');
-    console.log(accessToken);
-    console.log(refreshToken);
-    console.log(profile);
-    done(null, {userID: 'blargy'});
-  }
-));
-
-const app = express(),
-  port = process.env.PORT || 3001,
-  bodyParser = require('body-parser');
-
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+// static routes served from here
 app.use(express.static(path.join(__dirname, `${appClientBuildPath}`)));
 
-// configure auth routes
-// for authentication  TODO place in its own file at some point?
-app.route('/auth/facebook').get(passport.authenticate('facebook'));
-app.route('/auth/facebook/callback')
-  .get(passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/library' })
-);
+// configure auth
+const authCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://happyspiritgames.auth0.com/.well-known/jwks.json'
+  }),
+  audience: 'http://storytime.happyspiritgames.com',
+  issuer: 'https://happyspiritgames.auth0.com/',
+  algorithms: ['RS256']
+});
 
-routes(app);
+app.get('/api/authorized', authCheck, (req, res) => {
+  res.send('Secured Resource');
+});
 
-// do this at the end as a catch-all
+// configure REST API routes
+apiRoutes(app);
+
+// catch-all for everything else
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+`/${appClientBuildPath}/index.html`));
 });
 
 app.listen(port);
 
-console.log('StoryTime API server started on: ' + port);
+console.log('StoryTime service started, listening on port: ' + port);
