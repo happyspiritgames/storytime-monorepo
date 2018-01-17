@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+import StoryTimePage from './StoryTimePage';
 import SceneCard from './SceneCard';
-import ReaderNavBar from './ReaderNavBar';
 import { getSummary, getScene } from '../services/storyTimeService';
 
 export function buildStoryPath(storyKey) {
@@ -66,10 +65,9 @@ export default class Reader extends Component {
       )
     }
     return (
-      <Container id="reader" fluid={true} className="storytime-page">
-        <ReaderNavBar title={title} />
+      <StoryTimePage id="reader" heading={title}>
         {content}
-      </Container>
+      </StoryTimePage>
     );
   }
 }
