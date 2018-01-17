@@ -12,7 +12,7 @@ const appClientBuildPath = 'web-client/build';
 passport.use(new FacebookStrategy({
     clientID: '871780702991547',
     clientSecret: '80abbf1fb20c8ad21a9d5633bc59673f',
-    callbackURL: 'http://localhost:3000/auth/facebook/callback'
+    callbackURL: '/auth/facebook/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     console.log('Now what?');
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, `${appClientBuildPath}`)));
 // for authentication  TODO place in its own file at some point?
 app.route('/auth/facebook').get(passport.authenticate('facebook'));
 app.route('/auth/facebook/callback')
-  .get(passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/login' })
+  .get(passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/library' })
 );
 
 routes(app);
