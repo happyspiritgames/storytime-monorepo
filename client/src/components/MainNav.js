@@ -10,6 +10,9 @@ export default class MainNav extends Component {
     return (
       <Nav tabs justified className="reader-nav">
         <NavItem>
+          <NavLink href="/">StoryTime</NavLink>
+        </NavItem>
+        <NavItem>
           <NavLink href="/library">Find Stories</NavLink>
         </NavItem>
         {

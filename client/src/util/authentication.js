@@ -75,9 +75,12 @@ export function login() {
   });
 }
 
+// TODO have this take a route for redirect
 export function logout() {
   clearIdToken();
   clearAccessToken();
+
+  // TODO get this to work
   withRouter(({ history }) => {
     history.push('/');
   });
