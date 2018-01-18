@@ -18,7 +18,9 @@ export default class Account extends Component {
   }
 
   componentDidMount() {
-    getOwnProfile(this.loadProfile);
+    if (isLoggedIn()) {
+      getOwnProfile(this.loadProfile);
+    }
   }
 
   render() {

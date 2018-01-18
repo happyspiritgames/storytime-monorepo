@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, NavLink } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import { login, logout, isLoggedIn } from '../util/authentication';
 
-export default class MainNav extends Component {
+class MainNav extends Component {
+
+  redirectHome = () => {
+    const { history } = this.props;
+    history.push('/library');
+  }
 
   render() {
     const loggedIn = isLoggedIn();
@@ -27,7 +33,7 @@ export default class MainNav extends Component {
             ( loggedIn ) ? (
               <button
                 className="btn btn-danger log"
-                onClick={() => logout()}
+                onClick={() => logout(this.redirectHome)}
               >Sign Out</button>
             ) : (
               <button
@@ -41,3 +47,5 @@ export default class MainNav extends Component {
     );
   }
 }
+
+export default withRouter(MainNav)

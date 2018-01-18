@@ -1,5 +1,4 @@
 import decode from 'jwt-decode';
-import { withRouter } from 'react-router-dom';
 import auth0 from 'auth0-js';
 
 const ID_TOKEN_KEY = 'id_token';
@@ -75,15 +74,13 @@ export function login() {
   });
 }
 
-// TODO have this take a route for redirect
-export function logout() {
+export function logout(redirect) {
+  console.log('logout');
   clearIdToken();
   clearAccessToken();
-
-  // TODO get this to work
-  withRouter(({ history }) => {
-    history.push('/');
-  });
+  if (redirect) {
+    redirect();
+  }
 }
 
 export function requireAuth(nextState, replace) {
