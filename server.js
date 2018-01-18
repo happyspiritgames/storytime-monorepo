@@ -37,7 +37,7 @@ app.get('/api/authorized', authCheck, (req, res) => {
 });
 
 // configure REST API routes
-apiRoutes(app);
+apiRoutes(app, authCheck);
 
 // catch-all for everything else
 app.get('*', (req, res) => {
