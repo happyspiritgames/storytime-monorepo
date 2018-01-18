@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
 
-export default class MemberInfoCard extends Component {
+export default class PlayerInfoCard extends Component {
   static propTypes = {
-    email: PropTypes.string,
-    nickname: PropTypes.string,
-    membersOnlyComms: PropTypes.bool,
-    profilePicUrl: PropTypes.string
+    profile: PropTypes.shape({
+      email: PropTypes.string,
+      nickname: PropTypes.string,
+      membersOnlyComms: PropTypes.bool,
+      profilePicUrl: PropTypes.string
+    })
   };
 
   render() {
-    const { email, nickname, membersOnlyComms, profilePicUrl } = this.props;
+    const { email, nickname, membersOnlyComms, profilePicUrl } = this.props.profile;
     const membersOnlyCommsDescription = membersOnlyComms
       ? 'Yes, you want members-only communications.'
       : 'No, you do not want members-only communications';

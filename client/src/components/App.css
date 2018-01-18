@@ -2,6 +2,12 @@
   max-width: 750px;
   margin-top: 25px;
 }
+.navbar-right {
+  margin-right: 0px !important
+}
+.log {
+  margin: 5px 10px 0 0;
+}
 
 /* library styles */
 .story-card {
@@ -22,6 +28,7 @@
 /* reader styles */
 .reader-nav {
   margin-top: 10px;
+  margin-bottom: 20px;
   max-width: 750px;
 }
 #scene {

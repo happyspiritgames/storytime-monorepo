@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { format } from '../util/formatter';
+import { format } from '../../util/formatter';
 import { FIRST_SCENE } from './Reader';
 
 class SignOption extends Component {

@@ -1,4 +1,4 @@
-const repo = require('./persistence/storyRepo');
+const repo = require('../persistence/storyRepo');
 
 exports.ping = (req, res) => {
   console.log('ping');

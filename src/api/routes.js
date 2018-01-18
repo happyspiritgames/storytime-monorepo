@@ -1,6 +1,7 @@
 const storyController = require('./storyController');
+const playerController = require('./playerController');
 
-module.exports = function (app) {
+module.exports = function (app, authCheck) {
   app.route('/api/ping')
     .get(storyController.ping);
 
@@ -12,4 +13,7 @@ module.exports = function (app) {
 
   app.route('/api/stories/:storyKey/scenes/:sceneKey')
     .get(storyController.getStoryScene);
+
+  app.route('/api/players/profile')
+    .get(authCheck, playerController.getPlayerProfile);
 };
