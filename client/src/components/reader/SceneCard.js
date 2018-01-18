@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardHeader, CardText, CardBody, CardFooter } from 'reactstrap';
-import { format } from '../util/formatter';
+import { format } from '../../util/formatter';
 import Signpost from './Signpost';
 
 export default class SceneCard extends Component {

@@ -14,6 +14,6 @@ module.exports = function (app) {
   app.route('/api/stories/:storyKey/scenes/:sceneKey')
     .get(storyController.getStoryScene);
 
-  app.route('/api/players/profile'
-    .get(playerController.))
+  app.route('/api/players/profile')
+    .get(playerController.getPlayerProfile);
 };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import StoryTimePage from './StoryTimePage';
+import StoryTimePage from '../StoryTimePage';
 import StoryCard from './StoryCard';
-import { getStorySummaries } from '../services/storyTimeService';
+import { getStorySummaries } from '../../services/storyTimeService';
 
 export default class Library extends Component {
   constructor(props) {

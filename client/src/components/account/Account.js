@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import StoryTimePage from './StoryTimePage';
-import MemberInfoCard from './MemberInfoCard';
-import { isLoggedIn } from '../services/authService';
-import { getOwnProfile } from '../services/storyTimeService';
+import StoryTimePage from '../StoryTimePage';
+import PlayerInfoCard from './PlayerInfoCard';
+import { isLoggedIn } from '../../util/authentication';
+import { getOwnProfile } from '../../services/storyTimeService';
 
 export default class Account extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class Account extends Component {
     };
   }
 
-  loadProfile(profile) {
+  loadProfile = (profile) => {
     this.setState({ playerProfile: profile });
   }
 
@@ -22,10 +22,9 @@ export default class Account extends Component {
   }
 
   render() {
-    const { profile } = this.state.playerProfile;
     return (isLoggedIn()) ? (
       <StoryTimePage id="account" heading="Player Profile">
-        <MemberInfoCard {...profile} />
+        <PlayerInfoCard profile={this.state.playerProfile} />
       </StoryTimePage>
     ) : (
       <StoryTimePage id="account" heading="Who Are You?">

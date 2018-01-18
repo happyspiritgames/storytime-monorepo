@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import StoryTimePage from './StoryTimePage';
+import StoryTimePage from '../StoryTimePage';
 import SceneCard from './SceneCard';
-import { getSummary, getScene } from '../services/storyTimeService';
+import { getSummary, getScene } from '../../services/storyTimeService';
 
 export function buildStoryPath(storyKey) {
   return `/reader/${storyKey}`;

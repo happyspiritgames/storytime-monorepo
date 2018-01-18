@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
-import StoryTimePage from './StoryTimePage';
+import StoryTimePage from '../StoryTimePage';
 
 export const GOOGLE = 'google';
 export const FACEBOOK = 'facebook';

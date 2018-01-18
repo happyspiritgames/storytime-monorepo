@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, NavItem, NavLink } from 'reactstrap';
-import { login, logout, isLoggedIn } from '../services/authService';
+import { login, logout, isLoggedIn } from '../util/authentication';
 
 export default class MainNav extends Component {
 

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { setIdToken, setAccessToken } from '../services/authService';
+import { setIdToken, setAccessToken } from '../util/authentication';
 
 export default class Callback extends Component {
 

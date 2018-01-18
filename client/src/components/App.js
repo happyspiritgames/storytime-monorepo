@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { requireAuth } from '../services/authService';
-import Library from './Library';
-import Login from './Login';
-import Reader from './Reader';
-import Account from './Account';
+import Library from './reader/Library';
+import Login from './account/Login';
+import Reader from './reader/Reader';
+import Account from './account/Account';
 import Callback from './Callback';
 
 export default class StoryTimeApp extends Component {
