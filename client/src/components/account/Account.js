@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import PlayerInfoCard from './PlayerInfoCard';
-import { isLoggedIn } from '../../util/authentication';
+import { isLoggedIn, showUserInfo } from '../../util/authentication';
 import { getOwnProfile } from '../../services/storyTimeService';
 
 export default class Account extends Component {
@@ -24,6 +24,8 @@ export default class Account extends Component {
   }
 
   render() {
+    const userInfo = showUserInfo();
+    console.log(userInfo);
     return (isLoggedIn()) ? (
       <StoryTimePage id="account" heading="Player Profile">
         <PlayerInfoCard profile={this.state.playerProfile} />

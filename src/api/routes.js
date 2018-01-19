@@ -15,5 +15,5 @@ module.exports = function (app, authCheck) {
     .get(storyController.getStoryScene);
 
   app.route('/api/players/profile')
-    .get(authCheck, playerController.getPlayerProfile);
+    .get([authCheck, playerController.findOrCreatePlayer], playerController.getPlayerProfile);
 };
