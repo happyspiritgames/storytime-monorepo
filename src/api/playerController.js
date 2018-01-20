@@ -1,4 +1,5 @@
 const playerModel = require('../model/playerModel');
+const db = require('../db/postgres');
 
 exports.getPlayer = (req, res) => {
   // should have been established by middleware
@@ -27,11 +28,14 @@ exports.getPlayer = (req, res) => {
   });
 };
 
-exports.findOrCreatePlayer = (req, res, next) => {
-  // TODO get this working
-  // TODO use sessions to speed look-ups; only keep IDs in session, mapped by access token or something
-  //      only go to database when no session
-
+/**
+ * Uses authentication info to find player ID or create a new player record if not found.
+ *
+ * @param {*} req HTTP request object
+ * @param {*} res HTTP response object
+ * @param {*} next handler to call after this one
+ */
+exports.findOrCreatePlayer = async (req, res, next) => {
   console.log('findOrCreatePlayer');
 
   // handle errors
@@ -43,7 +47,12 @@ exports.findOrCreatePlayer = (req, res, next) => {
     next(new Error('User identifier "sub" is missing'));  // TODO make sure this is the right approach
   }
 
-  const playerId = playerModel.findPlayerIdFromIdpSub(req.user.sub);
+  const subject = req.user.sub;
+  // const playerId = playerModel.findPlayerId(req.user.sub);
+  const { rows } = await db.query(
+    'SELECT player_id FROM identity WHERE idp_sub = $1', [subject]);
+  console.log('result', rows);
+  const playerId = rows[0].playerId;
 
   // if found, set 'req.player.id' to be used in downstream queries
   if (playerId) {

@@ -22,7 +22,7 @@ exports.getPlayer = (id) => {
     });
 }
 
-exports.addPlayer = (idp_sub, email, nickname, profile) => {
+exports.createPlayer = (idp_sub, email, nickname, profile) => {
   db.getClient((err, client, done) => {
     // requires transaction to insert into player and identity
     // TODO finish
@@ -32,9 +32,13 @@ exports.addPlayer = (idp_sub, email, nickname, profile) => {
   });
 }
 
-exports.findPlayerIdFromIdpSub = (ipd_sub) => {
-  console.log('findPlayerIdFromIdpSub');
-}
+// exports.findPlayerId = (subject) => {
+//   console.log('findPlayerId');
+//   const { rows } = await db.query(
+//     'SELECT player_id FROM identity WHERE idp_sub = $1', [subject]);
+//   console.log('result', rows);
+//   return rows[0].playerId;
+// }
 
 /* queries
 

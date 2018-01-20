@@ -11,6 +11,6 @@ CREATE TABLE player (
 
 CREATE TABLE identity (
   idp_sub varchar(64) PRIMARY KEY,
-  player_id UUID,
+  player_id UUID NOT NULL,
   idp_profile text
 );
