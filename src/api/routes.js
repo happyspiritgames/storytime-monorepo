@@ -14,6 +14,9 @@ module.exports = function (app, authCheck) {
   app.route('/api/stories/:storyKey/scenes/:sceneKey')
     .get(storyController.getStoryScene);
 
-  app.route('/api/players/profile')
-    .get([authCheck, playerController.findOrCreatePlayer], playerController.getPlayerProfile);
+  app.route('/api/players/:playerId')
+    .get(playerController.getPlayer);
+
+  app.route('/api/secure/players/:playerId')
+    .get([authCheck, playerController.findOrCreatePlayer], playerController.getPlayer);
 };

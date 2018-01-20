@@ -1,10 +1,14 @@
 const playerModel = require('../model/playerModel');
 
-exports.getPlayerProfile = (req, res) => {
-  console.log('getPlayerProfile');
+exports.getPlayer = (req, res) => {
+  // should have been established by middleware
   console.log('user info', req.user);
   console.log('player info', req.player);
-  const profile = {
+
+  const { playerId } = req.params;
+  console.log('getPlayerProfile: playerId=', playerId);
+
+  const profileStub = {
     email: 'bubba@happyspiritgames.com',
     nickname: 'Bubba',
     membersOnlyComms: true,
@@ -14,7 +18,7 @@ exports.getPlayerProfile = (req, res) => {
   res.format({
       'application/json': () => {
         "use strict";
-        res.send(profile);
+        res.send(profileStub);
       },
       'default': () => {
         "use strict";

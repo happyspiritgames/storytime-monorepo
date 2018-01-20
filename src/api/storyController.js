@@ -11,7 +11,7 @@ exports.searchStories = (req, res) => {
 };
 
 exports.getPublishedStorySummary = (req, res) => {
-  const {storyKey} = req.params;
+  const { storyKey } = req.params;
   console.log('getPublishedStorySummary', `storyKey=${storyKey}`);
   const story = storyModel.getPublishedStorySummary(storyKey);
   res.format({
@@ -28,7 +28,7 @@ exports.getPublishedStorySummary = (req, res) => {
 };
 
 exports.getStoryScene = (req, res) => {
-  const {storyKey, sceneKey} = req.params;
+  const { storyKey, sceneKey } = req.params;
   console.log('getStoryScene', `storyKey=${storyKey}`, `sceneKey=${sceneKey}`);
   res.format({
       'application/json': () => {
