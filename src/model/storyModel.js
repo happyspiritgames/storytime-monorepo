@@ -1,4 +1,4 @@
-const localPersistence = require('./persistToLocalFile');
+const localPersistence = require('../db/flatfile/storyRepo');
 
 exports.getRecommendedStories = (maxResults = 10) => {
   const summaries = localPersistence.loadStorySummaries();
