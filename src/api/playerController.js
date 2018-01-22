@@ -1,5 +1,5 @@
-const playerModel = require('../model/playerModel');
 const db = require('../db/postgres');
+const playerModel = require('../model/playerModel');
 
 exports.getPlayers = (req, res) => {
   console.log('getPlayers');
@@ -16,7 +16,7 @@ exports.getPlayers = (req, res) => {
 
 exports.getPlayer = (req, res) => {
   const { playerId } = req.params;
-  console.log('getPlayerProfile: playerId=', playerId);
+  console.log('getPlayer: playerId=', playerId);
 
   db.query('SELECT * FROM player WHERE id=$1', [playerId], (err, dbResult) => {
     if (err) {
@@ -31,6 +31,31 @@ exports.getPlayer = (req, res) => {
       }
     }
   });
+};
+
+exports.createPlayer = async (req, res) => {
+  console.log('createPlayer: player data', req.body);
+  const { subject, email, nickname = 'Rising Star', profile = {} } = req.body;
+
+  // validate request
+  if (!subject || !email) {
+    res.status(400).send({ message: 'Required values not found: subject, email' });
+  }
+
+  // pass control to database access
+  let playerId;
+  try {
+    playerId = await playerModel.createPlayerFromIdentity(subject, email, nickname, profile);
+  } catch (e) {
+    console.error(e.stack);
+  }
+
+  // map database results to response
+  if (playerId) {
+    res.json({ id: playerId });
+  } else {
+    res.status(500).end();
+  }
 };
 
 exports.getOwnProfile = (req, res) => {

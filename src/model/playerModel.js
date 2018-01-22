@@ -1,4 +1,8 @@
+const { Pool } = require('pg');
 const db = require('../db/postgres');
+const { generateUUID } = require('../util/generator');
+
+const pool = new Pool();
 
 // TODO finish for admin screen
 // exports.getAllPlayers = () => {
@@ -22,15 +26,28 @@ exports.getPlayer = (id) => {
     });
 }
 
-exports.createPlayer = (idp_sub, email, nickname, profile) => {
-  db.getClient((err, client, done) => {
-    // requires transaction to insert into player and identity
-    // TODO finish
-    client.query('BEGIN');
-    client.query('COMMIT');
-    done();
-  });
-}
+const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
+const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
+
+const createPlayerFromIdentity = async (subject, email, nickname, socialProfile) => {
+  console.log('createPlayerFromIdentity');
+  const playerId = generateUUID();
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+    await client.query(INS_PLAYER_QUERY, [playerId, email, nickname]);
+    await client.query(INS_IDENTITY_QUERY, [subject, playerId, socialProfile]);
+    await client.query('COMMIT');
+  } catch (e) {
+    console.error('had to rollback due to error', e);
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+  return playerId;
+};
 
 // exports.findPlayerId = (subject) => {
 //   console.log('findPlayerId');
