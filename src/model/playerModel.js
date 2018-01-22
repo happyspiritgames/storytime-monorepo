@@ -29,7 +29,7 @@ exports.getPlayer = (id) => {
 const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
 const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
 
-const createPlayerFromIdentity = async (subject, email, nickname, socialProfile) => {
+exports.createPlayerFromIdentity = async (subject, email, nickname, socialProfile) => {
   console.log('createPlayerFromIdentity');
   const playerId = generateUUID();
   const client = await pool.connect();
