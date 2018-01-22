@@ -1,32 +1,45 @@
 const playerModel = require('../model/playerModel');
 const db = require('../db/postgres');
 
-exports.getPlayer = (req, res) => {
-  // should have been established by middleware
-  console.log('user info', req.user);
-  console.log('player info', req.player);
+exports.getPlayers = (req, res) => {
+  console.log('getPlayers');
+  db.query('SELECT * FROM player', null, (err, dbResult) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Problem with the system');
+      return;
+    } else {
+      res.json(dbResult.rows);
+    }
+  });
+};
 
+exports.getPlayer = (req, res) => {
   const { playerId } = req.params;
   console.log('getPlayerProfile: playerId=', playerId);
 
-  const profileStub = {
-    email: 'bubba@happyspiritgames.com',
-    nickname: 'Bubba',
-    membersOnlyComms: true,
-    profilePicUrl: 'http://localhost:3000/blargy.png'
-  };
-
-  res.format({
-      'application/json': () => {
-        "use strict";
-        res.send(profileStub);
-      },
-      'default': () => {
-        "use strict";
-        res.status(406).send('Not Acceptable');
+  db.query('SELECT * FROM player WHERE id=$1', [playerId], (err, dbResult) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Problem with the system');
+      return;
+    } else {
+      if (dbResult.rowCount > 0) {
+        res.json(dbResult.rows[0]);
+      } else {
+        res.json(null);
       }
+    }
   });
 };
+
+exports.getOwnProfile = (req, res) => {
+
+}
+
+exports.updateOwnProfile = (req, res) => {
+
+}
 
 /**
  * Uses authentication info to find player ID or create a new player record if not found.
