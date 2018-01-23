@@ -21,8 +21,8 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
         .catch(err => console.log('Failed to find story with key:', storyKey, err));
 };
 
-export const getOwnProfile = (processResponse) => {
-    fetch('/api/players/profile',
+export const getSelfProfile = (processResponse) => {
+    fetch('/api/players/self/profile',
         { headers: { Authorization: `Bearer ${getAccessToken()}`}})
         .then(res => res.json())
         .then(profile => processResponse(profile))

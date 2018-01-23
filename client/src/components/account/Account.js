@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import PlayerInfoCard from './PlayerInfoCard';
 import { isLoggedIn, showUserInfo } from '../../util/authentication';
-import { getOwnProfile } from '../../services/storyTimeService';
+import { getSelfProfile } from '../../services/storyTimeService';
 
 export default class Account extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class Account extends Component {
 
   componentDidMount() {
     if (isLoggedIn()) {
-      getOwnProfile(this.loadProfile);
+      getSelfProfile(this.loadProfile);
     }
   }
 

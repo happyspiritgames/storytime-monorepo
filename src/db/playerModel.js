@@ -55,7 +55,7 @@ exports.findPlayerIdFromIdentity = async (subjectToken) => {
 exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialProfile) => {
   console.log('createPlayerFromIdentity');
   const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
-  const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
+  const INS_IDENTITY_QUERY = 'INSERT INTO identity (provider, provider_user_id, player_id, profile) VALUES ($1, $2, $3, $4)';
 
   const identity = subjectToken.split('|');  // expected format 'provider|##########'
   const playerId = generateUUID();
@@ -64,7 +64,7 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
   try {
     await client.query('BEGIN');
     await client.query(INS_PLAYER_QUERY, [playerId, email, nickname]);
-    await client.query(INS_IDENTITY_QUERY, [subject, playerId, socialProfile]);
+    await client.query(INS_IDENTITY_QUERY, [identity[0], identity[1], playerId, socialProfile]);
     await client.query('COMMIT');
   } catch (e) {
     console.error('had to rollback due to error', e);

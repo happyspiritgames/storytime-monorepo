@@ -18,18 +18,12 @@ module.exports = function (app, authCheck) {
   .get(playerController.getPlayers);
   // .post(playerController.createPlayer);
 
+  app.route('/api/players/self/profile')
+  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile);
+
   app.route('/api/players/:playerId')
   .get(playerController.getPlayer);
 
   app.route('/api/players/find/:subject')
   .get(playerController.findPlayer);
-
-  // app.route('/api/players/profile')
-  //   .get([authCheck, playerController.findOrCreatePlayer], playerController.getOwnProfile);
-
-  // app.route('/api/unsecure/players/profile')
-  //   .get(playerController.getOwnProfile)
-  //   .put(playerController.updateOwnProfile);
-
-
 };
