@@ -4,17 +4,17 @@ const pool = new Pool();
 
 module.exports = {
   // for single-action queries
-  query: (text, params, callback) => {
+  query: async (queryText, params = []) => {
     const start = Date.now();
-    return pool.query(text, params, (err, res) => {
-      if (err) {
-        console.log('Something went wrong', start, err);
-      } else {
-        const duration = Date.now() - start;
-        console.log('executed query', { text, duration, rows: res.rowCount });
-      }
-      callback(err, res);
-    });
+    try {
+      const dbResult = await pool.query(queryText, params);
+      const duration = Date.now() - start;
+      console.log('executed query', { queryText, duration, rows: dbResult.rowCount });
+      return dbResult;
+    } catch (e) {
+      console.error('Database access error', e);
+      throw e;
+    }
   },
   // for transactions
   getClient: (callback) => {

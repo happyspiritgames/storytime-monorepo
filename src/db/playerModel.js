@@ -1,36 +1,59 @@
 const { Pool } = require('pg');
-const db = require('../db/postgres');
+const db = require('./postgres');
 const { generateUUID } = require('../util/generator');
 
 const pool = new Pool();
 
-// TODO finish for admin screen
-// exports.getAllPlayers = () => {
-//   console.log('playerModel.getAllPlayers');
-//   db.query(
-//     'SELECT * FROM player'
-//   )
-// }
+/**
+ * Returns all players.
+ */
+exports.getPlayers = async () => {
+  console.log('playerModel.getPlayers');
+  const SEL_PLAYERS = 'SELECT * FROM player';
+  const dbResult = await db.query(SEL_PLAYERS);
+  return dbResult.rows;
+};
 
-exports.getPlayer = (id) => {
-  console.log('playerModel.getPlayer');
-  db.query(
-    'SELECT id, created_at, email, nickname, agreed_to_comms_at FROM player WHERE id = $1',
-    [id],
-    (err, res) => {
-      if (err) {
-        console.error(err);
-        throw err;  // TODO use a callback?
-      }
-      return res.rows[0];  // TODO use a callback?
-    });
+/**
+ * Returns player with given ID.
+ * @param {*} id - ID of player to find
+ */
+exports.getPlayer = async (id) => {
+  console.log('playerModel.getPlayer id=', id);
+  const SEL_PLAYER = 'SELECT * FROM player WHERE id = $1'
+  const result = await db.query(SEL_PLAYER, [id]);
+  if (result.rowCount === 1) {
+    return result.rows[0];
+  }
+  console.log('player not found', id)
 }
 
-const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
-const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
+/**
+ * Returns player ID that is mapped to given subjectToken, or undefined if not found.
+ * @param {string} subjectToken
+ */
+exports.findPlayerIdFromIdentity = (subjectToken) => {
+  console.log('playerModel.findPlayerIdFromIdentity subject=', subjectToken);
+  const SEL_PLAYER_ID_FROM_IDENTITY = 'SELECT player_id FROM identity WHERE idp_sub = $1';
+  const result = db.query(SEL_PLAYER_ID_FROM_IDENTITY, [subjectToken]);
+  if (result.rowCount === 1) {
+    return result.rows[0].player_id;
+  }
+  console.log('player ID not found', subjectToken);
+}
 
+/**
+ * Transaction to create new player record that is mapped to a social identity.
+ * @param {*} subject
+ * @param {*} email
+ * @param {*} nickname
+ * @param {*} socialProfile
+ */
 exports.createPlayerFromIdentity = async (subject, email, nickname, socialProfile) => {
   console.log('createPlayerFromIdentity');
+  const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
+  const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
+
   const playerId = generateUUID();
   const client = await pool.connect();
 
