@@ -10,7 +10,9 @@ CREATE TABLE player (
 );
 
 CREATE TABLE identity (
-  idp_sub varchar(64) PRIMARY KEY,
-  player_id UUID NOT NULL,
-  idp_profile text
+  provider varchar(16),
+  provider_user_id varchar(32),
+  player_id UUID,
+  profile text,
+  PRIMARY KEY (provider, provider_user_id)
 );

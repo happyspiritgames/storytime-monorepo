@@ -32,10 +32,12 @@ exports.getPlayer = async (id) => {
  * Returns player ID that is mapped to given subjectToken, or undefined if not found.
  * @param {string} subjectToken
  */
-exports.findPlayerIdFromIdentity = (subjectToken) => {
+exports.findPlayerIdFromIdentity = async (subjectToken) => {
   console.log('playerModel.findPlayerIdFromIdentity subject=', subjectToken);
-  const SEL_PLAYER_ID_FROM_IDENTITY = 'SELECT player_id FROM identity WHERE idp_sub = $1';
-  const result = db.query(SEL_PLAYER_ID_FROM_IDENTITY, [subjectToken]);
+  const identity = subjectToken.split('|');  // expected format 'provider|##########'
+  const SEL_PLAYER_ID_FROM_IDENTITY =
+    'SELECT player_id FROM identity WHERE provider = $1 AND provider_user_id = $2';
+  const result = await db.query(SEL_PLAYER_ID_FROM_IDENTITY, identity);
   if (result.rowCount === 1) {
     return result.rows[0].player_id;
   }
