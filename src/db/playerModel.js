@@ -16,7 +16,7 @@ exports.getPlayers = async () => {
 
 /**
  * Returns player with given ID.
- * @param {*} id - ID of player to find
+ * @param {UUID} id - UUID of player to find
  */
 exports.getPlayer = async (id) => {
   console.log('playerModel.getPlayer id=', id);

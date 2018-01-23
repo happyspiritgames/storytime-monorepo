@@ -29,6 +29,19 @@ exports.getPlayer = async (req, res) => {
   }
 };
 
+exports.findPlayer = async (req, res) => {
+  const { subject } = req.params;
+  console.log('playerController.findPlayer subject=', subject);
+  try {
+    const playerId = await playerModel.findPlayerIdFromIdentity(subject);
+    const player = await playerModel.getPlayer(playerId);
+    res.json(player);
+  } catch (e) {
+    console.error('Problem with findPlayer', e);
+    res.status(500).end();  // TODO standardize error messages
+  }
+}
+
 // exports.createPlayer = async (req, res) => {
 //   console.log('createPlayer: player data', req.body);
 //   const { subject, email, nickname = 'Rising Star', profile = {} } = req.body;

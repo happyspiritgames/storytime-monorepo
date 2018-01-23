@@ -21,6 +21,9 @@ module.exports = function (app, authCheck) {
   app.route('/api/players/:playerId')
   .get(playerController.getPlayer);
 
+  app.route('/api/players/find/:subject')
+  .get(playerController.findPlayer);
+
   // app.route('/api/players/profile')
   //   .get([authCheck, playerController.findOrCreatePlayer], playerController.getOwnProfile);
 
