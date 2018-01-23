@@ -1,4 +1,4 @@
-const storyModel = require('../model/storyModel');
+const storyModel = require('../db/storyModel');
 
 exports.ping = (req, res) => {
   console.log('ping');

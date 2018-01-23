@@ -34,9 +34,10 @@ exports.getPlayer = async (id) => {
  */
 exports.findPlayerIdFromIdentity = async (subjectToken) => {
   console.log('playerModel.findPlayerIdFromIdentity subject=', subjectToken);
-  const identity = subjectToken.split('|');  // expected format 'provider|##########'
   const SEL_PLAYER_ID_FROM_IDENTITY =
     'SELECT player_id FROM identity WHERE provider = $1 AND provider_user_id = $2';
+
+  const identity = subjectToken.split('|');  // expected format 'provider|##########'
   const result = await db.query(SEL_PLAYER_ID_FROM_IDENTITY, identity);
   if (result.rowCount === 1) {
     return result.rows[0].player_id;
@@ -51,11 +52,12 @@ exports.findPlayerIdFromIdentity = async (subjectToken) => {
  * @param {*} nickname
  * @param {*} socialProfile
  */
-exports.createPlayerFromIdentity = async (subject, email, nickname, socialProfile) => {
+exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialProfile) => {
   console.log('createPlayerFromIdentity');
   const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
   const INS_IDENTITY_QUERY = 'INSERT INTO identity (idp_sub, player_id, idp_profile) VALUES ($1, $2, $3)';
 
+  const identity = subjectToken.split('|');  // expected format 'provider|##########'
   const playerId = generateUUID();
   const client = await pool.connect();
 
