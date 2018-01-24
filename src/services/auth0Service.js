@@ -1,43 +1,19 @@
 const request = require("request");
+const { ManagementClient } = require('auth0');
 
-const getAuth0ApiToken = (callback) => {
-  const options = {
-    method: 'POST',
-    url: 'https://happyspiritgames.auth0.com/oauth/token',
-    headers: { 'content-type': 'application/json' },
-    body: {
-      client_id: 'KYLPN9wvIe3NkdgAlvWk1DWVw2P5rAxl',
-      client_secret: 'b5nwic7j_o6C8SDWWIO3BoFtQkmM1XV88R_naZCMCcdRw6WUWW6ucy-Q33EBzAPR',
-      audience: 'https://happyspiritgames.auth0.com/api/v2/',
-      grant_type: 'client_credentials'
-    }
-  };
+const mgmtClient = new ManagementClient({
+  domain: 'happyspiritgames.auth0.com',
+  clientId: 'KYLPN9wvIe3NkdgAlvWk1DWVw2P5rAxl',
+  clientSecret: 'b5nwic7j_o6C8SDWWIO3BoFtQkmM1XV88R_naZCMCcdRw6WUWW6ucy-Q33EBzAPR',
+  scope: 'read:users',
+  audience: 'https://happyspiritgames.auth0.com/api/v2/'
+});
 
-  request(options, (error, response, body) => {
-    if (error) throw new Error(error);
-    console.log('API token', body);
-    callback(body);
-  });
-}
+exports.fetchUserInfo = async (subject) => {
+  console.log('auth0Service.fetchUserInfo');
+  const profiles = await mgmtClient.getUser(subject);
 
-const getUser = (apiToken, subject, callback) => {
-  const options = { method: 'GET',
-    url: `https://happyspiritgames.auth0.com/api/v2/users/${subject}`,
-    headers: {
-      authorization: `Bearer ${apiToken}`
-    }
-  };
-
-  request(options, (error, response, body) => {
-    if (error) throw new Error(error);
-    console.log('user', body);
-  });
-}
-
-exports.fetchUserInfo = (subject) => {
-  getAuth0ApiToken(token => {
-    getUser(token, subject, user => {
-      console.log('made it', user);
-    });
-  });
+  return (Array.isArray(profiles))
+    ? profiles.find(profile => (profile.user_id === subject))
+    : profiles;
 }

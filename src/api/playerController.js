@@ -1,6 +1,4 @@
-const db = require('../db/postgres');
 const playerModel = require('../db/playerModel');
-const { generateRandomString } = require('../util/generator');
 const { fetchUserInfo } = require('../services/auth0Service');
 
 /**
@@ -65,6 +63,22 @@ exports.findPlayer = async (req, res) => {
   }
 }
 
+exports.refreshProfile = async (req, res) => {
+  console.log('playerController.refreshProfile');
+  const { subject } = req.user.sub;
+  try {
+    const profile = await fetchUserInfo(subject);
+    if (profile) {
+      res.json(profile);
+    } else {
+      res.status(404).send();
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).end();
+  }
+}
+
 /**
  * Middleware to locate a player record using subject in jwt or to create a new
  * player record if not found.
@@ -92,15 +106,9 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   try {
     playerId = await playerModel.findPlayerIdFromIdentity(subject);
     if (!playerId) {
-      // TODO get user from auth0
-      // fetchUserInfo(subject);  // TODO this will happen async -- need to wait
-
-      // use random placeholders
-      const nickname = generateRandomString();
-      const email = `${nickname}@hsg.com`;
-      const profile = {picture: `${nickname}.png`};
-
-      playerId = await playerModel.createPlayerFromIdentity(subject, email, nickname, profile);
+      const profile = await fetchUserInfo(subject);
+      const { email, name } = profile;
+      playerId = await playerModel.createPlayerFromIdentity(subject, email, name, profile);
       if (!playerId) {
         // throw a fit
         next(new Error('Had trouble creating player'));

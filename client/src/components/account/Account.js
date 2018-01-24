@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import PlayerInfoCard from './PlayerInfoCard';
 import { isLoggedIn, showUserInfo } from '../../util/authentication';
-import { getSelfProfile } from '../../services/storyTimeService';
+import { getSelfProfile, refreshProfile } from '../../services/storyTimeService';
 
 export default class Account extends Component {
   constructor(props) {
@@ -17,9 +17,14 @@ export default class Account extends Component {
     this.setState({ playerProfile: profile });
   }
 
+  showProfile = (profile) => {
+    console.log('social profile', process);
+  }
+
   componentDidMount() {
     if (isLoggedIn()) {
       getSelfProfile(this.loadProfile);
+      // refreshProfile(this.showProfile);
     }
   }
 

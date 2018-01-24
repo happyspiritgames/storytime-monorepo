@@ -28,3 +28,11 @@ export const getSelfProfile = (processResponse) => {
         .then(profile => processResponse(profile))
         .catch(err => console.log('Failed to get player\'s own profile', err));
 };
+
+export const refreshProfile = (processResponse) => {
+    fetch('/api/players/self/profile/refresh',
+        { headers: { Authorization: `Bearer ${getAccessToken()}`}})
+        .then(res => res.json())
+        .then(profile => processResponse(profile))
+        .catch(err => console.log('Failed to get player\'s own profile', err));
+};
