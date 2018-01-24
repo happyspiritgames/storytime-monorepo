@@ -1,4 +1,4 @@
-const repo = require('../persistence/storyRepo');
+const storyModel = require('../db/storyModel');
 
 exports.ping = (req, res) => {
   console.log('ping');
@@ -7,13 +7,13 @@ exports.ping = (req, res) => {
 
 exports.searchStories = (req, res) => {
   console.log('searchStories');
-  res.send(repo.getRecommendedStories());
+  res.send(storyModel.getRecommendedStories());
 };
 
 exports.getPublishedStorySummary = (req, res) => {
-  const {storyKey} = req.params;
+  const { storyKey } = req.params;
   console.log('getPublishedStorySummary', `storyKey=${storyKey}`);
-  const story = repo.getPublishedStorySummary(storyKey);
+  const story = storyModel.getPublishedStorySummary(storyKey);
   res.format({
       'application/json': () => {
         "use strict";
@@ -28,12 +28,12 @@ exports.getPublishedStorySummary = (req, res) => {
 };
 
 exports.getStoryScene = (req, res) => {
-  const {storyKey, sceneKey} = req.params;
+  const { storyKey, sceneKey } = req.params;
   console.log('getStoryScene', `storyKey=${storyKey}`, `sceneKey=${sceneKey}`);
   res.format({
       'application/json': () => {
           "use strict";
-          res.send(repo.getStoryScene(storyKey, sceneKey));
+          res.send(storyModel.getStoryScene(storyKey, sceneKey));
       },
 
       'default': () => {

@@ -3,17 +3,30 @@ const playerController = require('./playerController');
 
 module.exports = function (app, authCheck) {
   app.route('/api/ping')
-    .get(storyController.ping);
+  .get(storyController.ping);
 
   app.route('/api/stories')
-    .get(storyController.searchStories);
+  .get(storyController.searchStories);
 
   app.route('/api/stories/:storyKey')
-    .get(storyController.getPublishedStorySummary);
+  .get(storyController.getPublishedStorySummary);
 
   app.route('/api/stories/:storyKey/scenes/:sceneKey')
-    .get(storyController.getStoryScene);
+  .get(storyController.getStoryScene);
 
-  app.route('/api/players/profile')
-    .get(authCheck, playerController.getPlayerProfile);
+  app.route('/api/players')
+  .get(playerController.getPlayers);
+  // .post(playerController.createPlayer);
+
+  app.route('/api/players/self/profile')
+  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile);
+
+  app.route('/api/players/self/profile/refresh')
+  .get([authCheck], playerController.refreshProfile);
+
+  app.route('/api/players/:playerId')
+  .get(playerController.getPlayer);
+
+  app.route('/api/players/find/:subject')
+  .get(playerController.findPlayer);
 };

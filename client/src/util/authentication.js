@@ -6,7 +6,7 @@ const ACCESS_TOKEN_KEY = 'access_token';
 const CLIENT_ID = 'KfiyrQwotwGHGoGFr7VRYhWvjWefWkMu';
 const CLIENT_DOMAIN = 'happyspiritgames.auth0.com';
 const REDIRECT = 'http://localhost:3000/callback';
-const SCOPE = 'edit:profile';
+const SCOPE = 'sub profile email';
 const AUDIENCE = 'http://storytime.happyspiritgames.com';
 
 const auth = new auth0.WebAuth({
@@ -22,11 +22,16 @@ function getParameterByName(name) {
 export function setIdToken() {
   const idToken = getParameterByName(ID_TOKEN_KEY);
   localStorage.setItem(ID_TOKEN_KEY, idToken);
+  console.log('ID token', idToken);
 }
 
 export function setAccessToken() {
   const accessToken = getParameterByName(ACCESS_TOKEN_KEY);
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+}
+
+export function showUserInfo() {
+  return decode(getIdToken());
 }
 
 export function getIdToken() {
@@ -75,7 +80,6 @@ export function login() {
 }
 
 export function logout(redirect) {
-  console.log('logout');
   clearIdToken();
   clearAccessToken();
   if (redirect) {
