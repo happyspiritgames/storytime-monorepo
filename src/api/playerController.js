@@ -154,3 +154,22 @@ exports.getSelfProfile = async (req, res) => {
     res.status(500).end();  // TODO standardize error messages
   }
 };
+
+/**
+ * Updates a player profile, applying whatever is in the payload to the logged-in
+ * user's player record.
+ * 
+ * @param {*} req
+ * @param {*} res
+ */
+exports.updateSelfProfile = async (req, res) => {
+  const { playerId } = req.user;
+  const { profileUpdate } = req.body;
+  console.log('updateSelfProfile playerId=', playerId, 'updates=', profileUpdate);
+  try {
+    res.json({ message: 'Got it, but update is out of service.  Try again later', profileUpdate });
+  } catch (e) {
+    console.error('Problem with updateSelfProfile', e);
+    res.status(500).end();  // TODO standardize error messages
+  }
+}
