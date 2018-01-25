@@ -5,7 +5,7 @@ const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 const CLIENT_ID = 'KfiyrQwotwGHGoGFr7VRYhWvjWefWkMu';
 const CLIENT_DOMAIN = 'happyspiritgames.auth0.com';
-const REDIRECT = 'http://localhost:3000/callback';
+const REDIRECT = `${window.location.protocol}//${window.location.host}/callback`;
 const SCOPE = 'sub profile email';
 const AUDIENCE = 'http://storytime.happyspiritgames.com';
 
