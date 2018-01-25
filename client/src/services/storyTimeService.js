@@ -54,7 +54,7 @@ export const updateProfile = (profileUpdates, processResponse) => {
     const putOptions = {
         method: 'PUT',
         headers: getHeaders(),
-        body: profileUpdates
+        body: JSON.stringify(profileUpdates)
     };
     fetch('/api/players/self/profile', putOptions)
         .then(res => res.json())

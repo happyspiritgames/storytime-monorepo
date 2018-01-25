@@ -21,14 +21,12 @@ module.exports = function (app, authCheck) {
   .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile)
   .put([authCheck, playerController.findOrCreatePlayer], playerController.updateSelfProfile);
 
-  // TODO remove this, scaffolding
-  app.route('/api/players/self/profile/refresh')
-  .get([authCheck], playerController.refreshProfile);
+  // app.route('/api/players/self/profile/refresh')
+  // .get([authCheck], playerController.refreshProfile);
 
   app.route('/api/players/:playerId')
   .get(playerController.getPlayer);
 
-  // TODO remove this, scaffolding
-  app.route('/api/players/find/:subject')
-  .get(playerController.findPlayer);
+  // app.route('/api/players/find/:subject')
+  // .get(playerController.findPlayer);
 };
