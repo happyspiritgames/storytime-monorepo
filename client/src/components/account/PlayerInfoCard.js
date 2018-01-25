@@ -3,19 +3,23 @@ import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
 
 export default class PlayerInfoCard extends Component {
+  static profileShape = PropTypes.shape({
+    email: PropTypes.string,
+    nickname: PropTypes.string,
+    membersOnlyComms: PropTypes.bool,
+    profilePicUrl: PropTypes.string,
+  });
   static propTypes = {
-    profile: PropTypes.shape({
-      email: PropTypes.string,
-      nickname: PropTypes.string,
-      membersOnlyComms: PropTypes.bool,
-      profilePicUrl: PropTypes.string,
-    }),
+    profile: PlayerInfoCard.profileShape,
+    profileUpdate: PlayerInfoCard.profileShape,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func
   };
 
   render() {
     const { email, nickname, membersOnlyComms, profilePicUrl } = this.props.profile;
+    const profileUpdate = this.props.profileUpdate;
+
     const { onChange, onSubmit } = this.props;
     const membersOnlyCommsDescription = membersOnlyComms
       ? 'Yes, you want members-only communications.'
@@ -49,7 +53,7 @@ export default class PlayerInfoCard extends Component {
             <input
               name="nickname"
               type="text"
-              value={nickname}
+              value={profileUpdate.nickname}
               onChange={onChange}
             />
           </Col>
@@ -59,12 +63,12 @@ export default class PlayerInfoCard extends Component {
           <Col>
             <label>
               <input
-                name="emailOptIn"
+                name="membersOnlyComms"
                 type="checkbox"
-                value={membersOnlyComms}
+                checked={profileUpdate.membersOnlyComms}
                 onChange={onChange}
               />
-              { membersOnlyComms
+              { profileUpdate.membersOnlyComms
                   ? 'Yes, keep me informed by email.'
                   : 'No, I prefer not to get email.' }
             </label>

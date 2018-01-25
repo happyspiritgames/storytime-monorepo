@@ -13,8 +13,13 @@ export default class Account extends Component {
         nickname: '',
         membersOnlyComms: false,
         profilePicUrl: ''
+      },
+      playerProfileUpdate: {
+        nickname: '',
+        membersOnlyComms: false,
       }
     };
+    // TODO make updates to parallel profile object
   }
 
   loadProfile = (profile) => {
@@ -25,16 +30,15 @@ export default class Account extends Component {
     const { target } = event;
     const { name, type } = target;
     const value = type === 'checkbox' ? target.checked : target.value;
-    const updatedProfile = Object.assign({}, this.state.playerProfile, { [name]: value });
+    const updatedProfile = Object.assign({}, this.state.playerProfileUpdate, { [name]: value });
     this.setState({
-      playerProfile: updatedProfile
+      playerProfileUpdate: updatedProfile
     });
-    console.log(this.state);
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    updateProfile(this.state.playerProfile, this.loadProfile);
+    updateProfile(this.state.playerProfileUpdate, this.loadProfile);
   }
 
   componentDidMount() {
@@ -48,6 +52,7 @@ export default class Account extends Component {
       <StoryTimePage id="account" heading="Player Profile">
         <PlayerInfoCard
           profile={this.state.playerProfile}
+          profileUpdate={this.state.playerProfileUpdate}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         />

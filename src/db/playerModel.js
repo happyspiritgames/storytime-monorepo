@@ -76,11 +76,20 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
   return playerId;
 };
 
-exports.updatePlayer = async (playerId, nickname) => {
+exports.updatePlayer = async (playerId, nickname, membersOnlyCommsOk) => {
   console.log('playerModel.updatePlayer');
   const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';
-  const dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
-  console.log(dbResult);
+  let dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
+  console.log('nickname', dbResult.rowCount);
+
+  const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
+  const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
+  if (membersOnlyCommsOk) {
+    dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId]);
+  } else {
+    dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId]);
+  }
+  console.log('commsOk', dbResult.rowCount);
 }
 
 /*
