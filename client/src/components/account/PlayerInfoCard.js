@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 
 export default class PlayerInfoCard extends Component {
   static profileShape = PropTypes.shape({
@@ -16,14 +16,94 @@ export default class PlayerInfoCard extends Component {
     onSubmit: PropTypes.func
   };
 
+  constructor() {
+    super();
+    this.state = {
+      editMode: false
+    };
+  }
+
+  handleSubmit = (event) => {
+    this.setState({
+      editMode: false
+    });
+    this.props.onSubmit(event);
+  }
+
+  handleEdit = () => {
+    this.setState({
+      editMode: true
+    })
+  }
+
+  handleCancel = () => {
+    this.setState({
+      editMode: false
+    })
+  }
+
+  renderNicknameField() {
+    if (this.state.editMode) {
+      return (
+        <input
+          name="nickname"
+          type="text"
+          value={this.props.profileUpdate.nickname}
+          onChange={this.props.onChange}
+        />
+      );
+    } else {
+      return this.props.profile.nickname;
+    }
+  }
+
+  renderEmailOptIn() {
+    if (this.state.editMode) {
+      const emailOptInUpdate = this.props.profileUpdate.membersOnlyComms;
+      const label = (emailOptInUpdate)
+        ? 'Yes, keep me informed by email.'
+        : 'No, I prefer not to get email.';
+      return (
+        <span>
+          <input
+            name="membersOnlyComms"
+            type="checkbox"
+            checked={emailOptInUpdate}
+            onChange={this.props.onChange}
+          /> {label
+        }</span>
+      )
+    } else {
+      return (this.props.profile.membersOnlyComms)
+      ? 'Yes, keep me informed by email.'
+      : 'No, I prefer not to get email.';
+    }
+  }
+
+  renderButtons() {
+    if (this.state.editMode) {
+      return (
+        <span>
+          <Button className="btn btn-info" onClick={this.handleSubmit}>
+            Save Changes
+          </Button> <Button className="btn btn-danger" onClick={this.handleCancel}>Cancel</Button>
+        </span>
+      )
+    } else {
+      return (
+        <span>
+          <Button onClick={this.handleEdit}>Change Profile</Button>
+        </span>
+      )
+    }
+  }
+
   render() {
     const { email, nickname, membersOnlyComms, profilePicUrl } = this.props.profile;
     const profileUpdate = this.props.profileUpdate;
+    const editMode = this.state.editMode;
 
     const { onChange, onSubmit } = this.props;
-    const membersOnlyCommsDescription = membersOnlyComms
-      ? 'Yes, you want members-only communications.'
-      : 'No, you do not want members-only communications';
 
     return (
       <div id="member-info">
@@ -34,51 +114,16 @@ export default class PlayerInfoCard extends Component {
         </Row>
         <Row>
           <Col sm="3"><strong>Nickname:</strong></Col>
-          <Col>{nickname}</Col>
+          <Col>{this.renderNicknameField()}</Col>
         </Row>
         <Row>
           <Col sm="3"><strong>Preferences:</strong></Col>
-          <Col>{membersOnlyCommsDescription}</Col>
-        </Row>
-        <Row>
-          <Col sm="3"><strong>Your Profile Picture:</strong></Col>
-          <Col><img src={profilePicUrl} alt={nickname} /></Col>
-        </Row>
-
-        <h3>Make Changes</h3>
-        <form onSubmit={onSubmit}>
-        <Row>
-          <Col sm="3"><strong>Nickname:</strong></Col>
-          <Col>
-            <input
-              name="nickname"
-              type="text"
-              value={profileUpdate.nickname}
-              onChange={onChange}
-            />
-          </Col>
+          <Col>{this.renderEmailOptIn()}</Col>
         </Row>
         <Row>
           <Col sm="3"></Col>
-          <Col>
-            <label>
-              <input
-                name="membersOnlyComms"
-                type="checkbox"
-                checked={profileUpdate.membersOnlyComms}
-                onChange={onChange}
-              />
-              { profileUpdate.membersOnlyComms
-                  ? 'Yes, keep me informed by email.'
-                  : 'No, I prefer not to get email.' }
-            </label>
-          </Col>
+          <Col>{this.renderButtons()}</Col>
         </Row>
-        <Row>
-          <Col sm="3"></Col>
-          <Col sm="12" span="2"><button className="btn btn-default" type="submit">Save Changes</button></Col>
-        </Row>
-        </form>
       </div>
     );
   }

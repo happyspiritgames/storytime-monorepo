@@ -11,8 +11,7 @@ export default class Account extends Component {
       playerProfile: {
         email: '',
         nickname: '',
-        membersOnlyComms: false,
-        profilePicUrl: ''
+        membersOnlyComms: false
       },
       playerProfileUpdate: {
         nickname: '',
