@@ -99,11 +99,7 @@ export default class PlayerInfoCard extends Component {
   }
 
   render() {
-    const { email, nickname, membersOnlyComms, profilePicUrl } = this.props.profile;
-    const profileUpdate = this.props.profileUpdate;
-    const editMode = this.state.editMode;
-
-    const { onChange, onSubmit } = this.props;
+    const { email } = this.props.profile;
 
     return (
       <div id="member-info">
