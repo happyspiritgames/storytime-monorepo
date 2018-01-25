@@ -53,7 +53,7 @@ exports.findPlayerIdFromIdentity = async (subjectToken) => {
  * @param {*} socialProfile
  */
 exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialProfile) => {
-  console.log('createPlayerFromIdentity');
+  console.log('playerModel.createPlayerFromIdentity');
   const INS_PLAYER_QUERY = 'INSERT INTO player (id, email, nickname) VALUES ($1, $2, $3)';
   const INS_IDENTITY_QUERY = 'INSERT INTO identity (provider, provider_user_id, player_id, profile) VALUES ($1, $2, $3, $4)';
 
@@ -76,33 +76,23 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
   return playerId;
 };
 
-// exports.findPlayerId = (subject) => {
-//   console.log('findPlayerId');
-//   const { rows } = await db.query(
-//     'SELECT player_id FROM identity WHERE idp_sub = $1', [subject]);
-//   console.log('result', rows);
-//   return rows[0].playerId;
-// }
+exports.updatePlayer = async (playerId, nickname, membersOnlyCommsOk) => {
+  console.log('playerModel.updatePlayer');
+  const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';
+  let dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
+  console.log('nickname', dbResult.rowCount);
 
-/* queries
+  const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
+  const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
+  if (membersOnlyCommsOk) {
+    dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId]);
+  } else {
+    dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId]);
+  }
+  console.log('commsOk', dbResult.rowCount);
+}
 
--- create player
-BEGIN
-
-INSERT INTO player
-(id, idp_sub, email, nickname)
-VALUES ($1, $2, $3, $4)
-RETURNING id; // ?select on the row?
-
-INSERT INTO identity
-(idp_sub, player_id, idp_profile)
-VALUE ($1, $2, $3);  // pull $2 from return of first insert
-
-COMMIT
-
-see https://node-postgres.com/features/transactions
-use async/await
-
+/*
 -- look up player given idp_sub
 SELECT player_id
 FROM identity

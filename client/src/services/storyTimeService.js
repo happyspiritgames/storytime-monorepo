@@ -1,4 +1,14 @@
-import { getAccessToken } from '../util/authentication';
+import { getAccessToken, isLoggedIn } from '../util/authentication';
+
+const getHeaders = () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    if (isLoggedIn()) {
+        headers.append('Authorization', `Bearer ${getAccessToken()}`);
+    }
+    return headers;
+};
 
 export const getStorySummaries = (processResponse) => {
     fetch('/api/stories')
@@ -21,18 +31,33 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
         .catch(err => console.log('Failed to find story with key:', storyKey, err));
 };
 
-export const getSelfProfile = (processResponse) => {
+export const getProfile = (processResponse) => {
     fetch('/api/players/self/profile',
-        { headers: { Authorization: `Bearer ${getAccessToken()}`}})
+        { headers: { Authorization: `Bearer ${getAccessToken()}` } })
         .then(res => res.json())
         .then(profile => processResponse(profile))
         .catch(err => console.log('Failed to get player\'s own profile', err));
 };
 
-export const refreshProfile = (processResponse) => {
-    fetch('/api/players/self/profile/refresh',
-        { headers: { Authorization: `Bearer ${getAccessToken()}`}})
+// export const refreshProfile = (processResponse) => {
+//     const options = {
+//         headers: getHeaders()
+//     };
+//     fetch('/api/players/self/profile/refresh', options)
+//         .then(res => res.json())
+//         .then(profile => processResponse(profile))
+//         .catch(err => console.log('Failed to get player\'s own profile', err));
+// };
+
+export const updateProfile = (profileUpdates, processResponse) => {
+    console.log('updateProfile: sending updates', profileUpdates);
+    const putOptions = {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(profileUpdates)
+    };
+    fetch('/api/players/self/profile', putOptions)
         .then(res => res.json())
-        .then(profile => processResponse(profile))
-        .catch(err => console.log('Failed to get player\'s own profile', err));
-};
+        .then(message => processResponse(message))
+        .catch(err => console.log('Failed to update player profile', err));
+}

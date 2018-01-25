@@ -91,13 +91,9 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   console.log('playerController.findOrCreatePlayer');
 
   // make sure client is authenticated
-  // expect that 'user' has been added to request and is jwt with 'sub' (subject) set
-  if (req.user === undefined) {
-    console.error('Auth is required');
-    next(new Error('User must be logged in'));  // TODO make sure this is the right approach
-  } else if (req.user.sub === undefined) {
-    console.error('Expected sub in json web token to be populated by identity provider');
-    next(new Error('User identifier "sub" is missing'));  // TODO make sure this is the right approach
+  if (!req.user || !req.user.sub) {
+    console.error('Cannot find jwt subject -- should have been extracted from auth header');
+    res.status(401).end();
   }
 
   let playerId;
@@ -109,12 +105,12 @@ exports.findOrCreatePlayer = async (req, res, next) => {
       const profile = await fetchUserInfo(subject);
       const { email, name } = profile;
       playerId = await playerModel.createPlayerFromIdentity(subject, email, name, profile);
+
       if (!playerId) {
-        // throw a fit
-        next(new Error('Had trouble creating player'));
+        console.error('Unable to create player account.', subject, email, name);
+        res.status(500).send({ message: 'Could not create an player account due to a system error.' });
       }
     }
-    // TODO figure out where to put this -- why not on user?
     req.user.playerId = playerId;
     next();
   } catch (e) {
@@ -154,3 +150,24 @@ exports.getSelfProfile = async (req, res) => {
     res.status(500).end();  // TODO standardize error messages
   }
 };
+
+/**
+ * Updates a player profile, applying whatever is in the payload to the logged-in
+ * user's player record.
+ *
+ * @param {*} req - the HTTP request
+ * @param {*} res - the HTTP response
+ */
+exports.updateSelfProfile = async (req, res) => {
+  const { playerId } = req.user;
+  const profileUpdate = req.body;
+  console.log('updateSelfProfile playerId=', playerId, 'updates=', profileUpdate);
+  try {
+    await playerModel.updatePlayer(playerId, profileUpdate.nickname, profileUpdate.membersOnlyComms);
+    const profile = await playerModel.getPlayer(playerId);
+    res.json(mapPlayerToProfile(profile));
+  } catch (e) {
+    console.error('Problem with updateSelfProfile', e);
+    res.status(500).end();  // TODO standardize error messages
+  }
+}

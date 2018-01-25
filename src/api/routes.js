@@ -16,17 +16,17 @@ module.exports = function (app, authCheck) {
 
   app.route('/api/players')
   .get(playerController.getPlayers);
-  // .post(playerController.createPlayer);
 
   app.route('/api/players/self/profile')
-  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile);
+  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile)
+  .put([authCheck, playerController.findOrCreatePlayer], playerController.updateSelfProfile);
 
-  app.route('/api/players/self/profile/refresh')
-  .get([authCheck], playerController.refreshProfile);
+  // app.route('/api/players/self/profile/refresh')
+  // .get([authCheck], playerController.refreshProfile);
 
   app.route('/api/players/:playerId')
   .get(playerController.getPlayer);
 
-  app.route('/api/players/find/:subject')
-  .get(playerController.findPlayer);
+  // app.route('/api/players/find/:subject')
+  // .get(playerController.findPlayer);
 };

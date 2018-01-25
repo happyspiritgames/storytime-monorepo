@@ -22,7 +22,6 @@ function getParameterByName(name) {
 export function setIdToken() {
   const idToken = getParameterByName(ID_TOKEN_KEY);
   localStorage.setItem(ID_TOKEN_KEY, idToken);
-  console.log('ID token', idToken);
 }
 
 export function setAccessToken() {
