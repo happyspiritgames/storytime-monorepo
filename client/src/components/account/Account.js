@@ -23,7 +23,11 @@ export default class Account extends Component {
   }
 
   loadProfile = (profile) => {
-    this.setState({ playerProfile: profile });
+    const update = {
+      nickname: profile.nickname,
+      membersOnlyComms: profile.membersOnlyComms
+    };
+    this.setState({ playerProfile: profile, playerProfileUpdate: update });
   }
 
   handleChange = (event) => {
