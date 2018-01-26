@@ -1,8 +1,5 @@
-const { Pool } = require('pg');
 const db = require('./postgres');
 const { generateUUID } = require('../util/generator');
-
-const pool = new Pool();
 
 /**
  * Returns all players.
@@ -59,7 +56,7 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
 
   const identity = subjectToken.split('|');  // expected format 'provider|##########'
   const playerId = generateUUID();
-  const client = await pool.connect();
+  const client = await db.pool.connect();
 
   try {
     await client.query('BEGIN');

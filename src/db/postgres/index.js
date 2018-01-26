@@ -60,5 +60,6 @@ module.exports = {
 
       callback(err, client, done);
     });
-  }
+  },
+  pool: pool
 }
