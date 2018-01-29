@@ -5,6 +5,7 @@ import Library from './reader/Library';
 import Login from './account/Login';
 import Reader from './reader/Reader';
 import Account from './account/Account';
+import Admin from './admin/PlayerAdmin';
 import Callback from './Callback';
 
 export default class StoryTimeApp extends Component {
@@ -17,6 +18,7 @@ export default class StoryTimeApp extends Component {
         <Route path="/library" component={Library} />
         <Route path="/reader/:storyKey" component={Reader} />
         <Route path="/account" component={Account} />
+        <Route path="/admin" component={Admin} />
         <Route path="/callback" component={Callback} />
       </div>
     );

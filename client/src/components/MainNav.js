@@ -28,6 +28,9 @@ class MainNav extends Component {
             </NavItem>
           ) : ''
         }
+        <NavItem>
+          <NavLink href="/admin">Game Admin</NavLink>
+        </NavItem>
         <NavItem className="nav navbar-nav navbar-right">
           {
             ( loggedIn ) ? (
