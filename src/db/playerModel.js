@@ -73,6 +73,18 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
   return playerId;
 };
 
+/**
+ * Returns an array of role names assigned to player with given ID.
+ *
+ * @param {*} playerId
+ */
+exports.getRoles = async (playerId) => {
+  console.log('playerModel.getRoles');
+  const SEL_ROLES = 'SELECT role.name FROM role, player_role WHERE player_role.player_id = $1 AND player_role.role_id = role.id';
+  const dbResult = await db.query(SEL_ROLES, [playerId]);
+  return dbResult.rows.map(row => row.name);
+}
+
 exports.updatePlayer = async (playerId, nickname, membersOnlyCommsOk) => {
   console.log('playerModel.updatePlayer');
   const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';

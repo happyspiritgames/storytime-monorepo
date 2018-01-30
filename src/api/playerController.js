@@ -109,6 +109,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   const subject = req.user.sub;
   console.log('subject is', subject);
   try {
+    // determine player ID
     playerId = await playerModel.findPlayerIdFromIdentity(subject);
     if (!playerId) {
       const profile = await fetchUserInfo(subject);
@@ -121,6 +122,10 @@ exports.findOrCreatePlayer = async (req, res, next) => {
       }
     }
     req.user.playerId = playerId;
+
+    // determine roles
+    const roles = await playerModel.getRoles(playerId);
+    req.user.roles = roles;
     next();
   } catch (e) {
     next(e);
