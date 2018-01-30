@@ -1,14 +1,4 @@
-import { getAccessToken, isLoggedIn } from '../util/authentication';
-
-const getHeaders = () => {
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-    if (isLoggedIn()) {
-        headers.append('Authorization', `Bearer ${getAccessToken()}`);
-    }
-    return headers;
-};
+import { getHeaders } from '../util/authentication';
 
 export const getStorySummaries = (processResponse) => {
     fetch('/api/stories')
@@ -32,22 +22,11 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
 };
 
 export const getProfile = (processResponse) => {
-    fetch('/api/players/self/profile',
-        { headers: { Authorization: `Bearer ${getAccessToken()}` } })
+    fetch('/api/players/self/profile', { headers: getHeaders() })
         .then(res => res.json())
         .then(profile => processResponse(profile))
         .catch(err => console.log('Failed to get player\'s own profile', err));
 };
-
-// export const refreshProfile = (processResponse) => {
-//     const options = {
-//         headers: getHeaders()
-//     };
-//     fetch('/api/players/self/profile/refresh', options)
-//         .then(res => res.json())
-//         .then(profile => processResponse(profile))
-//         .catch(err => console.log('Failed to get player\'s own profile', err));
-// };
 
 export const updateProfile = (profileUpdates, processResponse) => {
     console.log('updateProfile: sending updates', profileUpdates);
@@ -60,4 +39,4 @@ export const updateProfile = (profileUpdates, processResponse) => {
         .then(res => res.json())
         .then(message => processResponse(message))
         .catch(err => console.log('Failed to update player profile', err));
-}
+};

@@ -91,3 +91,13 @@ export function requireAuth(nextState, replace) {
     replace({ pathname: '/' });
   }
 }
+
+export const getHeaders = () => {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Accept', 'application/json');
+  if (isLoggedIn()) {
+      headers.append('Authorization', `Bearer ${getAccessToken()}`);
+  }
+  return headers;
+};

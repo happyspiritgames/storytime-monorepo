@@ -1,5 +1,6 @@
 const storyController = require('./storyController');
 const playerController = require('./playerController');
+const adminController = require('./adminController');
 
 module.exports = function (app, authCheck) {
   app.route('/api/ping')
@@ -27,6 +28,9 @@ module.exports = function (app, authCheck) {
   app.route('/api/players/:playerId')
   .get(playerController.getPlayer);
 
+  app.route('/api/admin/players')
+  .get(adminController.getPlayers);
+  
   // app.route('/api/players/find/:subject')
   // .get(playerController.findPlayer);
 };

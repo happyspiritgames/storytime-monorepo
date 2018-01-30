@@ -1,6 +1,15 @@
 const playerModel = require('../db/playerModel');
 const { fetchUserInfo } = require('../services/auth0Service');
 
+const mapPlayerToProfile = player => {
+  return {
+    id: player.id,
+    email: player.email,
+    nickname: player.nickname,
+    membersOnlyComms: !!player.agreed_to_comms_at
+  };
+}
+
 /**
  * StoryTime API method for retrieving a list of all players.
  *
@@ -116,15 +125,6 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-}
-
-const mapPlayerToProfile = player => {
-  return {
-    id: player.id,
-    email: player.email,
-    nickname: player.nickname,
-    membersOnlyComms: !!player.agreed_to_comms_at
-  };
 }
 
 /**
