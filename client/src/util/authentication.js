@@ -3,6 +3,7 @@ import auth0 from 'auth0-js';
 
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
+const PLAYER_ROLES_KEY = 'player_roles';
 const CLIENT_ID = 'KfiyrQwotwGHGoGFr7VRYhWvjWefWkMu';
 const CLIENT_DOMAIN = 'happyspiritgames.auth0.com';
 const REDIRECT = `${window.location.protocol}//${window.location.host}/callback`;
@@ -29,6 +30,10 @@ export function setAccessToken() {
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 }
 
+export function setRoles(roles) {
+  localStorage.setItem(PLAYER_ROLES_KEY, roles);
+}
+
 export function showUserInfo() {
   return decode(getIdToken());
 }
@@ -39,6 +44,16 @@ export function getIdToken() {
 
 export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function hasRole(roleToMatch) {
+  const roles = localStorage.getItem(PLAYER_ROLES_KEY);
+  console.log('roles', roles);
+  if (Array.isArray(roles)) {
+    return roles.find(role => {
+      return role === roleToMatch
+    });
+  }
 }
 
 function clearIdToken() {

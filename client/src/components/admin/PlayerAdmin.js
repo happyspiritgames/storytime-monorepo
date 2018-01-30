@@ -47,7 +47,7 @@ export default class PlayerAdmin extends Component {
   render() {
     const { players, selectedPlayer } = this.state;
     return (
-    <StoryTimePage id="admin" heading="Player Administration">
+    <StoryTimePage id="player-admin" heading="Players">
       <PlayersList players={players} />
       <hr />
       <PlayerDetails player={selectedPlayer} />

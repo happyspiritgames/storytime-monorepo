@@ -4,29 +4,26 @@ const express = require('express');
 const adminController = require('./adminController');
 
 module.exports = function (app, authCheck) {
-  app.route('/api/ping')
-  .get(storyController.ping);
+  const apiRouter = express.Router();
+  apiRouter.route('/ping').get(storyController.ping);
+  apiRouter.route('/stories').get(storyController.searchStories);
+  apiRouter.route('/stories/:storyKey').get(storyController.getPublishedStorySummary);
+  apiRouter.route('/stories/:storyKey/scenes/:sceneKey').get(storyController.getStoryScene);
 
-  app.route('/api/stories')
-  .get(storyController.searchStories);
+  // TODO decide whether needed; if so, auth needed?
+  apiRouter.route('/players').get(playerController.getPlayers);
 
-  app.route('/api/stories/:storyKey')
-  .get(storyController.getPublishedStorySummary);
+  const authRouter = express.Router();
 
-  app.route('/api/stories/:storyKey/scenes/:sceneKey')
-  .get(storyController.getStoryScene);
+  authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
 
-  app.route('/api/players')
-  .get(playerController.getPlayers);
+  authRouter.route('/players/self/roles').get(playerController.getRoles);
 
-  app.route('/api/players/self/profile')
-  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile)
-  .put([authCheck, playerController.findOrCreatePlayer], playerController.updateSelfProfile);
+  authRouter.route('/players/self/profile')
+  .get(playerController.getSelfProfile)
+  .put(playerController.updateSelfProfile);
 
-  // app.route('/api/players/self/profile/refresh')
-  // .get([authCheck], playerController.refreshProfile);
-
-  app.route('/api/players/:playerId')
+  authRouter.route('/players/:playerId')
   .get(playerController.getPlayer);
 
   // app.route('/api/players/find/:subject')
@@ -34,8 +31,6 @@ module.exports = function (app, authCheck) {
 
   const adminRouter = express.Router();
 
-  adminRouter.use(authCheck);
-  adminRouter.use(playerController.findOrCreatePlayer);
   adminRouter.use((req, res, next) => {
     console.log('Invoking admin API');
     if (!req.user || !req.user.roles || !req.user.roles.find((item) => item === 'admin')) {
@@ -49,8 +44,8 @@ module.exports = function (app, authCheck) {
   adminRouter.route('/players')
   .get(adminController.getPlayers);
 
-  app.use('/api/admin', adminRouter);
-
-
-
+  // assemble routers
+  apiRouter.use('/', authRouter);
+  apiRouter.use('/admin', adminRouter);
+  app.use('/api', apiRouter);
 };

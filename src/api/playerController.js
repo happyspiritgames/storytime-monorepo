@@ -132,6 +132,23 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   }
 }
 
+exports.getRoles = async (req, res) => {
+  const { playerId }= req.user;
+  console.log('playerController.getRoles: playerId=', playerId);
+  // TODO verify player ID is provided (i.e., player is logged in)
+  try {
+    const roles = await playerModel.getRoles(playerId);
+    if (roles) {
+      res.json({ roles });
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (e) {
+    console.error('Problem with getRoles', e);
+    res.sendStatus(500);  // TODO standardize error messages
+  }
+}
+
 /**
  * StoryTime API method for retrieving an authenticated player's profile.
  * Expects to find user.playerId in request, which is available if
@@ -148,11 +165,11 @@ exports.getSelfProfile = async (req, res) => {
     if (player) {
       res.json(mapPlayerToProfile(player));
     } else {
-      res.status(404).send();
+      res.sendStatus(404);
     }
   } catch (e) {
     console.error('Problem with getSelfProfile', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.sendStatus(500);  // TODO standardize error messages
   }
 };
 

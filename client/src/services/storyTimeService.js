@@ -21,6 +21,13 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
         .catch(err => console.log('Failed to find story with key:', storyKey, err));
 };
 
+export const getRoles = (processResponse) => {
+    fetch('/api/players/self/roles', { headers: getHeaders() })
+        .then(res => res.json())
+        .then(roles => processResponse(roles))
+        .catch(err => console.log('Failed to get player\'s roles', err));
+};
+
 export const getProfile = (processResponse) => {
     fetch('/api/players/self/profile', { headers: getHeaders() })
         .then(res => res.json())
