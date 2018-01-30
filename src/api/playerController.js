@@ -139,7 +139,7 @@ exports.getRoles = async (req, res) => {
   try {
     const roles = await playerModel.getRoles(playerId);
     if (roles) {
-      res.json({ roles });
+      res.json(roles);
     } else {
       res.sendStatus(404);
     }

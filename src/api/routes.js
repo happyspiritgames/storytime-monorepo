@@ -10,13 +10,8 @@ module.exports = function (app, authCheck) {
   apiRouter.route('/stories/:storyKey').get(storyController.getPublishedStorySummary);
   apiRouter.route('/stories/:storyKey/scenes/:sceneKey').get(storyController.getStoryScene);
 
-  // TODO decide whether needed; if so, auth needed?
-  apiRouter.route('/players').get(playerController.getPlayers);
-
   const authRouter = express.Router();
-
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
-
   authRouter.route('/players/self/roles').get(playerController.getRoles);
 
   authRouter.route('/players/self/profile')
@@ -30,8 +25,7 @@ module.exports = function (app, authCheck) {
   // .get(playerController.findPlayer);
 
   const adminRouter = express.Router();
-
-  adminRouter.use((req, res, next) => {
+  adminRouter.all('*', (req, res, next) => {
     console.log('Invoking admin API');
     if (!req.user || !req.user.roles || !req.user.roles.find((item) => item === 'admin')) {
       console.log('User is not logged in or does not have admin role.');

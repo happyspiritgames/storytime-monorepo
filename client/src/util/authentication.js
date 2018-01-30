@@ -30,10 +30,6 @@ export function setAccessToken() {
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 }
 
-export function setRoles(roles) {
-  localStorage.setItem(PLAYER_ROLES_KEY, roles);
-}
-
 export function showUserInfo() {
   return decode(getIdToken());
 }
@@ -46,12 +42,30 @@ export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
+/**
+ * Serializes an array of role names to local storage.
+ *
+ * @param {*} roles
+ */
+export function setRoles(roles) {
+  console.log('setRoles roles:', roles);
+  const serializedRoles = roles.join();
+  console.log('serialized roles', serializedRoles);
+  localStorage.setItem(PLAYER_ROLES_KEY, serializedRoles);
+}
+
+/**
+ * Checks whether given role name is found as a role in local storage.
+ *
+ * @param {*} roleToMatch
+ */
 export function hasRole(roleToMatch) {
-  const roles = localStorage.getItem(PLAYER_ROLES_KEY);
-  console.log('roles', roles);
-  if (Array.isArray(roles)) {
+  const serializedRoles = localStorage.getItem(PLAYER_ROLES_KEY);
+  console.log('found roles', serializedRoles);
+  if (serializedRoles) {
+    const roles = serializedRoles.split(',');
     return roles.find(role => {
-      return role === roleToMatch
+      return role === roleToMatch;
     });
   }
 }
@@ -62,6 +76,10 @@ function clearIdToken() {
 
 function clearAccessToken() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
+}
+
+function clearRoles() {
+  localStorage.removeItem(PLAYER_ROLES_KEY);
 }
 
 function getTokenExpirationDate(encodedToken) {
@@ -96,6 +114,7 @@ export function login() {
 export function logout(redirect) {
   clearIdToken();
   clearAccessToken();
+  clearRoles();
   if (redirect) {
     redirect();
   }
