@@ -47,7 +47,6 @@ export default class PlayerAdmin extends Component {
   }
 
   handlePlayerUpdate = (playerId) => {
-    console.log('should refresh now');
     getPlayer(playerId, this.loadPlayer);
   }
 

@@ -15,8 +15,9 @@ export default class PlayersList extends Component {
   }
 
   renderPlayerRow(player) {
+    const status = (player.status === 2) ? 'player-suspended' : '';
     return (
-      <tr key={player.id} onClick={this.handleSelect(player.id)}>
+      <tr key={player.id} onClick={this.handleSelect(player.id)} className={status}>
         <td>{ player.email }</td>
         <td>{ player.nickname }</td>
         <td>{ player.createdAt }</td>
