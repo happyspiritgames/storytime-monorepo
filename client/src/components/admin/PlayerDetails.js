@@ -4,8 +4,24 @@ import { Card, CardHeader, CardBody, CardFooter, Row, Col, Button } from 'reacts
 
 export default class PlayerDetails extends Component {
   static propTypes = {
-    player: PropTypes.object
+    player: PropTypes.object,
+    onStatusChange: PropTypes.shape({
+      activate: PropTypes.func,
+      suspend: PropTypes.func
+    })
   };
+
+  handleSuspendPlayer = (playerId) => {
+    return () => {
+      this.props.onStatusChange.suspend(playerId);
+    };
+  }
+
+  handleActivatePlayer = (playerId) => {
+    return () => {
+      this.props.onStatusChange.activate(playerId);
+    };
+  }
 
   render() {
     const { player } = this.props;
@@ -40,10 +56,14 @@ export default class PlayerDetails extends Component {
             <Col><strong>Email Opt-in</strong></Col>
             <Col><span>{emailOptIn}</span></Col>
           </Row>
+          <Row>
+            <Col><strong>Status</strong></Col>
+            <Col><span>{player.status}</span></Col>
+          </Row>
         </CardBody>
         <CardFooter>
-          <Button color="warning">Suspend</Button>&nbsp;
-          <Button color="primary">Resume</Button>&nbsp;
+          <Button color="warning" onClick={this.handleSuspendPlayer(player.id)}>Suspend</Button>&nbsp;
+          <Button color="primary" onClick={this.handleActivatePlayer(player.id)}>Activate</Button>&nbsp;
           <Button color="danger">Delete</Button>
         </CardFooter>
       </Card>

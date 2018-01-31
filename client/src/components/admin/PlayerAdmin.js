@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
-import { getPlayers } from '../../services/adminService';
+import { getPlayers, getPlayer, suspendPlayer, activatePlayer } from '../../services/adminApi';
 import PlayersList from './PlayersList';
 import PlayerDetails from './PlayerDetails';
 
@@ -32,6 +32,33 @@ export default class PlayerAdmin extends Component {
     });
   }
 
+  loadPlayer = (updatedPlayer) => {
+    const currentPlayers = this.state.players;
+    const playerIndex = currentPlayers.findIndex((player) => player.id === updatedPlayer.id);
+    if (playerIndex > -1) {
+      currentPlayers.splice(playerIndex, 1, updatedPlayer);
+    }
+    const currentPlayersById = this.state.playersById;
+    currentPlayersById[updatedPlayer.id] = updatedPlayer;
+    this.setState({
+      players: currentPlayers,
+      playersById: currentPlayersById
+    });
+  }
+
+  handlePlayerUpdate = (playerId) => {
+    console.log('should refresh now');
+    getPlayer(playerId, this.loadPlayer);
+  }
+
+  handleSuspendPlayer = (playerId) => {
+    suspendPlayer(playerId, this.handlePlayerUpdate);
+  }
+
+  handleActivatePlayer = (playerId) => {
+    activatePlayer(playerId, this.handlePlayerUpdate);
+  }
+
   componentDidMount() {
     getPlayers(this.loadPlayers);
   }
@@ -48,11 +75,15 @@ export default class PlayerAdmin extends Component {
 
   render() {
     const { players, selectedPlayer } = this.state;
+    const statusChangeCallbacks = {
+      suspend: this.handleSuspendPlayer,
+      activate: this.handleActivatePlayer
+    }
     return (
       <StoryTimePage id="player-admin" heading="Players">
         <PlayersList players={players} onSelect={this.handleSelectPlayer} />
         <hr />
-        <PlayerDetails player={selectedPlayer} />
+        <PlayerDetails player={selectedPlayer} onStatusChange={statusChangeCallbacks} />
       </StoryTimePage>
     );
   }
