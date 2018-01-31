@@ -133,7 +133,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
 }
 
 exports.getRoles = async (req, res) => {
-  const { playerId }= req.user;
+  const { playerId } = req.user;
   console.log('playerController.getRoles: playerId=', playerId);
   // TODO verify player ID is provided (i.e., player is logged in)
   try {
@@ -145,6 +145,21 @@ exports.getRoles = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getRoles', e);
+    res.sendStatus(500);  // TODO standardize error messages
+  }
+}
+
+exports.getStatuses = async (req, res) => {
+  console.log('playerController.getStatuses');
+  try {
+    const statuses = await playerModel.getPlayerStatuses();
+    if (statuses) {
+      res.json(statuses);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (e) {
+    console.error('Problem with getStatuses', e);
     res.sendStatus(500);  // TODO standardize error messages
   }
 }

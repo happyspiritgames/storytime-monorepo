@@ -31,3 +31,17 @@ WHERE email = 'davemount@gmail.com'
   AND provider = 'google-oauth2'
   AND role.name='admin';
 
+-- make it possible to suspend or remove (mark for removal) a player
+CREATE TABLE player_status (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(20),
+  display_name VARCHAR(20)
+);
+
+-- active status must be first (otherwise, adjust default value for player.status_id)
+INSERT INTO player_status (name, display_name) VALUES ('active', 'Active');
+INSERT INTO player_status (name, display_name) VALUES ('suspended', 'Suspended');
+INSERT INTO player_status (name, display_name) VALUES ('deleted', 'Deleted');
+
+ALTER TABLE player ADD COLUMN status_id INTEGER NOT NULL
+DEFAULT 1 REFERENCES player_status (id);

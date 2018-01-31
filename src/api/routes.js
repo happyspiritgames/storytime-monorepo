@@ -1,7 +1,8 @@
 const storyController = require('./storyController');
 const playerController = require('./playerController');
 const express = require('express');
-const adminController = require('./adminController');
+// const adminController = require('./adminController');
+const adminRoutes = require('./adminRoutes');
 
 module.exports = function (app, authCheck) {
   const apiRouter = express.Router();
@@ -21,25 +22,10 @@ module.exports = function (app, authCheck) {
   authRouter.route('/players/:playerId')
   .get(playerController.getPlayer);
 
-  // app.route('/api/players/find/:subject')
-  // .get(playerController.findPlayer);
-
-  const adminRouter = express.Router();
-  adminRouter.all('*', (req, res, next) => {
-    console.log('Invoking admin API');
-    if (!req.user || !req.user.roles || !req.user.roles.find((item) => item === 'admin')) {
-      console.log('User is not logged in or does not have admin role.');
-      res.status(401);
-      next('Unauthorized access');
-    }
-    next();
-  });
-
-  adminRouter.route('/players')
-  .get(adminController.getPlayers);
-
+  authRouter.route('/statuses').get(playerController.getStatuses);
+  
   // assemble routers
   apiRouter.use('/', authRouter);
-  apiRouter.use('/admin', adminRouter);
+  apiRouter.use('/admin', adminRoutes);
   app.use('/api', apiRouter);
 };
