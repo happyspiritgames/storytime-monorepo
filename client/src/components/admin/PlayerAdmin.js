@@ -24,34 +24,54 @@ export default class PlayerAdmin extends Component {
   constructor() {
     super();
     this.state = {
-      players: samplePlayerData,
-      selectedPlayer: samplePlayerData[0]
-    }
+      players: []
+    };
   }
 
   loadPlayers = (players = []) => {
     console.log('found players', players);
-    if (players) {
-      const selected = (players && players[0]) ? players[0] : null;
+    if (players && Array.isArray(players)) {
+      const playersById = {};
+      players.forEach(player => {
+        console.log('adding player to map', player.id);
+        playersById[player.id] = player;
+      });
+      console.log('by ID', playersById);
       this.setState({
-        players: players,
-        selectedPlayer: selected
+        players,
+        playersById
       });
     }
+  }
+
+  handleSelectPlayer = (playerId) => {
+    this.setState({
+      selectedPlayer: playerId
+    });
   }
 
   componentDidMount() {
     getPlayers(this.loadPlayers);
   }
 
+  renderPlayerDetails = () => {
+    const { selectedPlayer } = this.state;
+    if (selectedPlayer) {
+      const player = this.state.playersById[selectedPlayer];
+      if (player) {
+        return <PlayerDetails player={player} />;
+      }
+    }
+  }
+
   render() {
     const { players, selectedPlayer } = this.state;
     return (
-    <StoryTimePage id="player-admin" heading="Players">
-      <PlayersList players={players} />
-      <hr />
-      <PlayerDetails player={selectedPlayer} />
-    </StoryTimePage>
-    )
+      <StoryTimePage id="player-admin" heading="Players">
+        <PlayersList players={players} onSelect={this.handleSelectPlayer} />
+        <hr />
+        {this.renderPlayerDetails()}
+      </StoryTimePage>
+    );
   }
 }

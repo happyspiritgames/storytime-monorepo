@@ -4,12 +4,19 @@ import { Table } from 'reactstrap';
 
 export default class PlayersList extends Component {
   static propTypes = {
-    players: PropTypes.array.isRequired
+    players: PropTypes.array.isRequired,
+    onSelect: PropTypes.func
   };
+
+  handleSelect = (playerId) => {
+    return () => {
+      this.props.onSelect(playerId);
+    }
+  }
 
   renderPlayerRow(player) {
     return (
-      <tr key={player.id}>
+      <tr key={player.id} onClick={this.handleSelect(player.id)}>
         <td>{ player.email }</td>
         <td>{ player.nickname }</td>
         <td>{ player.createdAt }</td>
@@ -22,7 +29,9 @@ export default class PlayersList extends Component {
 
   render() {
     const { players } = this.props;
-    // const stuff = [];
+    if (!players) {
+      return '';
+    }
     const rows = players.map(player => this.renderPlayerRow(player));
 
     // TODO include sorting with icons

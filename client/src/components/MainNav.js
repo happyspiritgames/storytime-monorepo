@@ -30,7 +30,7 @@ class MainNav extends Component {
           ) : ''
         }
         {
-          (isAdmin) ? (
+          ( isAdmin ) ? (
             <NavItem>
               <NavLink href="/admin">Game Admin</NavLink>
             </NavItem>
