@@ -48,9 +48,7 @@ export function getAccessToken() {
  * @param {*} roles
  */
 export function setRoles(roles) {
-  console.log('setRoles roles:', roles);
   const serializedRoles = roles.join();
-  console.log('serialized roles', serializedRoles);
   localStorage.setItem(PLAYER_ROLES_KEY, serializedRoles);
 }
 
@@ -61,7 +59,6 @@ export function setRoles(roles) {
  */
 export function hasRole(roleToMatch) {
   const serializedRoles = localStorage.getItem(PLAYER_ROLES_KEY);
-  console.log('found roles', serializedRoles);
   if (serializedRoles) {
     const roles = serializedRoles.split(',');
     return roles.find(role => {

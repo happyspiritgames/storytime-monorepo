@@ -9,16 +9,21 @@ export default class PlayerDetails extends Component {
 
   render() {
     const { player } = this.props;
-    const emailOptIn = player.emailOptInAt ? `Yes ${player.emailOptInAt}` : 'No';
     if (player === undefined || player === {}) {
-      return;
+      return <p><strong>Select a player from the list above.</strong></p>;
     }
+
+    const emailOptIn = player.emailOptInAt ? `Yes ${player.emailOptInAt}` : 'No';
     return (
       <Card>
         <CardHeader>
-          <h5 className="mb-0">Player Details</h5>
+          <h5 className="mb-0">Details</h5>
         </CardHeader>
         <CardBody>
+          <Row>
+            <Col><strong>ID</strong></Col>
+            <Col><span>{player.id}</span></Col>
+          </Row>
           <Row>
             <Col><strong>Nickname</strong></Col>
             <Col><span>{player.nickname}</span></Col>
