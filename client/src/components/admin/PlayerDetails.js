@@ -31,7 +31,8 @@ export default class PlayerDetails extends Component {
     }
 
     const emailOptIn = player.emailOptInAt ? `Yes ${player.emailOptInAt}` : 'No';
-    const statusToShow = statusCodeLookup(player.status).displayName || player.status;
+    const playerStatusCode = statusCodeLookup(player.status);
+    const statusToShow = (playerStatusCode) ? playerStatusCode.displayName : player.status;
     return (
       <Card>
         <CardHeader>
@@ -64,9 +65,20 @@ export default class PlayerDetails extends Component {
           </Row>
         </CardBody>
         <CardFooter>
-          <Button color="warning" onClick={this.handleSuspendPlayer(player.id)}>Suspend</Button>&nbsp;
-          <Button color="primary" onClick={this.handleActivatePlayer(player.id)}>Activate</Button>&nbsp;
-          <Button color="danger">Delete</Button>
+          { playerStatusCode && playerStatusCode.name === 'active' &&
+            <Button color="warning"
+              onClick={this.handleSuspendPlayer(player.id)}
+            >
+              Suspend
+            </Button>
+          }
+          { playerStatusCode && playerStatusCode.name === 'suspended' &&
+            <Button color="primary"
+              onClick={this.handleActivatePlayer(player.id)}
+            >
+              Activate
+            </Button>
+          }
         </CardFooter>
       </Card>
     );
