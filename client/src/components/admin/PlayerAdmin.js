@@ -55,7 +55,8 @@ export default class PlayerAdmin extends Component {
     currentPlayersById[updatedPlayer.id] = updatedPlayer;
     this.setState({
       players: currentPlayers,
-      playersById: currentPlayersById
+      playersById: currentPlayersById,
+      selectedPlayer: updatedPlayer
     });
   }
 
