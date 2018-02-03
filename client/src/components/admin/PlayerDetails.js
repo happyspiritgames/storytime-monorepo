@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardHeader, CardBody, CardFooter, Row, Col, Button } from 'reactstrap';
+import { formatDateTime } from '../../util/formatter';
 
 export default class PlayerDetails extends Component {
   static propTypes = {
@@ -29,8 +30,11 @@ export default class PlayerDetails extends Component {
     if (player === undefined || player === {}) {
       return <p><strong>Select a player from the list above.</strong></p>;
     }
-
-    const emailOptIn = player.emailOptInAt ? `Yes ${player.emailOptInAt}` : 'No';
+    const joinedOnDisplayValue = formatDateTime(player.createdAt);
+    let emailOptInDisplayValue = 'No';
+    if (player.emailOptInAt) {
+      emailOptInDisplayValue = `Yes, ${formatDateTime(player.emailOptInAt)}`;
+    }
     const playerStatusCode = statusCodeLookup(player.status);
     const statusToShow = (playerStatusCode) ? playerStatusCode.displayName : player.status;
     return (
@@ -53,11 +57,11 @@ export default class PlayerDetails extends Component {
           </Row>
           <Row>
             <Col><strong>Joined</strong></Col>
-            <Col><span>{player.createdAt}</span></Col>
+            <Col><span>{joinedOnDisplayValue}</span></Col>
           </Row>
           <Row>
             <Col><strong>Email Opt-in</strong></Col>
-            <Col><span>{emailOptIn}</span></Col>
+            <Col><span>{emailOptInDisplayValue}</span></Col>
           </Row>
           <Row>
             <Col><strong>Status</strong></Col>

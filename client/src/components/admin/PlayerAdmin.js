@@ -71,7 +71,7 @@ export default class PlayerAdmin extends Component {
     activatePlayer(playerId, this.handlePlayerUpdate);
   }
 
-  getPlayerStatusDisplayName = (codeId) => {
+  lookupPlayerStatusCode = (codeId) => {
     return this.state.playerStatusCodes[codeId];
   }
 
@@ -81,7 +81,7 @@ export default class PlayerAdmin extends Component {
   }
 
   render() {
-    const { players, selectedPlayer, playerStatusCodes } = this.state;
+    const { players, selectedPlayer } = this.state;
     const statusChangeCallbacks = {
       suspend: this.handleSuspendPlayer,
       activate: this.handleActivatePlayer
@@ -91,13 +91,13 @@ export default class PlayerAdmin extends Component {
         <PlayersList
           players={players}
           onSelect={this.handleSelectPlayer}
-          statusCodeLookup={this.getPlayerStatusDisplayName}
+          statusCodeLookup={this.lookupPlayerStatusCode}
         />
         <hr />
         <PlayerDetails
           player={selectedPlayer}
           onStatusChange={statusChangeCallbacks}
-          statusCodeLookup={this.getPlayerStatusDisplayName}
+          statusCodeLookup={this.lookupPlayerStatusCode}
         />
       </StoryTimePage>
     );

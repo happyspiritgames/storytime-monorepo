@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
+import { formatDateTime } from '../../util/formatter';
 
 export default class PlayersList extends Component {
   static propTypes = {
@@ -19,14 +20,15 @@ export default class PlayersList extends Component {
     const { statusCodeLookup } = this.props;
     const statusCode = statusCodeLookup(player.status);
     let statusHighlight = '';
-    if (statusCode.name === 'suspended') {
+    if (statusCode && statusCode.name === 'suspended') {
       statusHighlight = 'player-suspended';
     }
+    const joinedDisplayValue = formatDateTime(player.createdAt);
     return (
       <tr key={player.id} onClick={this.handleSelect(player.id)} className={statusHighlight}>
         <td>{ player.email }</td>
         <td>{ player.nickname }</td>
-        <td>{ player.createdAt }</td>
+        <td>{ joinedDisplayValue }</td>
         <td>
           { player.emailOptInAt ? `Yes` : 'No' }
         </td>
