@@ -48,9 +48,9 @@ export const updateProfile = (profileUpdates, processResponse) => {
     .catch(err => console.log('Failed to update player profile', err));
 };
 
-export const getPlayerStatusCodes = (processStatuses) => {
-  fetch('/api/statuses', { headers: getHeaders() })
+export const getPlayerStatusCodes = (processStatusCodes) => {
+  fetch('/api/player-status-codes', { headers: getHeaders() })
     .then(res => res.json())
-    .then(statuses => processStatuses(statuses))
+    .then(statusCodes => processStatusCodes(statusCodes))
     .catch(err => console.log('Failed to get player status codes', err));
 }

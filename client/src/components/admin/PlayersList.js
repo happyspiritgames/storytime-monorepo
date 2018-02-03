@@ -5,7 +5,8 @@ import { Table } from 'reactstrap';
 export default class PlayersList extends Component {
   static propTypes = {
     players: PropTypes.array.isRequired,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    statusCodeLookup: PropTypes.func
   };
 
   handleSelect = (playerId) => {
@@ -15,9 +16,14 @@ export default class PlayersList extends Component {
   }
 
   renderPlayerRow(player) {
-    const status = (player.status === 2) ? 'player-suspended' : '';
+    const { statusCodeLookup } = this.props;
+    const statusCode = statusCodeLookup(player.status);
+    let statusHighlight = '';
+    if (statusCode.name === 'suspended') {
+      statusHighlight = 'player-suspended';
+    }
     return (
-      <tr key={player.id} onClick={this.handleSelect(player.id)} className={status}>
+      <tr key={player.id} onClick={this.handleSelect(player.id)} className={statusHighlight}>
         <td>{ player.email }</td>
         <td>{ player.nickname }</td>
         <td>{ player.createdAt }</td>

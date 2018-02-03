@@ -8,7 +8,8 @@ export default class PlayerDetails extends Component {
     onStatusChange: PropTypes.shape({
       activate: PropTypes.func,
       suspend: PropTypes.func
-    })
+    }),
+    statusCodeLookup: PropTypes.func
   };
 
   handleSuspendPlayer = (playerId) => {
@@ -24,12 +25,13 @@ export default class PlayerDetails extends Component {
   }
 
   render() {
-    const { player } = this.props;
+    const { player, statusCodeLookup } = this.props;
     if (player === undefined || player === {}) {
       return <p><strong>Select a player from the list above.</strong></p>;
     }
 
     const emailOptIn = player.emailOptInAt ? `Yes ${player.emailOptInAt}` : 'No';
+    const statusToShow = statusCodeLookup(player.status).displayName || player.status;
     return (
       <Card>
         <CardHeader>
@@ -58,7 +60,7 @@ export default class PlayerDetails extends Component {
           </Row>
           <Row>
             <Col><strong>Status</strong></Col>
-            <Col><span>{player.status}</span></Col>
+            <Col><span>{statusToShow}</span></Col>
           </Row>
         </CardBody>
         <CardFooter>

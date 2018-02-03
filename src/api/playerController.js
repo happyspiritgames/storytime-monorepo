@@ -149,17 +149,27 @@ exports.getRoles = async (req, res) => {
   }
 }
 
-exports.getStatuses = async (req, res) => {
-  console.log('playerController.getStatuses');
+const mapPlayerStatusCodesToApi = (codesFromDb) => {
+  return codesFromDb.map(code => {
+    return {
+      id: code.id,
+      name: code.name,
+      displayName: code.display_name
+    }
+  });
+}
+
+exports.getPlayerStatusCodes = async (req, res) => {
+  console.log('playerController.getPlayerStatusCodes');
   try {
-    const statuses = await playerModel.getPlayerStatuses();
-    if (statuses) {
-      res.json(statuses);
+    const statusCodes = await playerModel.getPlayerStatusCodes();
+    if (statusCodes) {
+      res.json(mapPlayerStatusCodesToApi(statusCodes));
     } else {
       res.sendStatus(404);
     }
   } catch (e) {
-    console.error('Problem with getStatuses', e);
+    console.error('Problem with getPlayerStatusCodes', e);
     res.sendStatus(500);  // TODO standardize error messages
   }
 }

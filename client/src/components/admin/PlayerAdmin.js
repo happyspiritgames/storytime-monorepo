@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import { getPlayers, getPlayer, suspendPlayer, activatePlayer } from '../../services/adminApi';
+import { getPlayerStatusCodes } from '../../services/storyTimeApi';
 import PlayersList from './PlayersList';
 import PlayerDetails from './PlayerDetails';
 
@@ -8,8 +9,20 @@ export default class PlayerAdmin extends Component {
   constructor() {
     super();
     this.state = {
-      players: []
+      players: [],
+      playerStatusCodes: {}
     };
+  }
+
+  // TODO someday load earlier along with all other static lookups
+  loadStatusCodes = (codes = []) => {
+    const playerStatusCodes = {};
+    codes.forEach(code => {
+      playerStatusCodes[code.id] = code;
+    });
+    this.setState({
+      playerStatusCodes
+    });
   }
 
   loadPlayers = (players = []) => {
@@ -58,31 +71,34 @@ export default class PlayerAdmin extends Component {
     activatePlayer(playerId, this.handlePlayerUpdate);
   }
 
+  getPlayerStatusDisplayName = (codeId) => {
+    return this.state.playerStatusCodes[codeId];
+  }
+
   componentDidMount() {
+    getPlayerStatusCodes(this.loadStatusCodes);
     getPlayers(this.loadPlayers);
   }
 
-  // renderPlayerDetails = () => {
-  //   const { selectedPlayer } = this.state;
-  //   if (selectedPlayer) {
-  //     const player = this.state.playersById[selectedPlayer];
-  //     if (player) {
-  //       return <PlayerDetails player={player} />;
-  //     }
-  //   }
-  // }
-
   render() {
-    const { players, selectedPlayer } = this.state;
+    const { players, selectedPlayer, playerStatusCodes } = this.state;
     const statusChangeCallbacks = {
       suspend: this.handleSuspendPlayer,
       activate: this.handleActivatePlayer
-    }
+    };
     return (
       <StoryTimePage id="player-admin" heading="Players">
-        <PlayersList players={players} onSelect={this.handleSelectPlayer} />
+        <PlayersList
+          players={players}
+          onSelect={this.handleSelectPlayer}
+          statusCodeLookup={this.getPlayerStatusDisplayName}
+        />
         <hr />
-        <PlayerDetails player={selectedPlayer} onStatusChange={statusChangeCallbacks} />
+        <PlayerDetails
+          player={selectedPlayer}
+          onStatusChange={statusChangeCallbacks}
+          statusCodeLookup={this.getPlayerStatusDisplayName}
+        />
       </StoryTimePage>
     );
   }

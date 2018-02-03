@@ -88,8 +88,8 @@ exports.getRoles = async (playerId) => {
 /**
  * Returns possible player statuses.
  */
-exports.getPlayerStatuses = async () => {
-  console.log('playerModel.getPlayerStatuses');
+exports.getPlayerStatusCodes = async () => {
+  console.log('playerModel.getPlayerStatusCodes');
   const SEL_ROLES = 'SELECT * FROM player_status';
   const dbResult = await db.query(SEL_ROLES);
   return dbResult.rows;
