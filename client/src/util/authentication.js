@@ -3,6 +3,7 @@ import auth0 from 'auth0-js';
 
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
+const PLAYER_ROLES_KEY = 'player_roles';
 const CLIENT_ID = 'KfiyrQwotwGHGoGFr7VRYhWvjWefWkMu';
 const CLIENT_DOMAIN = 'happyspiritgames.auth0.com';
 const REDIRECT = `${window.location.protocol}//${window.location.host}/callback`;
@@ -41,12 +42,41 @@ export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
+/**
+ * Serializes an array of role names to local storage.
+ *
+ * @param {*} roles
+ */
+export function setRoles(roles) {
+  const serializedRoles = roles.join();
+  localStorage.setItem(PLAYER_ROLES_KEY, serializedRoles);
+}
+
+/**
+ * Checks whether given role name is found as a role in local storage.
+ *
+ * @param {*} roleToMatch
+ */
+export function hasRole(roleToMatch) {
+  const serializedRoles = localStorage.getItem(PLAYER_ROLES_KEY);
+  if (serializedRoles) {
+    const roles = serializedRoles.split(',');
+    return roles.find(role => {
+      return role === roleToMatch;
+    });
+  }
+}
+
 function clearIdToken() {
   localStorage.removeItem(ID_TOKEN_KEY);
 }
 
 function clearAccessToken() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
+}
+
+function clearRoles() {
+  localStorage.removeItem(PLAYER_ROLES_KEY);
 }
 
 function getTokenExpirationDate(encodedToken) {
@@ -81,6 +111,7 @@ export function login() {
 export function logout(redirect) {
   clearIdToken();
   clearAccessToken();
+  clearRoles();
   if (redirect) {
     redirect();
   }

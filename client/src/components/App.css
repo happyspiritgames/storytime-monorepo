@@ -41,3 +41,8 @@
 #scene .card-footer {
   margin-top: 25px;
 }
+
+/* admin */
+.player-suspended {
+  background-color: darksalmon;
+}

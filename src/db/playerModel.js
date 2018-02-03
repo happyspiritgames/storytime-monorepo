@@ -73,59 +73,56 @@ exports.createPlayerFromIdentity = async (subjectToken, email, nickname, socialP
   return playerId;
 };
 
+/**
+ * Returns an array of role names assigned to player with given ID.
+ *
+ * @param {*} playerId
+ */
+exports.getRoles = async (playerId) => {
+  console.log('playerModel.getRoles');
+  const SEL_ROLES = 'SELECT role.name FROM role, player_role WHERE player_role.player_id = $1 AND player_role.role_id = role.id';
+  const dbResult = await db.query(SEL_ROLES, [playerId]);
+  return dbResult.rows.map(row => row.name);
+}
+
+/**
+ * Returns possible player statuses.
+ */
+exports.getPlayerStatusCodes = async () => {
+  console.log('playerModel.getPlayerStatusCodes');
+  const SEL_ROLES = 'SELECT * FROM player_status';
+  const dbResult = await db.query(SEL_ROLES);
+  return dbResult.rows;
+}
+
+const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
+const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
+
 exports.updatePlayer = async (playerId, nickname, membersOnlyCommsOk) => {
   console.log('playerModel.updatePlayer');
   const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';
   let dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
-  console.log('nickname', dbResult.rowCount);
 
-  const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
-  const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
   if (membersOnlyCommsOk) {
     dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId]);
   } else {
     dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId]);
   }
-  console.log('commsOk', dbResult.rowCount);
 }
 
-/*
--- look up player given idp_sub
-SELECT player_id
-FROM identity
-WHERE ipd_sub = "";
+const UPD_PLAYER_STATUS = 'UPDATE player SET status_id = (select id from player_status where name=$2) where id = $1';
 
--- look up player info
-SELECT created_at, email, nickname, agreed_to_comms_at
-FROM player
-WHERE id = "";
+exports.activatePlayer = async (playerId) => {
+  console.log('playerModel.suspendPlayer');
+  const dbResult = await db.query(UPD_PLAYER_STATUS, [playerId, 'active']);
+}
 
--- update player info
-UPDATE player
-SET nickname = $2
-WHERE id = $1;
+exports.suspendPlayer = async (playerId) => {
+  console.log('playerModel.suspendPlayer');
+  const dbResult = await db.query(UPD_PLAYER_STATUS, [playerId, 'suspended']);
+}
 
--- agree to communications
-UPDATE player
-SET agreed_to_comms_at = NOW()
-WHERE id = $1;
-
--- revoke agreement to communications
-UPDATE player
-SET agreed_to_comms_at = DEFAULT
-WHERE id = $1;
-
--- look up stored profile
-SELECT idp_profile
-FROM identity
-WHERE idp_sub = $1
-
--- update profile
-UPDATE identity
-SET idp_profile = $2
-WHERE idp_sub = $1;
-
--- delete a player
-DELETE FROM identity WHERE player_id = $1;
-DELETE FROM player WHERE id = $1;
-*/
+exports.deletePlayer = async (playerId) => {
+  console.log('playerModel.suspendPlayer');
+  const dbResult = await db.query(UPD_PLAYER_STATUS, [playerId, 'deleted']);
+}

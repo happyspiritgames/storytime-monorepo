@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
+import { formatDateTime } from '../../util/formatter';
 
 export default class PlayersList extends Component {
   static propTypes = {
-    players: PropTypes.array.isRequired
+    players: PropTypes.array.isRequired,
+    onSelect: PropTypes.func,
+    statusCodeLookup: PropTypes.func
   };
 
+  handleSelect = (playerId) => {
+    return () => {
+      this.props.onSelect(playerId);
+    }
+  }
+
   renderPlayerRow(player) {
+    const { statusCodeLookup } = this.props;
+    const statusCode = statusCodeLookup(player.status);
+    let statusHighlight = '';
+    if (statusCode && statusCode.name === 'suspended') {
+      statusHighlight = 'player-suspended';
+    }
+    const joinedDisplayValue = formatDateTime(player.createdAt);
     return (
-      <tr key={player.id}>
+      <tr key={player.id} onClick={this.handleSelect(player.id)} className={statusHighlight}>
         <td>{ player.email }</td>
         <td>{ player.nickname }</td>
-        <td>{ player.createdAt }</td>
+        <td>{ joinedDisplayValue }</td>
         <td>
           { player.emailOptInAt ? `Yes` : 'No' }
         </td>
@@ -22,7 +38,9 @@ export default class PlayersList extends Component {
 
   render() {
     const { players } = this.props;
-    // const stuff = [];
+    if (!players) {
+      return '';
+    }
     const rows = players.map(player => this.renderPlayerRow(player));
 
     // TODO include sorting with icons

@@ -42,3 +42,13 @@ export const format = (text = '') => {
   });
   return formatted;
 }
+
+export const formatDate = (date) => {
+  const value = (typeof date === 'string') ? new Date(Date.parse(date)) : date;
+  return `${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`;
+}
+
+export const formatDateTime = (date) => {
+  const value = (typeof date === 'string') ? new Date(Date.parse(date)) : date;
+  return `${formatDate(value)} ${value.getHours()}:${("0" + value.getMinutes()).slice(-2)}`;
+}

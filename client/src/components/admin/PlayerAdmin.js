@@ -1,57 +1,106 @@
 import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
-import { getPlayers } from '../../services/adminService';
+import { getPlayers, getPlayer, suspendPlayer, activatePlayer } from '../../services/adminApi';
+import { getPlayerStatusCodes } from '../../services/storyTimeApi';
 import PlayersList from './PlayersList';
 import PlayerDetails from './PlayerDetails';
-
-const samplePlayerData = [
-  {
-    id: '10001000-1000-4000-1000-100010001000',
-    email: 'bubba@hsg.com',
-    nickname: 'BubbaBubbaGump',
-    joinedAt: '01/15/2018',
-    optInAt: '01/15/2018'
-  },
-  {
-    id: '20002000-2000-4000-2000-200020002000',
-    email: 'hercules@olympus.gr',
-    nickname: 'My Hero',
-    joinedAt: '01/23/2018'
-  }
-];
 
 export default class PlayerAdmin extends Component {
   constructor() {
     super();
     this.state = {
-      players: samplePlayerData,
-      selectedPlayer: samplePlayerData[0]
-    }
+      players: [],
+      playerStatusCodes: {}
+    };
+  }
+
+  // TODO someday load earlier along with all other static lookups
+  loadStatusCodes = (codes = []) => {
+    const playerStatusCodes = {};
+    codes.forEach(code => {
+      playerStatusCodes[code.id] = code;
+    });
+    this.setState({
+      playerStatusCodes
+    });
   }
 
   loadPlayers = (players = []) => {
-    console.log('found players', players);
-    if (players) {
-      const selected = (players && players[0]) ? players[0] : null;
+    if (players && Array.isArray(players)) {
+      const playersById = {};
+      players.forEach(player => {
+        playersById[player.id] = player;
+      });
       this.setState({
-        players: players,
-        selectedPlayer: selected
+        players,
+        playersById
       });
     }
   }
 
+  handleSelectPlayer = (playerId) => {
+    const selectedPlayer = this.state.playersById[playerId];
+    this.setState({
+      selectedPlayer
+    });
+  }
+
+  loadPlayer = (updatedPlayer) => {
+    const currentPlayers = this.state.players;
+    const playerIndex = currentPlayers.findIndex((player) => player.id === updatedPlayer.id);
+    if (playerIndex > -1) {
+      currentPlayers.splice(playerIndex, 1, updatedPlayer);
+    }
+    const currentPlayersById = this.state.playersById;
+    currentPlayersById[updatedPlayer.id] = updatedPlayer;
+    this.setState({
+      players: currentPlayers,
+      playersById: currentPlayersById,
+      selectedPlayer: updatedPlayer
+    });
+  }
+
+  handlePlayerUpdate = (playerId) => {
+    getPlayer(playerId, this.loadPlayer);
+  }
+
+  handleSuspendPlayer = (playerId) => {
+    suspendPlayer(playerId, this.handlePlayerUpdate);
+  }
+
+  handleActivatePlayer = (playerId) => {
+    activatePlayer(playerId, this.handlePlayerUpdate);
+  }
+
+  lookupPlayerStatusCode = (codeId) => {
+    return this.state.playerStatusCodes[codeId];
+  }
+
   componentDidMount() {
+    getPlayerStatusCodes(this.loadStatusCodes);
     getPlayers(this.loadPlayers);
   }
 
   render() {
     const { players, selectedPlayer } = this.state;
+    const statusChangeCallbacks = {
+      suspend: this.handleSuspendPlayer,
+      activate: this.handleActivatePlayer
+    };
     return (
-    <StoryTimePage id="admin" heading="Player Administration">
-      <PlayersList players={players} />
-      <hr />
-      <PlayerDetails player={selectedPlayer} />
-    </StoryTimePage>
-    )
+      <StoryTimePage id="player-admin" heading="Players">
+        <PlayersList
+          players={players}
+          onSelect={this.handleSelectPlayer}
+          statusCodeLookup={this.lookupPlayerStatusCode}
+        />
+        <hr />
+        <PlayerDetails
+          player={selectedPlayer}
+          onStatusChange={statusChangeCallbacks}
+          statusCodeLookup={this.lookupPlayerStatusCode}
+        />
+      </StoryTimePage>
+    );
   }
 }
