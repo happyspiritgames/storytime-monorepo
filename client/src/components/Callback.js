@@ -1,11 +1,13 @@
 import { Component } from 'react';
-import { setIdToken, setAccessToken } from '../util/authentication';
+import { setIdToken, setAccessToken, setRoles } from '../util/authentication';
+import { getRoles } from '../services/storyTimeApi';
 
 export default class Callback extends Component {
 
   componentDidMount() {
     setAccessToken();
     setIdToken();
+    getRoles(setRoles);
     window.location.href = '/';
   }
 

@@ -1,32 +1,26 @@
 const storyController = require('./storyController');
 const playerController = require('./playerController');
+const express = require('express');
+const adminRoutes = require('./adminRoutes');
 
 module.exports = function (app, authCheck) {
-  app.route('/api/ping')
-  .get(storyController.ping);
+  const apiRouter = express.Router();
+  apiRouter.route('/ping').get(storyController.ping);
+  apiRouter.route('/stories').get(storyController.searchStories);
+  apiRouter.route('/stories/:storyKey').get(storyController.getPublishedStorySummary);
+  apiRouter.route('/stories/:storyKey/scenes/:sceneKey').get(storyController.getStoryScene);
 
-  app.route('/api/stories')
-  .get(storyController.searchStories);
+  const authRouter = express.Router();
+  authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
+  authRouter.route('/players/self/roles').get(playerController.getRoles);
+  authRouter.route('/players/self/profile')
+  .get(playerController.getSelfProfile)
+  .put(playerController.updateSelfProfile);
+  authRouter.route('/players/:playerId').get(playerController.getPlayer);
+  authRouter.route('/player-status-codes').get(playerController.getPlayerStatusCodes);
 
-  app.route('/api/stories/:storyKey')
-  .get(storyController.getPublishedStorySummary);
-
-  app.route('/api/stories/:storyKey/scenes/:sceneKey')
-  .get(storyController.getStoryScene);
-
-  app.route('/api/players')
-  .get(playerController.getPlayers);
-
-  app.route('/api/players/self/profile')
-  .get([authCheck, playerController.findOrCreatePlayer], playerController.getSelfProfile)
-  .put([authCheck, playerController.findOrCreatePlayer], playerController.updateSelfProfile);
-
-  // app.route('/api/players/self/profile/refresh')
-  // .get([authCheck], playerController.refreshProfile);
-
-  app.route('/api/players/:playerId')
-  .get(playerController.getPlayer);
-
-  // app.route('/api/players/find/:subject')
-  // .get(playerController.findPlayer);
+  // assemble routers
+  apiRouter.use('/', authRouter);
+  apiRouter.use('/admin', adminRoutes);
+  app.use('/api', apiRouter);
 };

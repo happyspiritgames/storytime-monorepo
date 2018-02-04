@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Nav, NavItem, NavLink, Button } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { login, logout, isLoggedIn } from '../util/authentication';
+import { login, logout, isLoggedIn, hasRole } from '../util/authentication';
 
 class MainNav extends Component {
 
@@ -12,6 +12,7 @@ class MainNav extends Component {
 
   render() {
     const loggedIn = isLoggedIn();
+    const isAdmin = hasRole('admin');
 
     return (
       <Nav tabs justified className="reader-nav">
@@ -28,21 +29,27 @@ class MainNav extends Component {
             </NavItem>
           ) : ''
         }
-        <NavItem>
-          <NavLink href="/admin">Game Admin</NavLink>
-        </NavItem>
+        {
+          ( isAdmin ) ? (
+            <NavItem>
+              <NavLink href="/admin">Game Admin</NavLink>
+            </NavItem>
+          ) : ''
+        }
         <NavItem className="nav navbar-nav navbar-right">
           {
             ( loggedIn ) ? (
-              <button
-                className="btn btn-danger log"
+              <Button
+                color="primary"
+                className="log"
                 onClick={() => logout(this.redirectHome)}
-              >Sign Out</button>
+              >Sign Out</Button>
             ) : (
-              <button
-                className="btn btn-info log"
+              <Button
+                color="primary"
+                className="log"
                 onClick={() => login()}
-              >Sign In</button>
+              >Sign In</Button>
             )
           }
         </NavItem>

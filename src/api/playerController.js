@@ -1,6 +1,15 @@
 const playerModel = require('../db/playerModel');
 const { fetchUserInfo } = require('../services/auth0Service');
 
+const mapPlayerToProfile = player => {
+  return {
+    id: player.id,
+    email: player.email,
+    nickname: player.nickname,
+    membersOnlyComms: !!player.agreed_to_comms_at
+  };
+}
+
 /**
  * StoryTime API method for retrieving a list of all players.
  *
@@ -100,6 +109,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
   const subject = req.user.sub;
   console.log('subject is', subject);
   try {
+    // determine player ID
     playerId = await playerModel.findPlayerIdFromIdentity(subject);
     if (!playerId) {
       const profile = await fetchUserInfo(subject);
@@ -112,19 +122,56 @@ exports.findOrCreatePlayer = async (req, res, next) => {
       }
     }
     req.user.playerId = playerId;
+
+    // determine roles
+    const roles = await playerModel.getRoles(playerId);
+    req.user.roles = roles;
     next();
   } catch (e) {
     next(e);
   }
 }
 
-const mapPlayerToProfile = player => {
-  return {
-    id: player.id,
-    email: player.email,
-    nickname: player.nickname,
-    membersOnlyComms: !!player.agreed_to_comms_at
-  };
+exports.getRoles = async (req, res) => {
+  const { playerId } = req.user;
+  console.log('playerController.getRoles: playerId=', playerId);
+  // TODO verify player ID is provided (i.e., player is logged in)
+  try {
+    const roles = await playerModel.getRoles(playerId);
+    if (roles) {
+      res.json(roles);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (e) {
+    console.error('Problem with getRoles', e);
+    res.sendStatus(500);  // TODO standardize error messages
+  }
+}
+
+const mapPlayerStatusCodesToApi = (codesFromDb) => {
+  return codesFromDb.map(code => {
+    return {
+      id: code.id,
+      name: code.name,
+      displayName: code.display_name
+    }
+  });
+}
+
+exports.getPlayerStatusCodes = async (req, res) => {
+  console.log('playerController.getPlayerStatusCodes');
+  try {
+    const statusCodes = await playerModel.getPlayerStatusCodes();
+    if (statusCodes) {
+      res.json(mapPlayerStatusCodesToApi(statusCodes));
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (e) {
+    console.error('Problem with getPlayerStatusCodes', e);
+    res.sendStatus(500);  // TODO standardize error messages
+  }
 }
 
 /**
@@ -143,11 +190,11 @@ exports.getSelfProfile = async (req, res) => {
     if (player) {
       res.json(mapPlayerToProfile(player));
     } else {
-      res.status(404).send();
+      res.sendStatus(404);
     }
   } catch (e) {
     console.error('Problem with getSelfProfile', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.sendStatus(500);  // TODO standardize error messages
   }
 };
 
