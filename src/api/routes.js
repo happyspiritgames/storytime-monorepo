@@ -2,6 +2,7 @@ const storyController = require('./storyController');
 const playerController = require('./playerController');
 const express = require('express');
 const adminRoutes = require('./adminRoutes');
+const authorRoutes = require('./authorRoutes');
 
 module.exports = function (app, authCheck) {
   const apiRouter = express.Router();
@@ -22,5 +23,6 @@ module.exports = function (app, authCheck) {
   // assemble routers
   apiRouter.use('/', authRouter);
   apiRouter.use('/admin', adminRoutes);
+  apiRouter.use('/author', authorRoutes);
   app.use('/api', apiRouter);
 };
