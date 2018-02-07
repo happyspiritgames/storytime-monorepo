@@ -1,5 +1,5 @@
 const draftModel = require('../db/draftStoryModel');
-const { internalError } = require('./errors');
+const { internalError, errorMessage } = require('./errors');
 
 /**
  * StoryTime API method for retrieving draft story summaries for the current player.
@@ -14,7 +14,7 @@ exports.getDraftSummaries = async (req, res) => {
     const stories = await draftModel.getStories(authorId);
     res.json(stories);
   } catch (e) {
-    console.error('Problem with getStories', e);
+    console.error('Problem getting draft stories', e);
     res.status(500).send(internalError);
   }
 };
@@ -30,14 +30,30 @@ exports.beginNewStory = async (req, res) => {
     const summary = await draftModel.getStory(storyKey);
     res.json(summary);
   } catch (e) {
-    console.error('Problem creating story', e);
+    console.error('Problem creating draft story', e);
     res.status(500).send(internalError);
   }
 };
 
 exports.getStorySummary = async (req, res) => {
   console.log('draftStoryController.getStorySummary');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId } = req.params;
+  try {
+    const summary = await draftModel.getStory(storyId);
+    if (summary) {
+      if (summary.authorId !== playerId) {
+        res.status(401).send(errorMessage('You do not have permission to edit that story.'));
+        return;
+      }
+      res.json(summary);
+    } else {
+      res.status(404).send(errorMessage('Story not found.'));
+    }
+  } catch (e) {
+    console.error('Problem getting draft summary', e);
+    res.status(500).send(internalError);
+  }
 };
 
 exports.updateStorySummary = async (req, res) => {
