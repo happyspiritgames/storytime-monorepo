@@ -1,5 +1,6 @@
 const playerModel = require('../db/playerModel');
 const { fetchUserInfo } = require('../services/auth0Service');
+const { internalError } = require('./errors');
 
 const mapPlayerToProfile = player => {
   return {
@@ -8,7 +9,7 @@ const mapPlayerToProfile = player => {
     nickname: player.nickname,
     membersOnlyComms: !!player.agreed_to_comms_at
   };
-}
+};
 
 /**
  * StoryTime API method for retrieving a list of all players.
@@ -23,7 +24,7 @@ exports.getPlayers = async (req, res) => {
     res.json(players);
   } catch (e) {
     console.error('Problem with getPlayers', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -45,7 +46,7 @@ exports.getPlayer = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -68,7 +69,7 @@ exports.findPlayer = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with findPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -84,7 +85,7 @@ exports.refreshProfile = async (req, res) => {
     }
   } catch (e) {
     console.error(e);
-    res.status(500).end();
+    res.status(500).send(internalError);
   }
 }
 
@@ -118,7 +119,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
 
       if (!playerId) {
         console.error('Unable to create player account.', subject, email, name);
-        res.status(500).send({ message: 'Could not create an player account due to a system error.' });
+        res.status(500).send(internalError);
       }
     }
     req.user.playerId = playerId;
@@ -145,7 +146,7 @@ exports.getRoles = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getRoles', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -170,7 +171,7 @@ exports.getPlayerStatusCodes = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getPlayerStatusCodes', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -194,7 +195,7 @@ exports.getSelfProfile = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getSelfProfile', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -215,6 +216,6 @@ exports.updateSelfProfile = async (req, res) => {
     res.json(mapPlayerToProfile(profile));
   } catch (e) {
     console.error('Problem with updateSelfProfile', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }

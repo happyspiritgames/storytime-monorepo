@@ -1,4 +1,5 @@
 const draftModel = require('../db/draftStoryModel');
+const { internalError } = require('./errors');
 
 /**
  * StoryTime API method for retrieving draft story summaries for the current player.
@@ -14,13 +15,24 @@ exports.getDraftSummaries = async (req, res) => {
     res.json(stories);
   } catch (e) {
     console.error('Problem with getStories', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
 exports.beginNewStory = async (req, res) => {
-  console.log('draftStoryController.beginNewStory');
-  res.end();
+  const { playerId } = req.user;
+  const { title, tagLine, about } = req.body;
+  console.log('draftStoryController.beginNewStory', playerId, title);
+  try {
+    const storyKey = await draftModel.createStory(playerId, title, tagLine, about);
+    const sceneKey = await draftModel.createScene(storyKey, 'Start Here', 'Tell your story', 'Now what?');
+    await draftModel.updateStory(storyKey, null, null, null, sceneKey);
+    const summary = await draftModel.getStory(storyKey);
+    res.json(summary);
+  } catch (e) {
+    console.error('Problem creating story', e);
+    res.status(500).send(internalError);
+  }
 };
 
 exports.getStorySummary = async (req, res) => {
