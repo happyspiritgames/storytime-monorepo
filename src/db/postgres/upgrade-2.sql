@@ -9,11 +9,11 @@ drop table if exists story;
 
 create table story (
   id varchar(8) primary key,
-  author uuid not null references player (id),
+  author_id uuid not null references player (id),
   title varchar(100) not null,
   tag_line varchar(256),
   about text,
-  first_scene varchar(8),
+  first_scene_id varchar(8),
   created_at timestamp not null default current_timestamp,
   updated_at timestamp not null default current_timestamp
 );
@@ -36,3 +36,12 @@ create table signpost (
   option_order smallint,
   primary key (scene_id, destination_id)
 );
+
+--insert into player_role values ('8a095fb3-8cd3-475b-a3c2-a842bac9ee39', 2);
+INSERT INTO player_role
+SELECT player.id as player_id, role.id as role_id
+FROM player, identity, role
+WHERE email = 'davemount@gmail.com'
+  AND player.id = identity.player_id
+  AND provider = 'google-oauth2'
+  AND role.name='author';

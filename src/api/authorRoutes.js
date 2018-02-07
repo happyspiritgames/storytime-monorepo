@@ -1,5 +1,5 @@
 const express = require('express');
-const storyController = require('./storyController');
+const draftController = require('./draftStoryController');
 
 const router = express.Router();
 
@@ -15,29 +15,28 @@ router.all('*', (req, res, next) => {
 
 // for seeing a list of stories owned by the author
 router.route('/stories')
-.get(storyController.getStories())
-.post(storyController.beginNewStory());
+.get(draftController.getDraftSummaries)
+.post(draftController.beginNewStory);
 
 // for working with latest draft of a particular story
 router.route('/stories/:storyId')
-.get(storyController.getStorySummary())
-.put(storyController.updateStorySummary());
+.get(draftController.getStorySummary)
+.put(draftController.updateStorySummary);
 
 // returns the complete story, including the summary and all scenes;
 // payload could be quite large, good for initial load and when client gets out of sync
 router.route('/stories/:storyId/full')
-.get(storyController.getFullStory())
-
+.get(draftController.getFullStory);
 
 // for working with scenes of draft story
-router.route('/stories/:storyId/scenes').post(storyController.beginNewScene());  // to support alternate workflow where scenes are wired up afterward
+router.route('/stories/:storyId/scenes').post(draftController.beginNewScene);  // to support alternate workflow where scenes are wired up afterward
 router.route('/stories/:storyId/scenes/:sceneId')
-.get(storyController.getScene())
-.put(storyController.updateScene())
-.delete(storyController.deleteScene())
+.get(draftController.getScene)
+.put(draftController.updateScene)
+.delete(draftController.deleteScene);
 
 router.route('/stories/:storyId/signpost')
-.post(storyController.addDestination())
-.put(storyController.updateDestinations());
+.get(draftController.getDestinations)
+.put(draftController.updateDestinations);
 
 module.exports = router;
