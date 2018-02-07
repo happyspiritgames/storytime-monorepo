@@ -15,7 +15,7 @@ exports.getDraftSummaries = async (req, res) => {
     res.json(stories);
   } catch (e) {
     console.error('Problem getting draft stories', e);
-    res.status(500).send(internalError);
+    res.status(500).json(internalError);
   }
 };
 
@@ -28,10 +28,10 @@ exports.beginNewStory = async (req, res) => {
     const sceneKey = await draftModel.createScene(storyKey, 'Start Here', 'Tell your story', 'Now what?');
     await draftModel.updateStory(storyKey, null, null, null, sceneKey);
     const summary = await draftModel.getStory(storyKey);
-    res.json(summary);
+    res.status(201).json(summary);
   } catch (e) {
     console.error('Problem creating draft story', e);
-    res.status(500).send(internalError);
+    res.status(500).json(internalError);
   }
 };
 
@@ -41,24 +41,43 @@ exports.getStorySummary = async (req, res) => {
   const { storyId } = req.params;
   try {
     const summary = await draftModel.getStory(storyId);
-    if (summary) {
-      if (summary.authorId !== playerId) {
-        res.status(401).send(errorMessage('You do not have permission to edit that story.'));
-        return;
-      }
-      res.json(summary);
-    } else {
-      res.status(404).send(errorMessage('Story not found.'));
+    if (!summary) {
+      res.status(404).json(errorMessage('Story not found.'));
+      return;
     }
+    if (summary.authorId !== playerId) {
+      res.status(401).json(errorMessage('You do not have permission to edit that story.'));
+      return;
+    }
+    res.json(summary);
   } catch (e) {
     console.error('Problem getting draft summary', e);
-    res.status(500).send(internalError);
+    res.status(500).json(internalError);
   }
 };
 
 exports.updateStorySummary = async (req, res) => {
   console.log('draftStoryController.updateStorySummary');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId } = req.params;
+  const { title, tagLine, about, firstSceneId } = req.body;
+  try {
+    let summary = await draftModel.getStory(storyId);
+    if (!summary) {
+      res.status(404).json(errorMessage('Story not found.'));
+      return;
+    }
+    if (summary.authorId !== playerId) {
+      res.status(401).json(errorMessage('You do not have permission to edit that story.'));
+      return;
+    }
+    await draftModel.updateStory(storyId, title, tagLine, about, firstSceneId);
+    summary = await draftModel.getStory(storyId);
+    res.status(202).json(summary);
+  } catch (e) {
+    console.error('Problem updating draft summary', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.getFullStory = async (req, res) => {
