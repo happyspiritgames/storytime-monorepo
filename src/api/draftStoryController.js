@@ -1,6 +1,19 @@
 const draftModel = require('../db/draftStoryModel');
 const { internalError, errorMessage } = require('./errors');
 
+const verifyStoryAuthorization = async (playerId, storyId, res) => {
+  const authorId = await draftModel.getStoryOwner(storyId);
+  if (!authorId) {
+    res.status(404).json(errorMessage('Story not found.'));
+    return false;
+  }
+  if (authorId !== playerId) {
+    res.status(401).json(errorMessage('You do not have permission to edit that story.'));
+    return false;
+  }
+  return true;
+}
+
 /**
  * StoryTime API method for retrieving draft story summaries for the current player.
  *
@@ -40,15 +53,10 @@ exports.getStorySummary = async (req, res) => {
   const { playerId } = req.user;
   const { storyId } = req.params;
   try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
     const summary = await draftModel.getStory(storyId);
-    if (!summary) {
-      res.status(404).json(errorMessage('Story not found.'));
-      return;
-    }
-    if (summary.authorId !== playerId) {
-      res.status(401).json(errorMessage('You do not have permission to edit that story.'));
-      return;
-    }
     res.json(summary);
   } catch (e) {
     console.error('Problem getting draft summary', e);
@@ -62,17 +70,11 @@ exports.updateStorySummary = async (req, res) => {
   const { storyId } = req.params;
   const { title, tagLine, about, firstSceneId } = req.body;
   try {
-    let summary = await draftModel.getStory(storyId);
-    if (!summary) {
-      res.status(404).json(errorMessage('Story not found.'));
-      return;
-    }
-    if (summary.authorId !== playerId) {
-      res.status(401).json(errorMessage('You do not have permission to edit that story.'));
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return;
     }
     await draftModel.updateStory(storyId, title, tagLine, about, firstSceneId);
-    summary = await draftModel.getStory(storyId);
+    const summary = await draftModel.getStory(storyId);
     res.status(202).json(summary);
   } catch (e) {
     console.error('Problem updating draft summary', e);
@@ -82,17 +84,64 @@ exports.updateStorySummary = async (req, res) => {
 
 exports.getFullStory = async (req, res) => {
   console.log('draftStoryController.getFullStory');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId } = req.params;
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    const summary = await draftModel.getStory(storyId);
+    const scenes = await draftModel.getScenes(storyId);
+
+    // TODO blend signposts into scenes
+
+    const fullStory = {
+      summary: summary,
+      scenes: scenes
+    };
+    res.json(fullStory);
+  } catch (e) {
+    console.error('Problem getting full draft', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.beginNewScene = async (req, res) => {
-  console.log('draftStoryController.beginNewScene');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId } = req.params;
+  const { title, prose, endPrompt } = req.body;
+  console.log('draftStoryController.beginNewScene', storyId, title);
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    const sceneId = await draftModel.createScene(storyId, title, prose, endPrompt);
+    const scene = await draftModel.getScene(storyId, sceneId);
+    res.status(201).json(scene);
+  } catch (e) {
+    console.error('Problem creating new scene', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.getScene = async (req, res) => {
-  console.log('draftStoryController.getScene');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId, sceneId } = req.params;
+  console.log('draftStoryController.getScene', storyId, sceneId);
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    const scene = await draftModel.getScene(storyId, sceneId);
+    if (!scene) {
+      res.status(404).json(errorMessage('The scene was not found.'));
+      return;
+    }
+    res.json(scene);
+  } catch (e) {
+    console.error('Problem getting draft scene', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.updateScene = async (req, res) => {
@@ -105,12 +154,12 @@ exports.deleteScene = async (req, res) => {
   res.end();
 };
 
-exports.getDestinations = async (req, res) => {
-  console.log('draftStoryController.addDestination');
+exports.getSignpost = async (req, res) => {
+  console.log('draftStoryController.getSignpost');
   res.end();
 };
 
-exports.updateDestinations = async (req, res) => {
-  console.log('draftStoryController.updateDestination');
+exports.updateSignpost = async (req, res) => {
+  console.log('draftStoryController.updateSignpost');
   res.end();
 };

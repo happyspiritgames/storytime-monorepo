@@ -43,6 +43,15 @@ exports.getStory = async (id) => {
   }
 }
 
+exports.getStoryOwner = async (storyId) => {
+  console.log('draftStoryModel.getStoryOwner');
+  const SEL_STORY_AUTHOR = 'SELECT author_id FROM story WHERE id=$1';
+  const dbResult = await db.query(SEL_STORY_AUTHOR, [storyId]);
+  if (dbResult.rowCount === 1) {
+    return dbResult.rows[0].author_id;
+  }
+}
+
 exports.createStory = async (authorId, title, tagLine, about) => {
   console.log('draftStoryModel.createStory');
   const INS_STORY = 'INSERT INTO story (id, author_id, title, tag_line, about) VALUES ($1, $2, $3, $4, $5)';
@@ -84,6 +93,17 @@ exports.updateStory = async (storyId, title, tagLine, about, firstSceneId) => {
   dbResult = await db.query(UPD_STORY, args);
 }
 
+exports.getScenes = async (storyId) => {
+  console.log('draftStoryModel.getScenes');
+  const SEL_SCENES = 'SELECT * FROM scene WHERE story_id=$1';
+  const dbResult = await db.query(SEL_SCENES, [storyId]);
+  if (dbResult.rowCount > 0) {
+    return dbResult.rows.map(sceneRow => mapSceneRowToApi(sceneRow));
+  } else {
+    return [];
+  }
+}
+
 exports.getScene = async (storyId, sceneId) => {
   console.log('draftStoryModel.getScene');
   const SEL_SCENE = 'SELECT * FROM scene WHERE story_id=$1 AND id=$2';
@@ -108,6 +128,10 @@ exports.createScene = async (storyId, title, prose, endPrompt) => {
 exports.updateScene = async (sceneId, title, prose, endPrompt) => {
   console.log('draftStoryModel.updateScene');
 
+}
+
+exports.getDestinations = async (sceneId) => {
+  console.log('draftStoryModel.getDestinations')
 }
 
 exports.addDestination = async (originSceneId, targetSceneId, teaser) => {

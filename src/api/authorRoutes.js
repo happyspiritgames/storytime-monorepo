@@ -36,7 +36,7 @@ router.route('/stories/:storyId/scenes/:sceneId')
 .delete(draftController.deleteScene);
 
 router.route('/stories/:storyId/signpost')
-.get(draftController.getDestinations)
-.put(draftController.updateDestinations);
+.get(draftController.getSignpost)
+.put(draftController.updateSignpost);
 
 module.exports = router;
