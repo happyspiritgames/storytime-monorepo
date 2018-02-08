@@ -34,7 +34,7 @@ router.route('/stories/:storyId/scenes/:sceneId')
 .get(draftController.getScene)
 .put(draftController.updateScene);
 
-router.route('/stories/:storyId/signpost')
+router.route('/stories/:storyId/scenes/:sceneId/signpost')
 .get(draftController.getSignpost)
 .put(draftController.updateSignpost);
 

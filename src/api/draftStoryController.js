@@ -192,17 +192,17 @@ exports.updateSignpost = async (req, res) => {
       return;
     }
     if (toRemove) {
-      toRemove.forEach(destinationId => {
+      toRemove.forEach(async destinationId => {
         await draftModel.deleteSignpostSign(sceneId, destinationId);
       });
     }
     if (toAdd) {
-      toAdd.forEach(sign => {
+      toAdd.forEach(async sign => {
         await draftModel.addSignpostSign(sceneId, sign.destinationId, sign.teaser, sign.signOrder);
       });
     }
     if (toUpdate) {
-      toUpdate.forEach(update => {
+      toUpdate.forEach(async update => {
         await draftModel.updateSignpostSign(sceneId, update.destinationId, update.teaser, update.signOrder);
       });
     }
