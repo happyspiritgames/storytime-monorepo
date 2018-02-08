@@ -3,7 +3,7 @@ const { generateRandomString } = require('../util/generator');
 
 const mapStoryRowToApi = (storyRow) => {
   return {
-    storyKey: storyRow.id,
+    storyId: storyRow.id,
     authorId: storyRow.author_id,
     title: storyRow.title,
     tagLine: storyRow.tag_line,
@@ -16,7 +16,7 @@ const mapStoryRowToApi = (storyRow) => {
 
 const mapSceneRowToApi = (sceneRow) => {
   return {
-    sceneKey: sceneRow.id,
+    sceneId: sceneRow.id,
     title: sceneRow.title,
     prose: sceneRow.prose,
     endPrompt: sceneRow.end_of_scene_prompt,
@@ -27,7 +27,6 @@ const mapSceneRowToApi = (sceneRow) => {
 
 const mapSignpostRowToApi = (signpostRow) => {
   return {
-    sceneId: signpostRow.scene_id,
     destinationId: signpostRow.destination_id,
     teaser: signpostRow.teaser,
     order: signpostRow.sign_order
@@ -157,19 +156,30 @@ exports.updateScene = async (storyId, sceneId, title, prose, endPrompt) => {
   dbResult = await db.query(UPD_SCENE, args);
 }
 
-exports.getSignpostSigns = async (sceneId) => {
-  console.log('draftStoryModel.getSignpostSigns');
+exports.getSignpost = async (sceneId) => {
+  console.log('draftStoryModel.getSignpost');
   const SEL_SIGNS = 'SELECT * FROM signpost WHERE scene_id=$1 ORDER BY sign_order';
   const dbResult = await db.query(SEL_SIGNS, [sceneId]);
-  if (dbResult.rows > 0) {
+  if (dbResult.rowCount > 0) {
     return dbResult.rows.map((signpostRow) => mapSignpostRowToApi(signpostRow));
+  }
+}
+
+exports.getSign = async (sceneId, destinationId) => {
+  console.log('draftStoryModel.getSign');
+  const SEL_SIGN = 'SELECT * FROM signpost WHERE scene_id=$1 AND destination_id=$2';
+  const dbResult = await db.query(SEL_SIGN, [sceneId, destinationId]);
+  if (dbResult.rowCount === 1) {
+    return mapSignpostRowToApi(dbResult.rows[0]);
+  } else {
+    console.log('no sign found', sceneId, destinationId);
   }
 }
 
 exports.addSignpostSign = async (sceneId, destinationId, teaser, signOrder) => {
   console.log('draftStoryModel.addSignpostSign');
   const INS_SIGN = 'INSERT INTO signpost (scene_id, destination_id, teaser, sign_order) VALUES ($1, $2, $3, $4)';
-  const dbResult = await dbResult.query(INS_SIGN, [sceneId, destinationId, teaser, signOrder]);
+  const dbResult = await db.query(INS_SIGN, [sceneId, destinationId, teaser, signOrder]);
   if (dbResult.rowCount !== 1) {
     console.error('Did not create signpost sign', sceneId, destinationId, teaser, signOrder);
   }
@@ -177,21 +187,22 @@ exports.addSignpostSign = async (sceneId, destinationId, teaser, signOrder) => {
 
 exports.updateSignpostSign = async (sceneId, destinationId, teaser, signOrder) => {
   console.log('draftStoryModel.updateSignpostSign');
-  let updates = 'updated_at=current_timestamp';
+  let updates = '';
   const args = [sceneId, destinationId];
   if (teaser) {
-    args.push(title);
-    updates = updates.concat(`, teaser=$${args.length} `);
+    args.push(teaser);
+    updates = updates.concat(`teaser=$${args.length}, `);
   }
   if (signOrder) {
-    args.push(tagLine);
-    updates = updates.concat(`, sign_order=$${args.length} `);
+    args.push(signOrder);
+    updates = updates.concat(`sign_order=$${args.length}, `);
   }
   if (args.length === 2) {
     // nothing to update
     return;
   }
-  const UPD_SIGN = `UPDATE story SET ${updates} WHERE scene_id=$1 AND destination_id=$2`;
+  updates = updates.substring(0, updates.length-2);
+  const UPD_SIGN = `UPDATE signpost SET ${updates} WHERE scene_id=$1 AND destination_id=$2`;
   dbResult = await db.query(UPD_SIGN, args);
   if (dbResult.rowCount !== 1) {
     console.error('Did not update signpost sign', sceneId, destinationId, teaser, signOrder);

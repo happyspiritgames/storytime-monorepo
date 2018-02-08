@@ -92,9 +92,13 @@ exports.getFullStory = async (req, res) => {
     }
     const summary = await draftModel.getStory(storyId);
     const scenes = await draftModel.getScenes(storyId);
-
-    // TODO blend signposts into scenes
-
+    for (let i = 0; i < scenes.length; i++) {
+      const scene = scenes[i];
+      const signpost = await draftModel.getSignpost(scene.sceneId);
+      if (signpost) {
+        scene['signpost'] = signpost;
+      }
+    }
     const fullStory = {
       summary: summary,
       scenes: scenes
@@ -170,11 +174,11 @@ exports.getSignpost = async (req, res) => {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return;
     }
-    const signpostSigns = await draftModel.getSignpostSigns(sceneId);
-    if (!signpostSigns) {
+    const signpost = await draftModel.getSignpost(sceneId);
+    if (!signpost) {
       res.status(404).json(theEnd);
     }
-    res.json(signpostSigns);
+    res.json(signpost);
   } catch (e) {
     console.error('Problem getting signpost for scene', e);
     res.status(500).json(internalError);
@@ -185,27 +189,39 @@ exports.updateSignpost = async (req, res) => {
   console.log('draftStoryController.updateSignpost');
   const { playerId } = req.user;
   const { storyId, sceneId } = req.params;
-  const { toAdd, toUpdate, toRemove } = req.body;
+  const { toUpdate, toDelete } = req.body;
+  console.log(req.body);
 
   try {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return;
     }
-    if (toRemove) {
-      toRemove.forEach(async destinationId => {
+    if (toDelete) {
+      console.log('deleting signs on signpost');
+      toDelete.forEach(async destinationId => {
         await draftModel.deleteSignpostSign(sceneId, destinationId);
       });
     }
-    if (toAdd) {
-      toAdd.forEach(async sign => {
-        await draftModel.addSignpostSign(sceneId, sign.destinationId, sign.teaser, sign.signOrder);
-      });
-    }
     if (toUpdate) {
+      console.log('updating signpost', toUpdate, toUpdate.length);
       toUpdate.forEach(async update => {
-        await draftModel.updateSignpostSign(sceneId, update.destinationId, update.teaser, update.signOrder);
+        const sign = await draftModel.getSign(sceneId, update.destinationId);
+        if (sign) {
+          console.log('found sign', sign);
+          if (sign.teaser !== update.teaser || sign.order !== update.order) {
+            console.log('update sign', update);
+            await draftModel.updateSignpostSign(sceneId, update.destinationId, update.teaser, update.order);
+          } else {
+            console.log('no update, same as existing', update);
+          }
+        } else {
+          consol.log('adding new sign');
+          await draftModel.addSignpostSign(sceneId, update.destinationId, update.teaser, update.order);
+        }
       });
     }
+    const signpost = await draftModel.getSignpost(sceneId);
+    res.status(202).end();
   } catch (e) {
     console.error('Problem updating signpost for scene', e);
     res.status(500).json(internalError);
