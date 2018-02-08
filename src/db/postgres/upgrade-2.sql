@@ -33,15 +33,15 @@ create table signpost (
   scene_id varchar(8) not null references scene (id),
   destination_id varchar(8) not null references scene (id),
   teaser varchar(256),
-  option_order smallint,
+  sign_order smallint,
   primary key (scene_id, destination_id)
 );
 
 --insert into player_role values ('8a095fb3-8cd3-475b-a3c2-a842bac9ee39', 2);
-INSERT INTO player_role
-SELECT player.id as player_id, role.id as role_id
-FROM player, identity, role
-WHERE email = 'davemount@gmail.com'
-  AND player.id = identity.player_id
-  AND provider = 'google-oauth2'
-  AND role.name='author';
+--INSERT INTO player_role
+--SELECT player.id as player_id, role.id as role_id
+--FROM player, identity, role
+--WHERE email = 'davemount@gmail.com'
+--  AND player.id = identity.player_id
+--  AND provider = 'google-oauth2'
+--  AND role.name='author';

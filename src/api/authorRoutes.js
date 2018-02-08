@@ -32,8 +32,7 @@ router.route('/stories/:storyId/full')
 router.route('/stories/:storyId/scenes').post(draftController.beginNewScene);  // to support alternate workflow where scenes are wired up afterward
 router.route('/stories/:storyId/scenes/:sceneId')
 .get(draftController.getScene)
-.put(draftController.updateScene)
-.delete(draftController.deleteScene);
+.put(draftController.updateScene);
 
 router.route('/stories/:storyId/signpost')
 .get(draftController.getSignpost)

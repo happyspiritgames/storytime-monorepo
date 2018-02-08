@@ -25,6 +25,15 @@ const mapSceneRowToApi = (sceneRow) => {
   }
 };
 
+const mapSignpostRowToApi = (signpostRow) => {
+  return {
+    sceneId: signpostRow.scene_id,
+    destinationId: signpostRow.destination_id,
+    teaser: signpostRow.teaser,
+    order: signpostRow.sign_order
+  }
+}
+
 exports.getStories = async (authorId) => {
   console.log('draftStoryModel.getStories');
   const SEL_STORIES = 'SELECT * FROM story WHERE author_id=$1';
@@ -58,7 +67,7 @@ exports.createStory = async (authorId, title, tagLine, about) => {
   const storyId = generateRandomString(8);
   let dbResult = await db.query(INS_STORY, [storyId, authorId, title, tagLine, about]);
   if (dbResult.rowCount !== 1) {
-    console.error('Did not create story');
+    console.error('Did not create story', authorId, title, tagLine, about);
     return;
   }
   return storyId;
@@ -148,21 +157,52 @@ exports.updateScene = async (storyId, sceneId, title, prose, endPrompt) => {
   dbResult = await db.query(UPD_SCENE, args);
 }
 
-exports.getDestinations = async (storyId, sceneId) => {
-  console.log('draftStoryModel.getDestinations')
+exports.getSignpostSigns = async (sceneId) => {
+  console.log('draftStoryModel.getSignpostSigns');
+  const SEL_SIGNS = 'SELECT * FROM signpost WHERE scene_id=$1 ORDER BY sign_order';
+  const dbResult = await db.query(SEL_SIGNS, [sceneId]);
+  if (dbResult.rows > 0) {
+    return dbResult.rows.map((signpostRow) => mapSignpostRowToApi(signpostRow));
+  }
 }
 
-exports.addDestination = async (storyId, originSceneId, targetSceneId, teaser) => {
-  console.log('draftStoryModel.addDestination');
-
+exports.addSignpostSign = async (sceneId, destinationId, teaser, signOrder) => {
+  console.log('draftStoryModel.addSignpostSign');
+  const INS_SIGN = 'INSERT INTO signpost (scene_id, destination_id, teaser, sign_order) VALUES ($1, $2, $3, $4)';
+  const dbResult = await dbResult.query(INS_SIGN, [sceneId, destinationId, teaser, signOrder]);
+  if (dbResult.rowCount !== 1) {
+    console.error('Did not create signpost sign', sceneId, destinationId, teaser, signOrder);
+  }
 }
 
-exports.updateDestination = async (storyId, originSceneId, targetSceneId, teaser) => {
-  console.log('draftStoryModel.updateDestination');
-
+exports.updateSignpostSign = async (sceneId, destinationId, teaser, signOrder) => {
+  console.log('draftStoryModel.updateSignpostSign');
+  let updates = 'updated_at=current_timestamp';
+  const args = [sceneId, destinationId];
+  if (teaser) {
+    args.push(title);
+    updates = updates.concat(`, teaser=$${args.length} `);
+  }
+  if (signOrder) {
+    args.push(tagLine);
+    updates = updates.concat(`, sign_order=$${args.length} `);
+  }
+  if (args.length === 2) {
+    // nothing to update
+    return;
+  }
+  const UPD_SIGN = `UPDATE story SET ${updates} WHERE scene_id=$1 AND destination_id=$2`;
+  dbResult = await db.query(UPD_SIGN, args);
+  if (dbResult.rowCount !== 1) {
+    console.error('Did not update signpost sign', sceneId, destinationId, teaser, signOrder);
+  }
 }
 
-exports.deleteDestination = async (storyId, originSceneId, targetSceneId) => {
-  console.log('draftStoryModel.deleteDestination');
-
+exports.deleteSignpostSign = async (sceneId, destinationId) => {
+  console.log('draftStoryModel.deleteSignpostSign');
+  const DEL_SIGNS = 'DELETE FROM signpost WHERE scene_id=$1 AND destination_id=$2';
+  const dbResult = await db.query(DEL_SIGNS, [sceneId, destinationId]);
+  if (dbResult.rows > 0) {
+    return dbResult.rows.map((signpostRow) => mapSignpostRowToApi(signpostRow));
+  }
 }

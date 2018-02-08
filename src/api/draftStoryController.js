@@ -162,14 +162,11 @@ exports.updateScene = async (req, res) => {
   }
 };
 
-exports.deleteScene = async (req, res) => {
-  console.log('draftStoryController.deleteScene');
-  res.end();
-};
-
 exports.getSignpost = async (req, res) => {
   console.log('draftStoryController.getSignpost');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId, sceneId } = req.params;
+  
 };
 
 exports.updateSignpost = async (req, res) => {
