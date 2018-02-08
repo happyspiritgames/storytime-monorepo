@@ -1,5 +1,5 @@
 const draftModel = require('../db/draftStoryModel');
-const { internalError, errorMessage } = require('./errors');
+const { internalError, errorMessage, theEnd } = require('./errors');
 
 const verifyStoryAuthorization = async (playerId, storyId, res) => {
   const authorId = await draftModel.getStoryOwner(storyId);
@@ -166,10 +166,48 @@ exports.getSignpost = async (req, res) => {
   console.log('draftStoryController.getSignpost');
   const { playerId } = req.user;
   const { storyId, sceneId } = req.params;
-  
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    const signpostSigns = await draftModel.getSignpostSigns(sceneId);
+    if (!signpostSigns) {
+      res.status(404).json(theEnd);
+    }
+    res.json(signpostSigns);
+  } catch (e) {
+    console.error('Problem getting signpost for scene', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.updateSignpost = async (req, res) => {
   console.log('draftStoryController.updateSignpost');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId, sceneId } = req.params;
+  const { toAdd, toUpdate, toRemove } = req.body;
+
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    if (toRemove) {
+      toRemove.forEach(destinationId => {
+        await draftModel.deleteSignpostSign(sceneId, destinationId);
+      });
+    }
+    if (toAdd) {
+      toAdd.forEach(sign => {
+        await draftModel.addSignpostSign(sceneId, sign.destinationId, sign.teaser, sign.signOrder);
+      });
+    }
+    if (toUpdate) {
+      toUpdate.forEach(update => {
+        await draftModel.updateSignpostSign(sceneId, update.destinationId, update.teaser, update.signOrder);
+      });
+    }
+  } catch (e) {
+    console.error('Problem updating signpost for scene', e);
+    res.status(500).json(internalError);
+  }
 };

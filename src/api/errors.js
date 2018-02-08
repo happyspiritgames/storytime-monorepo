@@ -7,3 +7,7 @@ exports.errorMessage = msg => {
     message: msg
   };
 };
+
+exports.theEnd = {
+  message: 'This could be the end of the story'
+};

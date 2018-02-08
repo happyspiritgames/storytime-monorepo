@@ -36,6 +36,7 @@ create table signpost (
   sign_order smallint,
   primary key (scene_id, destination_id)
 );
+-- TODO why not allow two options with the same destination?  then again, why?
 
 --insert into player_role values ('8a095fb3-8cd3-475b-a3c2-a842bac9ee39', 2);
 --INSERT INTO player_role
