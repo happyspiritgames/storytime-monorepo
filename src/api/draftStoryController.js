@@ -146,7 +146,20 @@ exports.getScene = async (req, res) => {
 
 exports.updateScene = async (req, res) => {
   console.log('draftStoryController.updateScene');
-  res.end();
+  const { playerId } = req.user;
+  const { storyId, sceneId } = req.params;
+  const { title, prose, endPrompt } = req.body;
+  try {
+    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+      return;
+    }
+    await draftModel.updateScene(storyId, sceneId, title, prose, endPrompt);
+    const scene = await draftModel.getScene(storyId, sceneId);
+    res.status(202).json(scene);
+  } catch (e) {
+    console.error('Problem updating draft scene', e);
+    res.status(500).json(internalError);
+  }
 };
 
 exports.deleteScene = async (req, res) => {

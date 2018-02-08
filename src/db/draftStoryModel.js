@@ -67,7 +67,7 @@ exports.createStory = async (authorId, title, tagLine, about) => {
 exports.updateStory = async (storyId, title, tagLine, about, firstSceneId) => {
   console.log('draftStoryModel.updateStory');
   let updates = 'updated_at=current_timestamp';
-  let args = [storyId];
+  const args = [storyId];
   if (title) {
     args.push(title);
     updates = updates.concat(`, title=$${args.length} `);
@@ -89,7 +89,6 @@ exports.updateStory = async (storyId, title, tagLine, about, firstSceneId) => {
     return;
   }
   const UPD_STORY = `UPDATE story SET ${updates} WHERE id=$1`;
-  console.log(UPD_STORY);
   dbResult = await db.query(UPD_STORY, args);
 }
 
@@ -125,26 +124,45 @@ exports.createScene = async (storyId, title, prose, endPrompt) => {
   return sceneId;
 }
 
-exports.updateScene = async (sceneId, title, prose, endPrompt) => {
+exports.updateScene = async (storyId, sceneId, title, prose, endPrompt) => {
   console.log('draftStoryModel.updateScene');
-
+  let updates = 'updated_at=current_timestamp';
+  const args = [storyId, sceneId];
+  if (title) {
+    args.push(title);
+    updates = updates.concat(`, title=$${args.length} `);
+  }
+  if (prose) {
+    args.push(prose);
+    updates = updates.concat(`, prose=$${args.length} `);
+  }
+  if (endPrompt) {
+    args.push(endPrompt);
+    updates = updates.concat(`, end_of_scene_prompt=$${args.length} `);
+  }
+  if (args.length === 2) {
+    // nothing to update
+    return;
+  }
+  const UPD_SCENE = `UPDATE scene SET ${updates} WHERE story_id=$1 AND id=$2`;
+  dbResult = await db.query(UPD_SCENE, args);
 }
 
-exports.getDestinations = async (sceneId) => {
+exports.getDestinations = async (storyId, sceneId) => {
   console.log('draftStoryModel.getDestinations')
 }
 
-exports.addDestination = async (originSceneId, targetSceneId, teaser) => {
+exports.addDestination = async (storyId, originSceneId, targetSceneId, teaser) => {
   console.log('draftStoryModel.addDestination');
 
 }
 
-exports.updateDestination = async (originSceneId, targetSceneId, teaser) => {
+exports.updateDestination = async (storyId, originSceneId, targetSceneId, teaser) => {
   console.log('draftStoryModel.updateDestination');
 
 }
 
-exports.deleteDestination = async (originSceneId, targetSceneId) => {
+exports.deleteDestination = async (storyId, originSceneId, targetSceneId) => {
   console.log('draftStoryModel.deleteDestination');
 
 }
