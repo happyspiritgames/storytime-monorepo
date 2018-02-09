@@ -85,6 +85,26 @@ exports.getRoles = async (playerId) => {
   return dbResult.rows.map(row => row.name);
 }
 
+exports.agreeToBeAuthor = async (playerId) => {
+  const UPD_AGREE_TO_AUTHOR_TERMS = 'UPDATE player SET agreed_to_author_at=CURRENT_TIMESTAMP WHERE id=$1';
+  const ADD_AUTHOR_ROLE = 'INSERT INTO player_role (player_id, role_id) SELECT $1 as player_id, role.id as role_id FROM role WHERE role.name=$2';
+  const client = await db.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(UPD_AGREE_TO_AUTHOR_TERMS, [playerId]);
+    // will fail if player already has author role
+    await client.query(ADD_AUTHOR_ROLE, [player_id, 'author']);
+    await client.query('COMMIT');
+  } catch (e) {
+    console.error('had to rollback due to error', e);
+    await client.query('ROLLBACK');
+    return false;
+  } finally {
+    client.release();
+  }
+  return true;
+}
+
 /**
  * Returns possible player statuses.
  */

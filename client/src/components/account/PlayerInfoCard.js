@@ -8,6 +8,8 @@ export default class PlayerInfoCard extends Component {
     nickname: PropTypes.string,
     membersOnlyComms: PropTypes.bool,
     profilePicUrl: PropTypes.string,
+    authorOptIn: PropTypes.string,
+    penName: PropTypes.string
   });
   static propTypes = {
     profile: PlayerInfoCard.profileShape,

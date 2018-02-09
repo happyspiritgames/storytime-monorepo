@@ -7,7 +7,9 @@ const mapPlayerToAdminApi = player => {
     nickname: player.nickname,
     createdAt: player.created_at,
     emailOptInAt: player.agreed_to_comms_at,
-    status: player.status_id
+    status: player.status_id,
+    authorOptInAt: player.agreed_to_author_at,
+    penName: player.pen_name
   };
 }
 

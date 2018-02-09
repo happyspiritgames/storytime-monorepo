@@ -14,6 +14,7 @@ module.exports = function (app, authCheck) {
   const authRouter = express.Router();
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
   authRouter.route('/players/self/roles').get(playerController.getRoles);
+  authRouter.route('/players/self/roles/agreeToTermsAuthor').put(playerController.agreeToAuthorTerms);
   authRouter.route('/players/self/profile')
   .get(playerController.getSelfProfile)
   .put(playerController.updateSelfProfile);

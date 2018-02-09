@@ -38,6 +38,9 @@ create table signpost (
 );
 -- TODO why not allow two options with the same destination?  then again, why?
 
+alter table player add column agreed_to_author_at timestamp;
+alter table player add column pen_name varchar(32);
+
 --insert into player_role values ('8a095fb3-8cd3-475b-a3c2-a842bac9ee39', 2);
 --INSERT INTO player_role
 --SELECT player.id as player_id, role.id as role_id

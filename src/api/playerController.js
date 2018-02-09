@@ -105,10 +105,8 @@ exports.findOrCreatePlayer = async (req, res, next) => {
     console.error('Cannot find jwt subject -- should have been extracted from auth header');
     res.status(401).end();
   }
-
   let playerId;
   const subject = req.user.sub;
-  console.log('subject is', subject);
   try {
     // determine player ID
     playerId = await playerModel.findPlayerIdFromIdentity(subject);
@@ -135,7 +133,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
 
 exports.getRoles = async (req, res) => {
   const { playerId } = req.user;
-  console.log('playerController.getRoles: playerId=', playerId);
+  console.log('playerController.getRoles', playerId);
   // TODO verify player ID is provided (i.e., player is logged in)
   try {
     const roles = await playerModel.getRoles(playerId);
@@ -185,7 +183,7 @@ exports.getPlayerStatusCodes = async (req, res) => {
  */
 exports.getSelfProfile = async (req, res) => {
   const { playerId } = req.user;
-  console.log('playerController.getPlayer: playerId=', playerId);
+  console.log('playerController.getSelfProfile', playerId);
   try {
     const player = await playerModel.getPlayer(playerId);
     if (player) {
@@ -209,13 +207,25 @@ exports.getSelfProfile = async (req, res) => {
 exports.updateSelfProfile = async (req, res) => {
   const { playerId } = req.user;
   const profileUpdate = req.body;
-  console.log('updateSelfProfile playerId=', playerId, 'updates=', profileUpdate);
+  console.log('playerController.updateSelfProfile', playerId, profileUpdate);
   try {
     await playerModel.updatePlayer(playerId, profileUpdate.nickname, profileUpdate.membersOnlyComms);
     const profile = await playerModel.getPlayer(playerId);
     res.json(mapPlayerToProfile(profile));
   } catch (e) {
     console.error('Problem with updateSelfProfile', e);
+    res.status(500).send(internalError);
+  }
+}
+
+exports.agreeToAuthorTerms = async (req, res) => {
+  console.log('playerController.agreeToAuthorTerms')
+  const { playerId } = req.user;
+  try {
+    await playerModel.agreeToBeAuthor(playerId);
+    res.status(202).end();
+  } catch (e) {
+    console.error('Problem with agreeToAuthorTerms', e);
     res.status(500).send(internalError);
   }
 }

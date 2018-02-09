@@ -11,11 +11,15 @@ export default class Account extends Component {
       playerProfile: {
         email: '',
         nickname: '',
-        membersOnlyComms: false
+        membersOnlyComms: false,
+        authorOptIn: '',
+        penName: ''
       },
       playerProfileUpdate: {
         nickname: '',
         membersOnlyComms: false,
+        authorOptIn: false,
+        penName: ''
       }
     };
     // TODO make updates to parallel profile object
