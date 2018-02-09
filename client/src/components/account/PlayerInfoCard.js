@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Button } from 'reactstrap';
+import { formatDateTime } from '../../util/formatter';
 
 export default class PlayerInfoCard extends Component {
   static profileShape = PropTypes.shape({
@@ -8,6 +9,8 @@ export default class PlayerInfoCard extends Component {
     nickname: PropTypes.string,
     membersOnlyComms: PropTypes.bool,
     profilePicUrl: PropTypes.string,
+    authorOptIn: PropTypes.string,
+    penName: PropTypes.string
   });
   static propTypes = {
     profile: PlayerInfoCard.profileShape,
@@ -80,6 +83,18 @@ export default class PlayerInfoCard extends Component {
     }
   }
 
+  renderAgreedToAuthorTerms() {
+    if (this.props.authorOptIn) {
+      return (
+        <span>Agreed to terms of authoring on: {formatDateTime(this.props.authorOptIn)}</span>
+      )
+    } else {
+      return (
+        <span>No, I have not agreed to the terms.</span>
+      )
+    }
+  }
+
   renderButtons() {
     if (this.state.editMode) {
       return (
@@ -103,7 +118,7 @@ export default class PlayerInfoCard extends Component {
 
     return (
       <div id="member-info">
-        <h3>Your Player Profile</h3>
+        <h3>About You</h3>
         <Row>
           <Col sm="3"><strong>Email address:</strong></Col>
           <Col>{email}</Col>
@@ -115,6 +130,10 @@ export default class PlayerInfoCard extends Component {
         <Row>
           <Col sm="3"><strong>Preferences:</strong></Col>
           <Col>{this.renderEmailOptIn()}</Col>
+        </Row>
+        <Row>
+          <Col sm="3"><strong>Is An Author:</strong></Col>
+          <Col>{this.renderAgreedToAuthorTerms()}</Col>
         </Row>
         <Row>
           <Col sm="3"></Col>

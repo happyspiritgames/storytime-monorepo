@@ -11,11 +11,15 @@ export default class Account extends Component {
       playerProfile: {
         email: '',
         nickname: '',
-        membersOnlyComms: false
+        membersOnlyComms: false,
+        authorOptIn: '',
+        penName: ''
       },
       playerProfileUpdate: {
         nickname: '',
         membersOnlyComms: false,
+        authorOptIn: false,
+        penName: ''
       }
     };
     // TODO make updates to parallel profile object
@@ -24,7 +28,8 @@ export default class Account extends Component {
   loadProfile = (profile) => {
     const update = {
       nickname: profile.nickname,
-      membersOnlyComms: profile.membersOnlyComms
+      membersOnlyComms: profile.membersOnlyComms,
+      authorOptIn: profile.authorOptIn
     };
     this.setState({ playerProfile: profile, playerProfileUpdate: update });
   }

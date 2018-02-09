@@ -19,5 +19,5 @@ exports.generateUUID = () => {
  */
 exports.generateRandomString = (length = 8) => {
   const offset = 2;
-  return Math.random().toString(36).substr(offset, length + offset).toLowerCase();
+  return Math.random().toString(36).substr(offset, length).toLowerCase();
 };

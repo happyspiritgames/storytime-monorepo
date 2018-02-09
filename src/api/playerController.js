@@ -1,31 +1,6 @@
 const playerModel = require('../db/playerModel');
 const { fetchUserInfo } = require('../services/auth0Service');
-
-const mapPlayerToProfile = player => {
-  return {
-    id: player.id,
-    email: player.email,
-    nickname: player.nickname,
-    membersOnlyComms: !!player.agreed_to_comms_at
-  };
-}
-
-/**
- * StoryTime API method for retrieving a list of all players.
- *
- * @param {*} req - the HTTP request
- * @param {*} res - the HTTP response
- */
-exports.getPlayers = async (req, res) => {
-  console.log('playerController.getPlayers');
-  try {
-    const players = await playerModel.getPlayers();
-    res.json(players);
-  } catch (e) {
-    console.error('Problem with getPlayers', e);
-    res.status(500).end();  // TODO standardize error messages
-  }
-};
+const { internalError } = require('./errors');
 
 /**
  * StoryTime API method for retrieving a player.
@@ -45,7 +20,7 @@ exports.getPlayer = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -68,7 +43,7 @@ exports.findPlayer = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with findPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -84,7 +59,7 @@ exports.refreshProfile = async (req, res) => {
     }
   } catch (e) {
     console.error(e);
-    res.status(500).end();
+    res.status(500).send(internalError);
   }
 }
 
@@ -104,10 +79,8 @@ exports.findOrCreatePlayer = async (req, res, next) => {
     console.error('Cannot find jwt subject -- should have been extracted from auth header');
     res.status(401).end();
   }
-
   let playerId;
   const subject = req.user.sub;
-  console.log('subject is', subject);
   try {
     // determine player ID
     playerId = await playerModel.findPlayerIdFromIdentity(subject);
@@ -118,7 +91,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
 
       if (!playerId) {
         console.error('Unable to create player account.', subject, email, name);
-        res.status(500).send({ message: 'Could not create an player account due to a system error.' });
+        res.status(500).send(internalError);
       }
     }
     req.user.playerId = playerId;
@@ -134,7 +107,7 @@ exports.findOrCreatePlayer = async (req, res, next) => {
 
 exports.getRoles = async (req, res) => {
   const { playerId } = req.user;
-  console.log('playerController.getRoles: playerId=', playerId);
+  console.log('playerController.getRoles', playerId);
   // TODO verify player ID is provided (i.e., player is logged in)
   try {
     const roles = await playerModel.getRoles(playerId);
@@ -145,18 +118,8 @@ exports.getRoles = async (req, res) => {
     }
   } catch (e) {
     console.error('Problem with getRoles', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
-}
-
-const mapPlayerStatusCodesToApi = (codesFromDb) => {
-  return codesFromDb.map(code => {
-    return {
-      id: code.id,
-      name: code.name,
-      displayName: code.display_name
-    }
-  });
 }
 
 exports.getPlayerStatusCodes = async (req, res) => {
@@ -164,13 +127,13 @@ exports.getPlayerStatusCodes = async (req, res) => {
   try {
     const statusCodes = await playerModel.getPlayerStatusCodes();
     if (statusCodes) {
-      res.json(mapPlayerStatusCodesToApi(statusCodes));
+      res.json(statusCodes);
     } else {
       res.sendStatus(404);
     }
   } catch (e) {
     console.error('Problem with getPlayerStatusCodes', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -184,17 +147,17 @@ exports.getPlayerStatusCodes = async (req, res) => {
  */
 exports.getSelfProfile = async (req, res) => {
   const { playerId } = req.user;
-  console.log('playerController.getPlayer: playerId=', playerId);
+  console.log('playerController.getSelfProfile', playerId);
   try {
     const player = await playerModel.getPlayer(playerId);
     if (player) {
-      res.json(mapPlayerToProfile(player));
+      res.json(player);
     } else {
       res.sendStatus(404);
     }
   } catch (e) {
     console.error('Problem with getSelfProfile', e);
-    res.sendStatus(500);  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -207,14 +170,26 @@ exports.getSelfProfile = async (req, res) => {
  */
 exports.updateSelfProfile = async (req, res) => {
   const { playerId } = req.user;
-  const profileUpdate = req.body;
-  console.log('updateSelfProfile playerId=', playerId, 'updates=', profileUpdate);
+  const { nickname, membersOnlyComms } = req.body;
+  console.log('playerController.updateSelfProfile', playerId, req.body);
   try {
-    await playerModel.updatePlayer(playerId, profileUpdate.nickname, profileUpdate.membersOnlyComms);
+    await playerModel.updatePlayer(playerId, nickname, membersOnlyComms);
     const profile = await playerModel.getPlayer(playerId);
-    res.json(mapPlayerToProfile(profile));
+    res.json(profile);
   } catch (e) {
     console.error('Problem with updateSelfProfile', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
+  }
+}
+
+exports.agreeToAuthorTerms = async (req, res) => {
+  console.log('playerController.agreeToAuthorTerms')
+  const { playerId } = req.user;
+  try {
+    await playerModel.agreeToBeAuthor(playerId);
+    res.status(202).end();
+  } catch (e) {
+    console.error('Problem with agreeToAuthorTerms', e);
+    res.status(500).send(internalError);
   }
 }

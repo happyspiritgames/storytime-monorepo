@@ -1,6 +1,19 @@
 const db = require('./postgres');
 const { generateUUID } = require('../util/generator');
 
+const mapPlayerToApi = player => {
+  return {
+    id: player.id,
+    email: player.email,
+    nickname: player.nickname,
+    createdAt: player.created_at,
+    status: player.status_id,
+    emailOptInAt: player.agreed_to_comms_at,
+    authorOptInAt: player.agreed_to_author_at,
+    penName: player.pen_name
+  };
+}
+
 /**
  * Returns all players.
  */
@@ -8,7 +21,11 @@ exports.getPlayers = async () => {
   console.log('playerModel.getPlayers');
   const SEL_PLAYERS = 'SELECT * FROM player';
   const dbResult = await db.query(SEL_PLAYERS);
-  return dbResult.rows;
+  if (dbResult.rowCount > 0) {
+    return dbResult.rows.map(playerRow => mapPlayerToApi(playerRow));
+  } else {
+    return [];
+  }
 };
 
 /**
@@ -20,9 +37,8 @@ exports.getPlayer = async (id) => {
   const SEL_PLAYER = 'SELECT * FROM player WHERE id = $1'
   const result = await db.query(SEL_PLAYER, [id]);
   if (result.rowCount === 1) {
-    return result.rows[0];
+    return mapPlayerToApi(result.rows[0]);
   }
-  console.log('player not found', id)
 }
 
 /**
@@ -85,6 +101,36 @@ exports.getRoles = async (playerId) => {
   return dbResult.rows.map(row => row.name);
 }
 
+exports.agreeToBeAuthor = async (playerId) => {
+  const UPD_AGREE_TO_AUTHOR_TERMS = 'UPDATE player SET agreed_to_author_at=CURRENT_TIMESTAMP WHERE id=$1';
+  const ADD_AUTHOR_ROLE = 'INSERT INTO player_role (player_id, role_id) SELECT $1 as player_id, role.id as role_id FROM role WHERE role.name=$2';
+  const client = await db.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(UPD_AGREE_TO_AUTHOR_TERMS, [playerId]);
+    // will fail if player already has author role
+    await client.query(ADD_AUTHOR_ROLE, [player_id, 'author']);
+    await client.query('COMMIT');
+  } catch (e) {
+    console.error('had to rollback due to error', e);
+    await client.query('ROLLBACK');
+    return false;
+  } finally {
+    client.release();
+  }
+  return true;
+}
+
+const mapPlayerStatusCodesToApi = codesFromDb => {
+  return codesFromDb.map(code => {
+    return {
+      id: code.id,
+      name: code.name,
+      displayName: code.display_name
+    }
+  });
+}
+
 /**
  * Returns possible player statuses.
  */
@@ -92,7 +138,9 @@ exports.getPlayerStatusCodes = async () => {
   console.log('playerModel.getPlayerStatusCodes');
   const SEL_ROLES = 'SELECT * FROM player_status';
   const dbResult = await db.query(SEL_ROLES);
-  return dbResult.rows;
+  if (dbResult.rowCount > 0) {
+    return dbResult.rows.map(statusCodeRow => mapPlayerStatusCodesToApi(statusCodeRow));
+  }
 }
 
 const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
