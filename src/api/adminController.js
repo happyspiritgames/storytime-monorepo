@@ -1,17 +1,5 @@
 const playerModel = require('../db/playerModel');
-
-const mapPlayerToAdminApi = player => {
-  return {
-    id: player.id,
-    email: player.email,
-    nickname: player.nickname,
-    createdAt: player.created_at,
-    emailOptInAt: player.agreed_to_comms_at,
-    status: player.status_id,
-    authorOptInAt: player.agreed_to_author_at,
-    penName: player.pen_name
-  };
-}
+const { internalError, errorMessage } = require('./errors');
 
 /**
  * StoryTime API method for retrieving a list of all players.
@@ -23,11 +11,10 @@ exports.getPlayers = async (req, res) => {
   console.log('playerController.getPlayers');
   try {
     const players = await playerModel.getPlayers();
-    const transformed = players.map(player => mapPlayerToAdminApi(player));
-    res.json(transformed);
+    res.json(players);
   } catch (e) {
     console.error('Problem with getPlayers', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -42,11 +29,13 @@ exports.getPlayer = async (req, res) => {
   console.log('playerController.getPlayer', playerId);
   try {
     const player = await playerModel.getPlayer(playerId);
-    const transformed = mapPlayerToAdminApi(player);
-    res.json(transformed);
+    if (!player) {
+      res.status(404).send(errorMessage('Player was not found'));
+    }
+    res.json(player);
   } catch (e) {
     console.error('Problem with getPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 };
 
@@ -58,7 +47,7 @@ exports.suspendPlayer = async (req, res) => {
     res.status(202).send();
   } catch (e) {
     console.error('Problem with suspendPlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -70,7 +59,7 @@ exports.activatePlayer = async (req, res) => {
     res.status(202).send();
   } catch (e) {
     console.error('Problem with activatePlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }
 
@@ -82,6 +71,6 @@ exports.deletePlayer = async (req, res) => {
     res.status(202).send();
   } catch (e) {
     console.error('Problem with deletePlayer', e);
-    res.status(500).end();  // TODO standardize error messages
+    res.status(500).send(internalError);
   }
 }

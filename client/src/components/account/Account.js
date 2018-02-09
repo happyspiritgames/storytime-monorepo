@@ -28,7 +28,8 @@ export default class Account extends Component {
   loadProfile = (profile) => {
     const update = {
       nickname: profile.nickname,
-      membersOnlyComms: profile.membersOnlyComms
+      membersOnlyComms: profile.membersOnlyComms,
+      authorOptIn: profile.authorOptIn
     };
     this.setState({ playerProfile: profile, playerProfileUpdate: update });
   }

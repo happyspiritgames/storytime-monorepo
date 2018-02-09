@@ -2,32 +2,6 @@ const playerModel = require('../db/playerModel');
 const { fetchUserInfo } = require('../services/auth0Service');
 const { internalError } = require('./errors');
 
-const mapPlayerToProfile = player => {
-  return {
-    id: player.id,
-    email: player.email,
-    nickname: player.nickname,
-    membersOnlyComms: !!player.agreed_to_comms_at
-  };
-};
-
-/**
- * StoryTime API method for retrieving a list of all players.
- *
- * @param {*} req - the HTTP request
- * @param {*} res - the HTTP response
- */
-exports.getPlayers = async (req, res) => {
-  console.log('playerController.getPlayers');
-  try {
-    const players = await playerModel.getPlayers();
-    res.json(players);
-  } catch (e) {
-    console.error('Problem with getPlayers', e);
-    res.status(500).send(internalError);
-  }
-};
-
 /**
  * StoryTime API method for retrieving a player.
  *
@@ -148,22 +122,12 @@ exports.getRoles = async (req, res) => {
   }
 }
 
-const mapPlayerStatusCodesToApi = (codesFromDb) => {
-  return codesFromDb.map(code => {
-    return {
-      id: code.id,
-      name: code.name,
-      displayName: code.display_name
-    }
-  });
-}
-
 exports.getPlayerStatusCodes = async (req, res) => {
   console.log('playerController.getPlayerStatusCodes');
   try {
     const statusCodes = await playerModel.getPlayerStatusCodes();
     if (statusCodes) {
-      res.json(mapPlayerStatusCodesToApi(statusCodes));
+      res.json(statusCodes);
     } else {
       res.sendStatus(404);
     }
@@ -187,7 +151,7 @@ exports.getSelfProfile = async (req, res) => {
   try {
     const player = await playerModel.getPlayer(playerId);
     if (player) {
-      res.json(mapPlayerToProfile(player));
+      res.json(player);
     } else {
       res.sendStatus(404);
     }
@@ -206,12 +170,12 @@ exports.getSelfProfile = async (req, res) => {
  */
 exports.updateSelfProfile = async (req, res) => {
   const { playerId } = req.user;
-  const profileUpdate = req.body;
-  console.log('playerController.updateSelfProfile', playerId, profileUpdate);
+  const { nickname, membersOnlyComms } = req.body;
+  console.log('playerController.updateSelfProfile', playerId, req.body);
   try {
-    await playerModel.updatePlayer(playerId, profileUpdate.nickname, profileUpdate.membersOnlyComms);
+    await playerModel.updatePlayer(playerId, nickname, membersOnlyComms);
     const profile = await playerModel.getPlayer(playerId);
-    res.json(mapPlayerToProfile(profile));
+    res.json(profile);
   } catch (e) {
     console.error('Problem with updateSelfProfile', e);
     res.status(500).send(internalError);
