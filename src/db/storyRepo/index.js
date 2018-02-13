@@ -2,9 +2,9 @@ const fs = require('fs');
 
 const repoDir = './storyRepo';
 
-exports.loadStory = (storyKey) => {
+exports.loadStory = storyId => {
   "use strict";
-  const storyFilePath = `${repoDir}/${storyKey}/story.json`;
+  const storyFilePath = `${repoDir}/${storyId}/story.json`;
   const found = fs.existsSync(storyFilePath);
   if (found) {
     const json = fs.readFileSync(storyFilePath, "utf8");

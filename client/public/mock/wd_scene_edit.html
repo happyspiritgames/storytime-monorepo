@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Desk - Scene</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Adamina">
+  <link rel="stylesheet" href="../styles/wd-styles.css">
+</head>
+<body>
+  <div class="contact-clean">
+    <form>
+      <fieldset style="margin-bottom:2rem;">
+        <legend>Scene Information</legend>
+        <div class="edit-info">
+          <div class="form-group">
+            <label>Title </label>
+            <input class="form-control" type="text" value="The Title of the Scene" />
+          </div>
+          <div class="form-group">
+            <label>Prose </label>
+            <textarea class="form-control">The scene goes here.  This is what people will read.</textarea>
+          </div>
+          <div class="form-group">
+            <label>Next Scene Prompt</label>
+            <input class="form-control" type="text" value="Custom text to tell the player to choose the next scene." />
+          </div>
+          <button class="btn btn-primary" type="button">Save Scene</button>
+        </div>
+      </fieldset>
+      <fieldset style="margin-bottom:2rem;">
+        <legend>Next Scene Options</legend>
+        <ul class="list-group edit-info">
+          <li class="list-group-item">
+            <span>Destination Scene 1 Title (ID)</span><i class="fa fa-remove float-right"></i>
+            <input class="form-control" type="text" placeholder="Teaser">
+          </li>
+          <li class="list-group-item">
+            <span>Destination Scene 2 Title (ID)</span><i class="fa fa-remove float-right"></i>
+            <input class="form-control" type="text" placeholder="Teaser">
+          </li>
+          <button class="btn btn-primary" type="button">Save Next Scene Options</button>
+        </ul>
+      </fieldset>
+      <fieldset style="margin-bottom:2rem;">
+        <legend>Destination Scene</legend>
+        <div class="form-group edit-info">
+          <select class="form-control">
+            <optgroup label="This is a group">
+              <option value=".">Create new scene...</option>
+              <option value="A" selected="">Scene A</option>
+              <option value="B">Scene B</option>
+              <option value="C">Scene C</option>
+            </optgroup>
+          </select>
+          <input class="form-control" type="text" placeholder="Teaser">
+          <button class="btn btn-primary" type="button">Add Option</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

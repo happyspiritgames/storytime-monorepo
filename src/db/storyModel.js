@@ -3,26 +3,24 @@ const localPersistence = require('./storyRepo');
 exports.getRecommendedStories = (maxResults = 10) => {
   const summaries = localPersistence.loadStorySummaries();
   const published = summaries.filter(summary => summary.publishedAt);
-  if (!published || published.length === 0) {
-    console.log('Found 0 published stories', published);
+  if (published && published.length > 0) {
+    return published;
   }
-  return published;
+  console.log('No published stories found');
 };
 
-exports.getPublishedStorySummary = (storyKey) => {
-  const story = localPersistence.loadStory(storyKey);
-  if (story === undefined) {
-    console.log('Did not find story with storyKey=', storyKey);
-    return null;
+exports.getPublishedStorySummary = storyId => {
+  const story = localPersistence.loadStory(storyId);
+  if (story) {
+    return story.summary;
   }
-  return story.summary;
+  console.log('Did not find story', storyId);
 };
 
-exports.getStoryScene = (storyKey, sceneKey) => {
-  const story = localPersistence.loadStory(storyKey);
-  if (story === undefined) {
-    console.log('Did not find story with storyKey=', storyKey, 'sceneKey=', sceneKey);
-    return null;
+exports.getStoryScene = (storyId, sceneId) => {
+  const story = localPersistence.loadStory(storyId);
+  if (story) {
+    return story.scenes[sceneId];
   }
-  return story.scenes[sceneKey];
+  console.log('Did not find scene', storyId, sceneId);
 };
