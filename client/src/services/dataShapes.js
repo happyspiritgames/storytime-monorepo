@@ -9,3 +9,12 @@ export const storySummaryShape = PropTypes.shape({
   firstSceneId: PropTypes.string,
   publishedAt: PropTypes.string
 });
+
+export const playerProfileShape = PropTypes.shape({
+  playerId: PropTypes.string,
+  email: PropTypes.string,
+  nickname: PropTypes.string,
+  agreedToEmailOn: PropTypes.string,
+  agreedToTermsOfAuthorOn: PropTypes.string,
+  penName: PropTypes.string
+});

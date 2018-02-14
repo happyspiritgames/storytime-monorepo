@@ -3,10 +3,9 @@ import { Route } from 'react-router-dom';
 import Clubhouse from './Clubhouse';
 import Library from './library';
 import Reader from './reader';
-import Login from './account/Login';
-import Account from './account/Account';
+import Account from './account';
+import LoginCallback from './account/LoginCallback';
 import Admin from './admin/PlayerAdmin';
-import Callback from './Callback';
 
 export default class StoryTimeApp extends Component {
 
@@ -15,15 +14,10 @@ export default class StoryTimeApp extends Component {
       <div>
         <Route exact path="/" component={Library} />
         <Route path="/reader/:storyId/:sceneId" component={Reader} />
+        <Route path="/account" component={Account} />
+        <Route path="/admin" component={Admin} />
+        <Route path="/callback" component={LoginCallback} />
       </div>
     );
   }
 }
-
-/*
-        <Route path="/login" component={Login} />
-        <Route path="/library" component={Library} />
-        <Route path="/account" component={Account} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/callback" component={Callback} />
-*/
