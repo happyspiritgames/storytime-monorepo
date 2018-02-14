@@ -3,3 +3,32 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.profile-row {
+  margin-bottom:1rem;
+  margin-top:1rem;
+}
+
+.card-title, .card-subtitle {
+  margin-bottom:1rem;
+}
+
+.btn.btn-primary {
+}
+
+.form-check {
+  margin-bottom:2rem;
+}
+
+.help-text {
+  margin-left:.5rem;
+}
+
+.section {
+  margin-bottom:2rem;
+}
+
+form {
+  border:solid 1px gray;
+  padding:.3rem;
+}
