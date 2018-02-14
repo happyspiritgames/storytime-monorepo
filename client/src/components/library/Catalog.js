@@ -9,8 +9,12 @@ export default class Catalog extends Component {
 
   renderCard(summary) {
     const { storyId, title, penName, tagLine, about, firstSceneId } = summary;
+      /*
+        Put this under card, above card-body when story cover image is supported.
+        <img className="card-img-top w-100 d-block" alt={title} />
+      */
     return (
-      <div key={storyId} className="card"><img className="card-img-top w-100 d-block" alt={title} />
+      <div key={storyId} className="card">
         <div className="card-body">
           <h4 className="card-title">{title}</h4>
           <h6 className="text-muted card-subtitle">by {penName}</h6>
@@ -21,6 +25,7 @@ export default class Catalog extends Component {
       </div>
     );
   }
+
 
   render() {
     const { summaries } = this.props;
