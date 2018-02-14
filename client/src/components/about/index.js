@@ -3,11 +3,11 @@ import StoryTimePage from '../StoryTimePage';
 import { Link } from 'react-router-dom';
 import './about.css';
 
-export default class Library extends Component {
+export default class About extends Component {
   render() {
     return (
       <StoryTimePage id="about">
-        <div class="message">
+        <div className="message">
           <p>Greetings! <img className="float-right headshot" src="/img/DaveMount.png" width="150" alt="The Happy Spirit" /></p>
           <p>You have found StoryTime, the first game produced by Happy Spirit Games. If you are new to
             StoryTime, give <Link to="/reader/themission"><em>The Mission</em></Link> a try.  Go

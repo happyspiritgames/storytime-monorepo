@@ -13,7 +13,9 @@ export default class StoryTimePage extends Component {
     return (
       <div id={id} className="container-fluid">
         <Navigation />
-        {children}
+        <div className="main-content">
+          {children}
+        </div>
         <Footer />
       </div>
     );

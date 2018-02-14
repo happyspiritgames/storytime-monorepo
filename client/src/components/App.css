@@ -1,15 +1,8 @@
-.storytime-page {
-  max-width: 750px;
-  margin-top: 25px;
-}
 .navbar-right {
   margin-right: 0px !important
 }
 .log {
   margin: 5px 10px 0 0;
-}
-.headshot {
-  margin-left: 15px;
 }
 
 /* library styles */
@@ -35,4 +28,12 @@
 }
 #scene .card-footer {
   margin-top: 25px;
+}
+
+.edit-icon {
+  font-size: 24px;
+}
+
+.main-content {
+  margin: 1rem;
 }
