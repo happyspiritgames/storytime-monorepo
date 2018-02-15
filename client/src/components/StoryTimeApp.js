@@ -18,8 +18,8 @@ export default class StoryTimeApp extends Component {
     return (
       <div>
         <Route exact path="/" component={Library} />
-        <Route path="/reader/:storyId" component={Reader} />
-        <Route path="/reader/:storyId/:sceneId" component={Reader} />
+        <Route exact path="/reader/:storyId" component={Reader} />
+        <Route exact path="/reader/:storyId/:sceneId" component={Reader} />
         <Route exact path="/writingdesk" component={WritingDesk} />
         <Route exact path="/writingdesk/:draftId" component={EditStory} />
         <Route exact path="/writingdesk/:draftId/:sceneId" component={EditScene} />
