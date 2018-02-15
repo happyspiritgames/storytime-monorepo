@@ -88,7 +88,7 @@ export default class PlayerAdmin extends Component {
       activate: this.handleActivatePlayer
     };
     return (
-      <StoryTimePage id="player-admin" heading="Players">
+      <StoryTimePage id="player-admin">
         <PlayersList
           players={players}
           onSelect={this.handleSelectPlayer}

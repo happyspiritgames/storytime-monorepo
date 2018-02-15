@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
-import MainNav from './MainNav';
+import Navigation from './navigation';
+import Footer from './footer';
 
 export default class StoryTimePage extends Component {
   static propTypes = {
-    id: PropTypes.string,
-    heading: PropTypes.string
+    id: PropTypes.string.isRequired
   }
 
   render() {
-    const { id, heading, children } = this.props;
-
+    const { id, children } = this.props;
     return (
-      <Container id={id} fluid={true} className="storytime-page">
-        <MainNav />
-        <h1 className="text-center">{heading}</h1>
-        {children}
-      </Container>
+      <div id={id} className="container-fluid">
+        <Navigation />
+        <div className="main-content">
+          {children}
+        </div>
+        <Footer />
+      </div>
     );
   }
 }

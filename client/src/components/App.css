@@ -1,15 +1,8 @@
-.storytime-page {
-  max-width: 750px;
-  margin-top: 25px;
-}
 .navbar-right {
   margin-right: 0px !important
 }
 .log {
   margin: 5px 10px 0 0;
-}
-.headshot {
-  margin-left: 15px;
 }
 
 /* library styles */
@@ -21,11 +14,6 @@
 }
 .story-about {
   margin-top: 1em;
-}
-#message {
-  margin-top: 3em;
-  padding: 1em;
-  background-color:#bfd9bf
 }
 
 /* reader styles */
@@ -42,7 +30,10 @@
   margin-top: 25px;
 }
 
-/* admin */
-.player-suspended {
-  background-color: darksalmon;
+.action-icon {
+  font-size: 24px;
+}
+
+.main-content {
+  margin: 1rem;
 }

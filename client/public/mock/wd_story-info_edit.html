@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Desk - Story</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Adamina">
+    <link rel="stylesheet" href="../styles/wd-styles.css">
+  </head>
+  <body>
+    <div class="contact-clean">
+      <form>
+        <fieldset style="margin-bottom:2rem;">
+          <legend>Story Information</legend>
+          <div class="form-group">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Story Title <a href="wd_scene_edit.html"><i class="fa fa-edit float-right" style="font-size:28px;"></i></a></h4>
+                <h6 class="text-muted card-subtitle mb-2">Tag Line Goes Here</h6>
+                <p class="card-text">This is about the story.  Just enough information to make people curious enough to try it.</p>
+                <p class="card-text">Last updated on January 31, 2018 at 6:23 PM.</p>
+              </div>
+            </div>
+          </div>
+          <div class="edit-info">
+            <div class="form-group">
+              <label>Title </label>
+              <input class="form-control" type="text" value="Story Title" />
+            </div>
+            <div class="form-group">
+              <label style="font-size:16px;">Tag Line</label>
+              <input class="form-control" type="text" value="Tag Line Goes Here" />
+              <small class="form-text text-muted">A catchy phrase or sentence to attract readers.</small>
+            </div>
+            <div class="form-group">
+              <label>About </label>
+              <textarea class="form-control">This is about the story.  Just enough information to make people curious enough to try it.</textarea>
+              <small class="form-text text-muted">Give the reader an idea of what the story is about.</small>
+            </div>
+            <button class="btn btn-primary" type="button">Save Story information</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Scenes</legend>
+          <div class="form-group edit-info">
+            <label>New Scene Title </label>
+            <input class="form-control" type="text" />
+            <button class="btn btn-primary" type="button">Add A Scene</button>
+          </div>
+          <ul class="list-group" style="margin-bottom:1.5rem;">
+            <li class="list-group-item">
+              <span>Scene Title</span><a href="wd_scene_edit.html"><i class="fa fa-edit float-right" style="font-size:28px;"></i></a>
+            </li>
+            <li class="list-group-item">
+              <span>Scene Title</span><a href="wd_scene_edit.html"><i class="fa fa-edit float-right" style="font-size:28px;"></i></a>
+            </li>
+            <li class="list-group-item">
+              <span>Scene Title</span><a href="wd_scene_edit.html"><i class="fa fa-edit float-right" style="font-size:28px;"></i></a>
+            </li>
+          </ul>
+        </fieldset>
+      </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 import { formatDateTime } from '../../util/formatter';
+import './admin.css';
 
 export default class PlayersList extends Component {
   static propTypes = {

@@ -8,8 +8,8 @@ module.exports = function (app, authCheck) {
   const apiRouter = express.Router();
   apiRouter.route('/ping').get(storyController.ping);
   apiRouter.route('/stories').get(storyController.searchStories);
-  apiRouter.route('/stories/:storyKey').get(storyController.getPublishedStorySummary);
-  apiRouter.route('/stories/:storyKey/scenes/:sceneKey').get(storyController.getStoryScene);
+  apiRouter.route('/stories/:storyId').get(storyController.getPublishedStorySummary);
+  apiRouter.route('/stories/:storyId/scenes/:sceneId').get(storyController.getStoryScene);
 
   const authRouter = express.Router();
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);

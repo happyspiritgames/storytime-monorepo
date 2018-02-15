@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import Clubhouse from './Clubhouse';
-import Library from './reader/Library';
-import Login from './account/Login';
-import Reader from './reader/Reader';
-import Account from './account/Account';
-import Admin from './admin/PlayerAdmin';
-import Callback from './Callback';
+import Library from './library';
+import Reader from './reader';
+import WritingDesk from './writingdesk';
+import EditStory from './writingdesk/EditStory';
+import EditScene from './writingdesk/EditScene';
+import Account from './account';
+import Admin from './admin';
+import About from './about';
+import Contact from './contact';
+import LoginCallback from './account/LoginCallback';
 
 export default class StoryTimeApp extends Component {
 
   render() {
     return (
       <div>
-        <Route exact path="/" component={Clubhouse} />
-        <Route path="/login" component={Login} />
-        <Route path="/library" component={Library} />
-        <Route path="/reader/:storyKey" component={Reader} />
+        <Route exact path="/" component={Library} />
+        <Route path="/reader/:storyId" component={Reader} />
+        <Route path="/reader/:storyId/:sceneId" component={Reader} />
+        <Route exact path="/writingdesk" component={WritingDesk} />
+        <Route exact path="/writingdesk/:draftId" component={EditStory} />
+        <Route exact path="/writingdesk/:draftId/:sceneId" component={EditScene} />
         <Route path="/account" component={Account} />
         <Route path="/admin" component={Admin} />
-        <Route path="/callback" component={Callback} />
+        <Route path="/about" component={About} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/callback" component={LoginCallback} />
       </div>
     );
   }
