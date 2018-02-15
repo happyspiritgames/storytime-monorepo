@@ -10,6 +10,7 @@ import Admin from './admin';
 import About from './about';
 import Contact from './contact';
 import LoginCallback from './account/LoginCallback';
+import './StoryTimeApp.css';
 
 export default class StoryTimeApp extends Component {
 
