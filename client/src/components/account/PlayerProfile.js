@@ -64,7 +64,7 @@ export default class PlayerProfile extends Component {
             <div className="col-3">&nbsp;</div>
             <div className="col">
               <button className="btn btn-primary" type="button" onClick={this.onEdit}>
-                <i className="icon ion-edit edit-icon"></i> Change Profile
+                <i className="icon ion-edit action-icon"></i> Change Profile
               </button>
             </div>
           </div>
