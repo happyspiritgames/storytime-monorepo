@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import { format } from '../../util/formatter';
 import './reader.css';
