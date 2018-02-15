@@ -74,7 +74,10 @@ export default class PlayerProfile extends Component {
   }
 
   renderProfileForEdit(profile) {
-    const { nickname, agreedToEmailOn, agreedToTermsOfAuthorOn, penName } = profile;
+    const { nickname, agreedToEmailOn, penName } = profile;
+    const agreeToEmailLabel = (agreedToEmailOn)
+      ? `You agreed to receive email on ${formatDate(agreedToEmailOn)}.`
+      : 'Check to agree to receive email from Happy Spirit Games.'
 
     return (
       <form>
@@ -89,8 +92,8 @@ export default class PlayerProfile extends Component {
           <small className="form-text text-muted">The name that shows up on published stories as the author. (only appears when t&amp;c for authors is agreed.)</small>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="checkbox" id="formCheck-1" />
-          <label className="form-check-label" for="formCheck-1">Check to agree to receive email from Happy Spirit Games</label>
+          <input className="form-check-input" type="checkbox" id="formCheck-1" checked={agreedToEmailOn} />
+          <label className="form-check-label" for="formCheck-1">{agreeToEmailLabel}</label>
         </div>
         <button className="btn btn-primary action-button" type="button" onClick={this.onSave}>Save Changes</button>
       </form>
