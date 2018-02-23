@@ -14,27 +14,26 @@ router.all('*', (req, res, next) => {
 });
 
 // for seeing a list of stories owned by the author
-router.route('/stories')
+router.route('/')
 .get(draftController.getDraftSummaries)
 .post(draftController.beginNewStory);
 
 // for working with latest draft of a particular story
-router.route('/stories/:storyId')
+router.route('/:storyId')
 .get(draftController.getStorySummary)
 .put(draftController.updateStorySummary);
 
 // returns the complete story, including the summary and all scenes;
 // payload could be quite large, good for initial load and when client gets out of sync
-router.route('/stories/:storyId/full')
-.get(draftController.getFullStory);
+router.route('/:storyId/full').get(draftController.getFullStory);
 
 // for working with scenes of draft story
-router.route('/stories/:storyId/scenes').post(draftController.beginNewScene);  // to support alternate workflow where scenes are wired up afterward
-router.route('/stories/:storyId/scenes/:sceneId')
+router.route('/:storyId/scenes').post(draftController.beginNewScene);  // to support alternate workflow where scenes are wired up afterward
+router.route('/:storyId/scenes/:sceneId')
 .get(draftController.getScene)
 .put(draftController.updateScene);
 
-router.route('/stories/:storyId/scenes/:sceneId/signpost')
+router.route('/:storyId/scenes/:sceneId/signpost')
 .get(draftController.getSignpost)
 .put(draftController.updateSignpost);
 

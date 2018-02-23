@@ -139,7 +139,7 @@ exports.getPlayerStatusCodes = async () => {
   const SEL_ROLES = 'SELECT * FROM player_status';
   const dbResult = await db.query(SEL_ROLES);
   if (dbResult.rowCount > 0) {
-    return dbResult.rows.map(statusCodeRow => mapPlayerStatusCodesToApi(statusCodeRow));
+    return mapPlayerStatusCodesToApi(dbResult.rows);
   }
 }
 

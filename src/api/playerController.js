@@ -175,7 +175,7 @@ exports.updateSelfProfile = async (req, res) => {
   try {
     await playerModel.updatePlayer(playerId, nickname, membersOnlyComms);
     const profile = await playerModel.getPlayer(playerId);
-    res.json(profile);
+    res.status(202).json(profile);
   } catch (e) {
     console.error('Problem with updateSelfProfile', e);
     res.status(500).send(internalError);

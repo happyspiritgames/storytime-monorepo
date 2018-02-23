@@ -2,7 +2,7 @@ const storyController = require('./storyController');
 const playerController = require('./playerController');
 const express = require('express');
 const adminRoutes = require('./adminRoutes');
-const authorRoutes = require('./authorRoutes');
+const editorRoutes = require('./editorRoutes');
 
 module.exports = function (app, authCheck) {
   const apiRouter = express.Router();
@@ -14,16 +14,16 @@ module.exports = function (app, authCheck) {
   const authRouter = express.Router();
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
   authRouter.route('/players/self/roles').get(playerController.getRoles);
-  authRouter.route('/players/self/roles/agreeToTermsAuthor').put(playerController.agreeToAuthorTerms);
+  authRouter.route('/players/self/roles/agree-author').put(playerController.agreeToAuthorTerms);
   authRouter.route('/players/self/profile')
   .get(playerController.getSelfProfile)
   .put(playerController.updateSelfProfile);
   authRouter.route('/players/:playerId').get(playerController.getPlayer);
-  authRouter.route('/player-status-codes').get(playerController.getPlayerStatusCodes);
+  authRouter.route('/codes/player-status').get(playerController.getPlayerStatusCodes);
 
   // assemble routers
   apiRouter.use('/', authRouter);
   apiRouter.use('/admin', adminRoutes);
-  apiRouter.use('/author', authorRoutes);
+  apiRouter.use('/draft-stories', editorRoutes);
   app.use('/api', apiRouter);
 };
