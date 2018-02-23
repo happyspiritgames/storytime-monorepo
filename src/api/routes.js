@@ -13,9 +13,9 @@ module.exports = function (app, authCheck) {
 
   const authRouter = express.Router();
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
-  authRouter.route('/players/self/roles').get(playerController.getRoles);
-  authRouter.route('/players/self/roles/agree-author').put(playerController.agreeToAuthorTerms);
-  authRouter.route('/players/self/profile')
+  authRouter.route('/self/roles').get(playerController.getRoles);
+  authRouter.route('/self/roles/agree-author').put(playerController.agreeToAuthorTerms);
+  authRouter.route('/self/profile')
   .get(playerController.getSelfProfile)
   .put(playerController.updateSelfProfile);
   authRouter.route('/players/:playerId').get(playerController.getPlayer);

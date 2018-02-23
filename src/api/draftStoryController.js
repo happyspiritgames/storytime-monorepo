@@ -215,15 +215,19 @@ exports.updateSignpost = async (req, res) => {
             console.log('no update, same as existing', update);
           }
         } else {
-          consol.log('adding new sign');
+          console.log('adding new sign');
           await draftModel.addSignpostSign(sceneId, update.destinationId, update.teaser, update.order);
         }
       });
     }
     const signpost = await draftModel.getSignpost(sceneId);
-    res.status(202).end();
+    res.status(202).send(signpost);
   } catch (e) {
     console.error('Problem updating signpost for scene', e);
     res.status(500).json(internalError);
   }
+};
+
+exports.startPublishingProcess = async (req, res) => {
+  res.status(501).send(errorMessage('Coming soon...'));
 };

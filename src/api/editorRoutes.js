@@ -26,6 +26,7 @@ router.route('/:storyId')
 // returns the complete story, including the summary and all scenes;
 // payload could be quite large, good for initial load and when client gets out of sync
 router.route('/:storyId/full').get(draftController.getFullStory);
+router.route('/:storyId/publish').post(draftController.startPublishingProcess);
 
 // for working with scenes of draft story
 router.route('/:storyId/scenes').post(draftController.beginNewScene);  // to support alternate workflow where scenes are wired up afterward
