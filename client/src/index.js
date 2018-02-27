@@ -1,11 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import StoryTimeApp from './components/StoryTimeApp';
-import './index.css';
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import store, { history } from './store'
+import StoryTimeApp from './components/StoryTimeApp'
+import './index.css'
 
-ReactDOM.render((
-  <BrowserRouter>
-    <StoryTimeApp />
-  </BrowserRouter>
-), document.getElementById('root'));
+render(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <StoryTimeApp />
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root')
+)
