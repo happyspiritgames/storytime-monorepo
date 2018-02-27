@@ -3,8 +3,9 @@ import { visitScene } from '../actions'
 import Reader from '../components/reader'
 
 const mapStateToProps = (state) => ({
-  summary: state.reader.story.summary,
-  scene: state.reader.story.scenes[state.currentScene]
+  status: state.reader.status,
+  summary: state.reader.summary,
+  scene: state.reader.scenes[state.currentScene]
 })
 
 const mapDispatchToProps = {

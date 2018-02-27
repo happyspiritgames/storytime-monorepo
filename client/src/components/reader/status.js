@@ -1,0 +1,5 @@
+export default {
+  READY: 'READY',
+  FETCHING: 'FETCHING',
+  FAILED_TO_FETCH: 'FAILED_TO_FETCH'
+}

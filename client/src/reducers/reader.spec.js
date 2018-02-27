@@ -18,7 +18,9 @@ describe('reader reducer', () => {
     expect(
       reader({}, {
         type: 'LOAD_SUMMARY',
-        summary: testSummary
+        payload: {
+          summary: testSummary
+        }
       })
     ).toEqual({
       summary: testSummary

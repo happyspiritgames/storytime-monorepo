@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
-import { format } from '../../util/formatter';
-import './reader.css';
+import React, { Component } from 'react'
+import StoryTimePage from '../StoryTimePage'
+import { format } from '../../util/formatter'
+import { READY, FETCHING, FAILED_TO_FETCH } from './status'
+import './reader.css'
 
 // const sampleSummary = {
 //   storyId: "themission",
@@ -66,9 +67,26 @@ export default class Reader extends Component {
     );
   }
 
+  renderNotLoaded(message) {
+    return (
+      <StoryTimePage id="reader">
+        <h3 className="text-center">{message}</h3>
+      </StoryTimePage>
+    )
+  }
+
   render() {
-    const { summary, scene } = this.props;
-    const formattedProse = this.formatProse(scene.prose);
+    const { status, summary, scene } = this.props
+
+    if (status === FETCHING) {
+      return this.renderNotLoaded('Loading...one moment please.')
+    } else if (status === FAILED_TO_FETCH) {
+      return this.renderNotLoaded('Oh no.  Something went wrong.')
+    } else if (status !== READY) {
+      return this.renderNotLoaded('Nothing is happening.  Must...wait...forever...')
+    }
+
+    const formattedProse = this.formatProse(scene.prose)
 
     return (
       <StoryTimePage id="reader">
