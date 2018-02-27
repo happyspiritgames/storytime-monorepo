@@ -1,4 +1,4 @@
-import * as actions from './index'
+import * as actions from './actions'
 
 describe('reader actions', () => {
   it('fetchSummary should create FETCH_SUMMARY action', () => {
@@ -52,7 +52,7 @@ describe('reader actions', () => {
       type: actions.BEGIN_STORY
     })
   })
-  
+
   it('visitScene should create VISIT_SCENE action', () => {
     expect(
       actions.visitScene('blah')

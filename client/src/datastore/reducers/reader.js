@@ -1,12 +1,14 @@
 import * as actions from '../actions'
-import {
-  READY,
-  FETCHING,
-  FAILED_TO_FETCH
-} from '../components/reader/status'
+
+export const readerStatus = {
+  NOT_READY: 'NOT_READY',
+  READY: 'READY',
+  FETCHING: 'FETCHING',
+  HAS_ERRORS: 'HAS_ERRORS'
+}
 
 const dataShape = {
-  status: READY,
+  status: readerStatus.READY,
   summary: {},
   scenes: {
     '37': {},
@@ -17,10 +19,15 @@ const dataShape = {
   history: ['37', '42']
 }
 
-const initialState = {
+export const initialState = {
+  status: readerStatus.NOT_READY,
   summary: {},
   scenes: {},
   history: []
+}
+
+const isReady = (state) => {
+  return state.summary && state.currentScene && state.scenes[state.currentScene]
 }
 
 export default (state = initialState, action) => {
@@ -28,7 +35,7 @@ export default (state = initialState, action) => {
     case actions.FETCH_SUMMARY:
       return {
         ...state,
-        status: FETCHING,
+        status: readerStatus.FETCHING,
         storyToFetch: action.payload.storyId
       }
 
@@ -38,7 +45,8 @@ export default (state = initialState, action) => {
         return state
       }
       // play nicely with outstanding calls to fetch scenes
-      const status = (state.scenesToFetch === undefined) ? READY : FETCHING;
+      const status = (state.scenesToFetch === undefined)
+        ? readerStatus.READY : readerStatus.FETCHING;
       return {
         ...state,
         summary: action.payload.summary,
@@ -53,7 +61,7 @@ export default (state = initialState, action) => {
         : [ sceneId ]
       return {
         ...state,
-        status: FETCHING,
+        status: readerStatus.FETCHING,
         scenesToFetch
       }
 
@@ -69,7 +77,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         scenes: nextScenes,
-        staus: READY
+        staus: readerStatus.READY
       }
 
     case actions.VISIT_SCENE:

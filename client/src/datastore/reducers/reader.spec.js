@@ -1,11 +1,22 @@
-import reader from './reader';
+import reader, { initialState, readerStatus } from './reader'
+import * as actions from '../actions'
 
 describe('reader reducer', () => {
   it('should handle initial state', () => {
     expect(
       reader(undefined, {})
-    ).toEqual({});
-  });
+    ).toEqual(initialState)
+  })
+
+  it('handles FETCH_SUMMARY', () => {
+    expect(
+      reader(undefined, actions.fetchSummary('abc'))
+    ).toEqual({
+      ...initialState,
+      storyToFetch: 'abc',
+      status: readerStatus.FETCHING
+    })
+  })
 
   it('handles LOAD_SUMMARY', () => {
     const testSummary = {
@@ -14,18 +25,17 @@ describe('reader reducer', () => {
       penName: 'Onthe Money',
       tagLine: 'A tale of winning beyond belief',
       about: 'You think winning is easy?  Well why not?!'
-    };
+    }
     expect(
-      reader({}, {
-        type: 'LOAD_SUMMARY',
-        payload: {
-          summary: testSummary
-        }
-      })
-    ).toEqual({
-      summary: testSummary
-    });
-  });
+      reader(
+        undefined, actions.loadSummary(testSummary))
+      ).toEqual({
+        ...initialState,
+        summary: testSummary,
+        status: readerStatus.READY
+      }
+    )
+  })
 
   it('handles LOAD_SUMMARY without payload', () => {
     // TODO use a spy to check console error messages
@@ -37,8 +47,8 @@ describe('reader reducer', () => {
           title: 'Loser'
         }
       })
-    ).toEqual({});
-  });
+    ).toEqual({})
+  })
 
   it('handles LOAD_SCENE', () => {
     const testScene = {
@@ -50,7 +60,7 @@ describe('reader reducer', () => {
         { sceneId: '124', teaser: 'The easy way.' },
         { sceneId: '125', teaser: 'The hard way.' }
       ]
-    };
+    }
     expect (
       reader({}, {
         type: 'LOAD_SCENE',
@@ -60,8 +70,8 @@ describe('reader reducer', () => {
       scenes: {
         '123': testScene
       }
-    });
-  });
+    })
+  })
 
   it('handles LOAD_SCENE without scene', () => {
     // TODO use a spy to check console error messages
@@ -71,20 +81,20 @@ describe('reader reducer', () => {
         wrongScene: {}
       })
     ).toEqual({});
-  });
+  })
 
   it('handles LOAD_SCENE without proper payload', () => {
     const garbagePayload = {
       garbage: '123'
-    };
+    }
     // TODO use a spy to check console error messages
     expect (
       reader({}, {
         type: 'LOAD_SCENE',
         scene: garbagePayload
       })
-    ).toEqual({});
-  });
+    ).toEqual({})
+  })
 
   it('handles VISIT_SCENE', () => {
     expect (
@@ -95,13 +105,13 @@ describe('reader reducer', () => {
     ).toEqual({
       currentScene: '42'
     })
-  });
-  it('handles VISIT_SCENE without nextSceneId', () => {
+  })
+  it('handles VISIT_SCENE without sceneId', () => {
     expect (
       reader({}, {
         type: 'VISIT_SCENE',
         sceneId: '42'
       })
     ).toEqual({})
-  });
-});
+  })
+})
