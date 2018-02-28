@@ -93,7 +93,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentSceneId: action.payload.sceneId,
-        history: [...state.history, action.payload.sceneId]
+        history: [...state.history, action.payload.sceneId],
+        status: readerStates.READY
       }
 
     default:

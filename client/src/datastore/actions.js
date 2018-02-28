@@ -1,5 +1,5 @@
 export const FETCH_SUMMARY = 'FETCH_SUMMARY'
-const fetchSummary = (storyId) => ({
+export const fetchSummary = (storyId) => ({
   type: FETCH_SUMMARY,
   payload: {
     storyId
@@ -7,7 +7,7 @@ const fetchSummary = (storyId) => ({
 })
 
 export const LOAD_SUMMARY = 'LOAD_SUMMARY'
-const loadSummary = (summary) => ({
+export const loadSummary = (summary) => ({
   type: LOAD_SUMMARY,
   payload: {
     summary
@@ -40,7 +40,7 @@ export const stageSummary = storyId => {
 }
 
 export const FETCH_SCENE = 'FETCH_SCENE'
-const fetchScene = (sceneId) => ({
+export const fetchScene = (sceneId) => ({
   type: FETCH_SCENE,
   payload: {
     sceneId
@@ -48,7 +48,7 @@ const fetchScene = (sceneId) => ({
 })
 
 export const LOAD_SCENE = 'LOAD_SCENE'
-const loadScene = (scene) => ({
+export const loadScene = (scene) => ({
   type: LOAD_SCENE,
   payload: {
     scene
@@ -66,7 +66,8 @@ export const stageScene = (storyId, sceneId) => {
   return (dispatch, getState) => {
     const cachedScene = findCachedScene(getState(), sceneId)
     if (cachedScene) {
-      return Promise.resolve
+      console.log('Found scene in cache')
+      return Promise.resolve()
     } else {
       dispatch(fetchScene(sceneId))
       return fetch(`/api/stories/${storyId}/scenes/${sceneId}`)
@@ -92,23 +93,10 @@ export const begin = (storyId) => {
       dispatch(stageScene(storyId, firstSceneId))
       .then(() => {
         dispatch(beginStory())
-        console.log(getState())
       })
     })
   }
 }
-
-// export const begin = (storyId) => {
-//   return (dispatch, getState) => {
-//     dispatch(stageSummary(storyId))
-
-//       .then(() => {
-//         const { storyId, firstSceneId } = getState().reader.summary
-//         dispatch(stageScene(storyId, firstSceneId))
-//           .then(() => dispatch(beginStory()))
-//       })
-//   }
-// }
 
 export const VISIT_SCENE = 'VISIT_SCENE'
 export const visitScene = (sceneId) => ({
@@ -117,3 +105,20 @@ export const visitScene = (sceneId) => ({
     sceneId
   }
 })
+
+export const goToScene = (sceneId) => {
+  return (dispatch, getState) => {
+    const { storyId } = getState().reader.summary
+    if (!storyId) {
+      console.error('Story summary is not loaded')
+      return
+    }
+    dispatch(stageScene(storyId, sceneId))
+    .then(() => {
+      dispatch(visitScene(sceneId))
+    })
+  }
+}
+
+// TODO to support bookmarks, create method goToBookmark that takes storyId and sceneId
+// would work like begin but go to given scene instead of first scene

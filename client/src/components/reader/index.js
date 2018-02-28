@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { push } from 'react-router-redux'
 import StoryTimePage from '../StoryTimePage'
-import { begin, visitPage } from '../../datastore/actions'
 import { format } from '../../util/formatter'
 import { readerStates } from '../../datastore/reducers/reader'
 import { storySummaryShape, sceneShape } from '../../services/dataShapes'
@@ -12,34 +12,35 @@ export default class Reader extends Component {
     status: PropTypes.string,
     summary: storySummaryShape,
     scene: sceneShape,
-    dispatch: PropTypes.func.isRequired
+    onBegin: PropTypes.func.isRequired,
+    onGoToScene: PropTypes.func.isRequired
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    const { onBegin } = this.props
     const { storyId, sceneId } = this.props.match.params
     if (storyId && sceneId) {
       // TODO implement visit
       // dispatch(visit(storyId, sceneId))
       console.log('implement visit() please')
     } else if (storyId) {
-      dispatch(begin(storyId))
+      onBegin(storyId)
     }
   }
 
-  renderSignpost(scene) {
+  renderSignpost(scene, goToScene, playAgain, goToLibrary) {
     const { endPrompt, signpost } = scene
     let signs
     if (signpost) {
-      signs = signpost.map(sign =>
-        (<li key={`${sign.sceneId}|${sign.teaser}`} className="list-group-item"><a href={`#${sign.sceneId}`}><span>{sign.teaser}</span></a></li>)
-      )
+      signs = signpost.map(sign => {
+        let signKey = `${sign.sceneId}|${sign.teaser}`
+        return (<li key={signKey} className="list-group-item" onClick={() => { goToScene(sign.sceneId) }}>{sign.teaser}</li>)
+      })
     } else {
-      // must be an ending
       signs = [
-        <li className="list-group-item"><span>Go back to the beginning and try again.</span></li>,
-        <li className="list-group-item"><span>Give some feedback.</span></li>,
-        <li className="list-group-item"><span>Find another story.</span></li>
+        <li key='replay' className="list-group-item" onClick={() => { playAgain() }}>Go back to the beginning and try again.</li>,
+        <li key='feedback' className="list-group-item">Give some feedback.</li>,
+        <li key='somethingElse' className="list-group-item" onClick={() => { goToLibrary() }}>Find another story.</li>
       ]
     }
     return (
@@ -71,7 +72,7 @@ export default class Reader extends Component {
   }
 
   render() {
-    const { status, summary, scene } = this.props
+    const { status, summary, scene, onGoToScene, onBegin, dispatch } = this.props
 
     if (status === readerStates.FETCHING) {
       return this.renderNotReady('Loading...one moment please.')
@@ -82,6 +83,8 @@ export default class Reader extends Component {
     }
 
     const formattedProse = this.formatProse(scene.prose)
+    const playAgain = () => { onBegin(summary.storyId) }
+    const goToLibrary = () => { dispatch(push('/')) }
 
     return (
       <StoryTimePage id="reader">
@@ -95,7 +98,7 @@ export default class Reader extends Component {
             {formattedProse}
           </div>
         </div>
-        {this.renderSignpost(scene)}
+        {this.renderSignpost(scene, onGoToScene, playAgain, goToLibrary)}
       </StoryTimePage>
     )
   }
