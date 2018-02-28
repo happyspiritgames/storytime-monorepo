@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import store, { history } from './datastore/store'
-import StoryTimeApp from './components/StoryTimeApp'
+import StoryTimeApp from './StoryTimeApp'
 import './index.css'
 
 render(

@@ -1,11 +1,7 @@
 import { connect } from 'react-redux'
 import Reader from '../components/reader'
 import {
-  fetchSummary,
-  loadSummary,
-  fetchScene,
-  loadScene,
-  beginStory,
+  begin,
   visitScene
 } from '../datastore/actions';
 
@@ -16,11 +12,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onFetchStory: fetchSummary,
-  onLoadSummary: loadSummary,
-  onFetchScene: fetchScene,
-  onLoadScene: loadScene,
-  onBeginStory: beginStory,
+  onBegin: begin,
   onVisitScene: visitScene
 }
 
