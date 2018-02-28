@@ -73,9 +73,6 @@ export default class Reader extends Component {
   render() {
     const { status, summary, scene } = this.props
 
-    if (status !== readerStates.READY) {
-      return null
-    }
     if (status === readerStates.FETCHING) {
       return this.renderNotReady('Loading...one moment please.')
     } else if (status === readerStates.HAS_ERRORS) {
