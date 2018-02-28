@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
-import store, { history } from './store'
+import store, { history } from './datastore/store'
 import StoryTimeApp from './components/StoryTimeApp'
 import './index.css'
 

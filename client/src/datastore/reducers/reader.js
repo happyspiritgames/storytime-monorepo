@@ -7,20 +7,6 @@ export const readerStates = {
   HAS_ERRORS: 'HAS_ERRORS'
 }
 
-const dataShape = {
-  status: readerStates.READY,
-  summary: {},
-  scenes: {
-    '37': {},
-    '42': {},
-    '99': {}
-  },
-  currentSceneId: '42',
-  storyToFetch: 'abc',
-  sceneToFetch: '99',
-  history: ['37', '42']
-}
-
 export const initialState = {
   status: readerStates.NOT_READY,
   summary: {},
@@ -28,12 +14,9 @@ export const initialState = {
   history: []
 }
 
-const isReady = (state) => {
-  return state.summary && state.currentScene && state.scenes[state.currentScene]
-}
-
 export default (state = initialState, action) => {
   let status = readerStates.NOT_READY
+  let copyOfState
   switch (action.type) {
     case actions.FETCH_SUMMARY:
       return {
@@ -50,11 +33,12 @@ export default (state = initialState, action) => {
       }
       // play nicely with outstanding calls to fetch scenes
       status = (state.sceneToFetch) ? readerStates.FETCHING : readerStates.NOT_READY;
+      copyOfState = { ...state }
+      delete copyOfState['storyToFetch']
       return {
-        ...state,
+        ...copyOfState,
         summary: action.payload.summary,
         status,
-        storyToFetch: undefined
       }
 
     case actions.FETCH_SCENE:
@@ -80,13 +64,15 @@ export default (state = initialState, action) => {
         [action.payload.scene.sceneId]: action.payload.scene
       }
       status = (state.storyToFetch) ? readerStates.FETCHING : readerStates.NOT_READY;
+      copyOfState = { ...state }
+      delete copyOfState['sceneToFetch']
       return {
-        ...state,
+        ...copyOfState,
         scenes: newScenes,
         status
       }
 
-      case actions.BEGIN_STORY:
+    case actions.BEGIN_STORY:
       // must have summary and first scene loaded
       if (!(state.summary && state.scenes[state.summary.firstSceneId])) {
         return state

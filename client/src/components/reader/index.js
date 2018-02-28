@@ -33,19 +33,19 @@ import './reader.css'
 
 export default class Reader extends Component {
   renderSignpost(scene) {
-    const { endPrompt, signpost } = scene;
-    let signs;
+    const { endPrompt, signpost } = scene
+    let signs
     if (signpost) {
       signs = signpost.map(sign =>
         (<li key={`${sign.sceneId}|${sign.teaser}`} className="list-group-item"><a href={`#${sign.sceneId}`}><span>{sign.teaser}</span></a></li>)
-      );
+      )
     } else {
       // must be an ending
       signs = [
         <li className="list-group-item"><span>Go back to the beginning and try again.</span></li>,
         <li className="list-group-item"><span>Give some feedback.</span></li>,
         <li className="list-group-item"><span>Find another story.</span></li>
-      ];
+      ]
     }
     return (
       <div className="card">
@@ -64,10 +64,10 @@ export default class Reader extends Component {
   formatProse(prose) {
     return prose.split('\n').map((paragraph, index) =>
       (<p className="card-text" key={index}>{ format(paragraph) }</p>)
-    );
+    )
   }
 
-  renderNotLoaded(message) {
+  renderNotReady(message) {
     return (
       <StoryTimePage id="reader">
         <h3 className="text-center">{message}</h3>
@@ -78,12 +78,14 @@ export default class Reader extends Component {
   render() {
     const { status, summary, scene } = this.props
 
+    console.log('status', status, 'summary', summary, 'scene', scene)
+
     if (status === readerStates.FETCHING) {
-      return this.renderNotLoaded('Loading...one moment please.')
+      return this.renderNotReady('Loading...one moment please.')
     } else if (status === readerStates.HAS_ERRORS) {
-      return this.renderNotLoaded('Oh no.  Something went wrong.')
+      return this.renderNotReady('Oh no.  Something went wrong.')
     } else if (status !== readerStates.READY) {
-      return this.renderNotLoaded('Nothing is happening.  Must...wait...forever...')
+      return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
     }
 
     const formattedProse = this.formatProse(scene.prose)
@@ -102,6 +104,6 @@ export default class Reader extends Component {
         </div>
         {this.renderSignpost(scene)}
       </StoryTimePage>
-    );
+    )
   }
 }
