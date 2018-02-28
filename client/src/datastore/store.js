@@ -34,6 +34,3 @@ const store = createStore(
 )
 
 export default store
-
-console.log(store.getState())
-store.dispatch(begin('themission'))

@@ -1,10 +1,32 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import StoryTimePage from '../StoryTimePage'
+import { begin, visitPage } from '../../datastore/actions'
 import { format } from '../../util/formatter'
 import { readerStates } from '../../datastore/reducers/reader'
+import { storySummaryShape, sceneShape } from '../../services/dataShapes'
 import './reader.css'
 
 export default class Reader extends Component {
+  static propTypes = {
+    status: PropTypes.string,
+    summary: storySummaryShape,
+    scene: sceneShape,
+    dispatch: PropTypes.func.isRequired
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props
+    const { storyId, sceneId } = this.props.match.params
+    if (storyId && sceneId) {
+      // TODO implement visit
+      // dispatch(visit(storyId, sceneId))
+      console.log('implement visit() please')
+    } else if (storyId) {
+      dispatch(begin(storyId))
+    }
+  }
+
   renderSignpost(scene) {
     const { endPrompt, signpost } = scene
     let signs
@@ -51,8 +73,9 @@ export default class Reader extends Component {
   render() {
     const { status, summary, scene } = this.props
 
-    console.log('status', status, 'summary', summary, 'scene', scene)
-
+    if (status !== readerStates.READY) {
+      return null
+    }
     if (status === readerStates.FETCHING) {
       return this.renderNotReady('Loading...one moment please.')
     } else if (status === readerStates.HAS_ERRORS) {
@@ -60,7 +83,6 @@ export default class Reader extends Component {
     } else if (status !== readerStates.READY) {
       return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
     }
-
 
     const formattedProse = this.formatProse(scene.prose)
 

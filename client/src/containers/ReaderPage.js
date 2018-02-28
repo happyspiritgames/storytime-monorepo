@@ -17,8 +17,7 @@ const mapDispatchToProps = {
 }
 
 const ReaderPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Reader)
 
 export default ReaderPage
