@@ -1,4 +1,4 @@
-import reader, { initialState, readerStatus } from './reader'
+import reader, { initialState, readerStates } from './reader'
 import * as actions from '../actions'
 
 describe('reader reducer', () => {
@@ -14,7 +14,7 @@ describe('reader reducer', () => {
     ).toEqual({
       ...initialState,
       storyToFetch: 'abc',
-      status: readerStatus.FETCHING
+      status: readerStates.FETCHING
     })
   })
 
@@ -27,27 +27,32 @@ describe('reader reducer', () => {
       about: 'You think winning is easy?  Well why not?!'
     }
     expect(
-      reader(
-        undefined, actions.loadSummary(testSummary))
-      ).toEqual({
-        ...initialState,
-        summary: testSummary,
-        status: readerStatus.READY
-      }
-    )
+      reader(undefined, actions.loadSummary(testSummary))
+    ).toEqual({
+      ...initialState,
+      summary: testSummary,
+      status: readerStates.NOT_READY
+    })
   })
 
   it('handles LOAD_SUMMARY without payload', () => {
     // TODO use a spy to check console error messages
     expect(
-      reader({}, {
-        type: 'LOAD_SUMMARY',
-        blargy: {
-          storyId: 'ABCDEFG',
-          title: 'Loser'
-        }
-      })
-    ).toEqual({})
+      reader(undefined, actions.loadSummary())
+    ).toEqual({
+      ...initialState,
+      status: readerStates.NOT_READY
+    })
+  })
+
+  it('handles FETCH_SCENE', () => {
+    expect(
+      reader(undefined, actions.fetchScene('42'))
+    ).toEqual({
+      ...initialState,
+      sceneToFetch: '42',
+      status: readerStates.FETCHING
+    })
   })
 
   it('handles LOAD_SCENE', () => {
@@ -62,25 +67,20 @@ describe('reader reducer', () => {
       ]
     }
     expect (
-      reader({}, {
-        type: 'LOAD_SCENE',
-        scene: testScene
-      })
+      reader(undefined, actions.loadScene(testScene))
     ).toEqual({
-      scenes: {
-        '123': testScene
-      }
+        ...initialState,
+        scenes: {
+          '123': testScene
+        }
     })
   })
 
   it('handles LOAD_SCENE without scene', () => {
     // TODO use a spy to check console error messages
     expect (
-      reader({}, {
-        type: 'LOAD_SCENE',
-        wrongScene: {}
-      })
-    ).toEqual({});
+      reader(undefined, actions.loadScene())
+    ).toEqual({ ...initialState })
   })
 
   it('handles LOAD_SCENE without proper payload', () => {
@@ -89,29 +89,45 @@ describe('reader reducer', () => {
     }
     // TODO use a spy to check console error messages
     expect (
-      reader({}, {
-        type: 'LOAD_SCENE',
-        scene: garbagePayload
-      })
-    ).toEqual({})
+      reader(undefined, actions.loadScene(garbagePayload))
+    ).toEqual({ ...initialState })
+  })
+
+  it('handles START_STORY when summary and scene are loaded', () => {
+    const testState = {
+      summary: {
+        storyId: 'ABCDEFG',
+        title: 'Winner',
+        penName: 'Onthe Money',
+        tagLine: 'A tale of winning beyond belief',
+        about: 'You think winning is easy?  Well why not?!',
+        firstSceneId: '42'
+      },
+      scenes: {
+        '42': {}
+      },
+      state: readerStates.NOT_READY
+    }
+    const result = reader(testState, actions.beginStory())
+    expect(result.currentScene).toEqual('42')
+    expect(result.status).toEqual(readerStates.READY)
   })
 
   it('handles VISIT_SCENE', () => {
     expect (
-      reader({}, {
-        type: 'VISIT_SCENE',
-        nextSceneId: '42'
-      })
+      reader(undefined, actions.visitScene('42'))
     ).toEqual({
+      ...initialState,
       currentScene: '42'
     })
   })
+
   it('handles VISIT_SCENE without sceneId', () => {
+    // TODO use a spy to check console error messages
     expect (
-      reader({}, {
-        type: 'VISIT_SCENE',
-        sceneId: '42'
-      })
-    ).toEqual({})
+      reader(undefined, actions.visitScene())
+    ).toEqual({
+      ...initialState
+    })
   })
 })

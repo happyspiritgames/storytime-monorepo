@@ -1,6 +1,6 @@
 import * as actions from '../actions'
 
-export const readerStatus = {
+export const readerStates = {
   NOT_READY: 'NOT_READY',
   READY: 'READY',
   FETCHING: 'FETCHING',
@@ -8,19 +8,21 @@ export const readerStatus = {
 }
 
 const dataShape = {
-  status: readerStatus.READY,
+  status: readerStates.READY,
   summary: {},
   scenes: {
     '37': {},
     '42': {},
     '99': {}
   },
-  currentScene: '42',
+  currentSceneId: '42',
+  storyToFetch: 'abc',
+  sceneToFetch: '99',
   history: ['37', '42']
 }
 
 export const initialState = {
-  status: readerStatus.NOT_READY,
+  status: readerStates.NOT_READY,
   summary: {},
   scenes: {},
   history: []
@@ -31,22 +33,23 @@ const isReady = (state) => {
 }
 
 export default (state = initialState, action) => {
+  let status = readerStates.NOT_READY
   switch (action.type) {
     case actions.FETCH_SUMMARY:
       return {
         ...state,
-        status: readerStatus.FETCHING,
+        status: readerStates.FETCHING,
         storyToFetch: action.payload.storyId
       }
 
     case actions.LOAD_SUMMARY:
+      // TODO handle error condition
       if (!action.payload.summary) {
         console.error('Did not find summary to load')
         return state
       }
       // play nicely with outstanding calls to fetch scenes
-      const status = (state.scenesToFetch === undefined)
-        ? readerStatus.READY : readerStatus.FETCHING;
+      status = (state.sceneToFetch) ? readerStates.FETCHING : readerStates.NOT_READY;
       return {
         ...state,
         summary: action.payload.summary,
@@ -55,29 +58,43 @@ export default (state = initialState, action) => {
       }
 
     case actions.FETCH_SCENE:
-      const sceneId = action.payload.sceneId
-      const scenesToFetch = (state.scenesToFetch)
-        ? [ ...state.scenesToFetch, sceneId ]
-        : [ sceneId ]
       return {
         ...state,
-        status: readerStatus.FETCHING,
-        scenesToFetch
+        status: readerStates.FETCHING,
+        sceneToFetch: action.payload.sceneId
       }
 
+    // TODO someday implement PREFETCH_SCENES -- for background loading
+
     case actions.LOAD_SCENE:
-      if (!action.scene) {
+      // TODO handle error condition
+      if (!action.payload.scene) {
         console.error('Did not find scene to load')
         return state
       } else if (!action.payload.scene.sceneId) {
         console.error('The scene must have an ID to store in client state.')
         return state
       }
-      const nextScenes = Object.assign({}, state.scenes, { [action.payload.scene.sceneId]: action.payload.scene })
+      const newScenes = {
+        ...state.scenes,
+        [action.payload.scene.sceneId]: action.payload.scene
+      }
+      status = (state.storyToFetch) ? readerStates.FETCHING : readerStates.NOT_READY;
       return {
         ...state,
-        scenes: nextScenes,
-        staus: readerStatus.READY
+        scenes: newScenes,
+        status
+      }
+
+      case actions.BEGIN_STORY:
+      // must have summary and first scene loaded
+      if (!(state.summary && state.scenes[state.summary.firstSceneId])) {
+        return state
+      }
+      return {
+        ...state,
+        currentScene: state.summary.firstSceneId,
+        status: readerStates.READY
       }
 
     case actions.VISIT_SCENE:
@@ -85,6 +102,7 @@ export default (state = initialState, action) => {
         console.error('Did not find next scene ID')
         return state
       }
+      // TODO handle scene not in store
       return {
         ...state,
         currentScene: action.payload.sceneId

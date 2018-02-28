@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import StoryTimePage from '../StoryTimePage'
 import { format } from '../../util/formatter'
-import { READY, FETCHING, FAILED_TO_FETCH } from './status'
+import { readerStates } from '../../datastore/reducers/reader'
 import './reader.css'
 
 // const sampleSummary = {
@@ -78,11 +78,11 @@ export default class Reader extends Component {
   render() {
     const { status, summary, scene } = this.props
 
-    if (status === FETCHING) {
+    if (status === readerStates.FETCHING) {
       return this.renderNotLoaded('Loading...one moment please.')
-    } else if (status === FAILED_TO_FETCH) {
+    } else if (status === readerStates.HAS_ERRORS) {
       return this.renderNotLoaded('Oh no.  Something went wrong.')
-    } else if (status !== READY) {
+    } else if (status !== readerStates.READY) {
       return this.renderNotLoaded('Nothing is happening.  Must...wait...forever...')
     }
 
