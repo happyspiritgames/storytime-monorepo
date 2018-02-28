@@ -111,6 +111,7 @@ describe('reader reducer', () => {
     const result = reader(testState, actions.beginStory())
     expect(result.currentScene).toEqual('42')
     expect(result.status).toEqual(readerStates.READY)
+    expect(result.history).toEqual(['42'])
   })
 
   it('handles VISIT_SCENE', () => {
@@ -118,7 +119,8 @@ describe('reader reducer', () => {
       reader(undefined, actions.visitScene('42'))
     ).toEqual({
       ...initialState,
-      currentScene: '42'
+      currentScene: '42',
+      history: ['42']
     })
   })
 

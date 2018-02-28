@@ -94,6 +94,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentScene: state.summary.firstSceneId,
+        history: [state.summary.firstSceneId],
         status: readerStates.READY
       }
 
@@ -105,7 +106,8 @@ export default (state = initialState, action) => {
       // TODO handle scene not in store
       return {
         ...state,
-        currentScene: action.payload.sceneId
+        currentScene: action.payload.sceneId,
+        history: [...state.history, action.payload.sceneId]
       }
 
     default:
