@@ -17,7 +17,7 @@ const auth = new auth0.WebAuth({
 
 function getParameterByName(name) {
   let match = RegExp('[#&]' + name + '=([^&]*)').exec(window.location.hash);
-  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+  return match && match[1] && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
 export function setIdToken() {
@@ -90,8 +90,17 @@ function getTokenExpirationDate(encodedToken) {
 }
 
 function isTokenExpired(token) {
-  const expirationDate = getTokenExpirationDate(token);
-  return expirationDate < new Date();
+  if (!token) {
+    return true;
+  }
+  let expirationDate;
+  try {
+    expirationDate = getTokenExpirationDate(token);
+  } catch (e) {
+    console.error('Problem finding token', e);
+    return true;
+  }
+  return (expirationDate && expirationDate < new Date());
 }
 
 export function isLoggedIn() {

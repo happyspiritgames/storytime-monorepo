@@ -17,7 +17,7 @@ export const getSummary = (storyKey, processResponse) => {
 export const getScene = (storyKey, sceneKey, processResponse) => {
   fetch(`/api/stories/${storyKey}/scenes/${sceneKey}`)
     .then(res => res.json())
-    .then(summaries => processResponse(summaries))
+    .then(scene => processResponse(scene))
     .catch(err => console.log('Failed to find story with key:', storyKey, err));
 };
 

@@ -139,19 +139,19 @@ exports.getPlayerStatusCodes = async () => {
   const SEL_ROLES = 'SELECT * FROM player_status';
   const dbResult = await db.query(SEL_ROLES);
   if (dbResult.rowCount > 0) {
-    return dbResult.rows.map(statusCodeRow => mapPlayerStatusCodesToApi(statusCodeRow));
+    return mapPlayerStatusCodesToApi(dbResult.rows);
   }
 }
 
 const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
 const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
 
-exports.updatePlayer = async (playerId, nickname, membersOnlyCommsOk) => {
+exports.updatePlayer = async (playerId, nickname, emailOptIn) => {
   console.log('playerModel.updatePlayer');
   const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';
   let dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
 
-  if (membersOnlyCommsOk) {
+  if (emailOptIn) {
     dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId]);
   } else {
     dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId]);

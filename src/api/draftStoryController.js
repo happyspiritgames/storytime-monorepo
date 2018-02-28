@@ -37,10 +37,10 @@ exports.beginNewStory = async (req, res) => {
   const { title, tagLine, about } = req.body;
   console.log('draftStoryController.beginNewStory', playerId, title);
   try {
-    const storyKey = await draftModel.createStory(playerId, title, tagLine, about);
-    const sceneKey = await draftModel.createScene(storyKey, 'Start Here', 'Tell your story', 'Now what?');
-    await draftModel.updateStory(storyKey, null, null, null, sceneKey);
-    const summary = await draftModel.getStory(storyKey);
+    const storyId = await draftModel.createStory(playerId, title, tagLine, about);
+    const sceneId = await draftModel.createScene(storyId, 'Start Here', 'Tell your story', 'Now what?');
+    await draftModel.updateStory(storyId, null, null, null, sceneId);
+    const summary = await draftModel.getStory(storyId);
     res.status(201).json(summary);
   } catch (e) {
     console.error('Problem creating draft story', e);
@@ -215,15 +215,19 @@ exports.updateSignpost = async (req, res) => {
             console.log('no update, same as existing', update);
           }
         } else {
-          consol.log('adding new sign');
+          console.log('adding new sign');
           await draftModel.addSignpostSign(sceneId, update.destinationId, update.teaser, update.order);
         }
       });
     }
     const signpost = await draftModel.getSignpost(sceneId);
-    res.status(202).end();
+    res.status(202).send(signpost);
   } catch (e) {
     console.error('Problem updating signpost for scene', e);
     res.status(500).json(internalError);
   }
+};
+
+exports.startPublishingProcess = async (req, res) => {
+  res.status(501).send(errorMessage('Coming soon...'));
 };

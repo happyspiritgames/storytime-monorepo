@@ -44,12 +44,16 @@ const sampleStories = [
 
 export default class Library extends Component {
   render() {
-    const featuredStory = sampleStories[0];
-    const catalogStories = sampleStories.slice(1);
+    // TODO wire to redux
+    // const { featured, catalog } = this.props
+
+    const featured = sampleStories[0]
+    const catalog = sampleStories.splice(1)
+
     return (
       <StoryTimePage id="library">
-        <FeaturedStory storySummary={featuredStory} />
-        <Catalog summaries={catalogStories} />
+        <FeaturedStory storySummary={featured} />
+        <Catalog summaries={catalog} />
       </StoryTimePage>
     );
   }

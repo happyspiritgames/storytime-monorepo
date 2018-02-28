@@ -16,7 +16,7 @@ export default class Contact extends Component {
           <div className="form-group">
             <textarea className="form-control" rows="14" name="message" placeholder="Your message"></textarea>
           </div>
-          <div className="form-group">
+          <div className="form-group text-center">
             <button className="btn btn-primary" type="submit">Send to Happy Spirit Games</button>
           </div>
         </form>
