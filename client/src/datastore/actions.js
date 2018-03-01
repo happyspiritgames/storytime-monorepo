@@ -1,3 +1,28 @@
+export const FETCH_CATALOG = 'FETCH_CATALOG'
+export const fetchCatalog = () => ({
+  type: FETCH_CATALOG,
+})
+
+export const LOAD_CATALOG = 'FETCH_CATALOG'
+export const loadCatalog = (summaries) => ({
+  type: LOAD_CATALOG,
+  payload: {
+    summaries
+  }
+})
+
+export const stageCatalog = () => {
+  return (dispatch) => {
+    dispatch(fetchCatalog())
+    return fetch('/api/stories')
+      .then(
+        res => res.json(),
+        error => console.error('Could not fetch catalog', error)
+      )
+      .then(summaries => dispatch(loadCatalog(summaries)))
+  }
+}
+
 export const FETCH_SUMMARY = 'FETCH_SUMMARY'
 export const fetchSummary = (storyId) => ({
   type: FETCH_SUMMARY,
@@ -12,6 +37,14 @@ export const loadSummary = (summary) => ({
   payload: {
     summary
   }
+})
+
+// TODO handle failures gracefully -- show and clear message on UI
+export const FETCH_FAILED = 'FETCH_FAILED'
+export const fetchFailed = (error) => ({
+  type: FETCH_FAILED,
+  payload: error,
+  error: true
 })
 
 const findCachedSummary = (state, storyId) => {

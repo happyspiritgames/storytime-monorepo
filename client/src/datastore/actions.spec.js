@@ -1,6 +1,26 @@
 import * as actions from './actions'
 
 describe('reader actions', () => {
+  it('fetchCatalog should create FETCH_CATALOG action', () => {
+    expect(
+      actions.fetchCatalog()
+    ).toEqual({
+      type: actions.FETCH_CATALOG
+    })
+  })
+
+  it('loadCatalog should create LOAD_CATALOG action', () => {
+    const catalog = [{ storyId: 'blah', title: 'Blah' }, { storyId: 'blargy', title: 'Blargy' }]
+    expect(
+      actions.loadCatalog(catalog)
+    ).toEqual({
+      type: actions.LOAD_CATALOG,
+      payload: {
+        summaries: catalog
+      }
+    })
+  })
+
   it('fetchSummary should create FETCH_SUMMARY action', () => {
     expect(
       actions.fetchSummary('blah')
@@ -65,4 +85,5 @@ describe('reader actions', () => {
   })
 
   // TODO handle error payloads
+  // TODO test thunks
 })

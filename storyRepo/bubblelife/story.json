@@ -1,0 +1,18 @@
+{
+  "summary": {
+    "storyId": "bubblelife",
+    "title": "The Life of a Bubble",
+    "penName": "Mr. Bubbles",
+    "tagLine": "Round and round, down the drain.",
+    "about": "Discover the fascinating life of a bubble as it travels down the drain and on to adventure.",
+    "firstSceneId": "1",
+    "publishedAt": "2018-01-31T14:51:37.000Z"
+  },
+  "scenes": {
+    "1": {
+      "sceneId": "1",
+      "title": "Life is Quick",
+      "prose": "You are a happy little bubble, floating in the tub.  Oops, someone pulled the drain.  You float towards it.  Wheee!!!  As you are squeezed down the drain you pop."
+    }
+  }
+}

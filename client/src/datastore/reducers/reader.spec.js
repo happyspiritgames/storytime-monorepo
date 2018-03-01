@@ -120,7 +120,8 @@ describe('reader reducer', () => {
     ).toEqual({
       ...initialState,
       currentSceneId: '42',
-      history: ['42']
+      history: ['42'],
+      status: readerStates.READY
     })
   })
 

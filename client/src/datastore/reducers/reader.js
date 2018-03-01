@@ -38,7 +38,7 @@ export default (state = initialState, action) => {
       return {
         ...copyOfState,
         summary: action.payload.summary,
-        status,
+        status
       }
 
     case actions.FETCH_SCENE:
