@@ -1,9 +1,4 @@
-import { LOAD_CATALOG, LOAD_SUMMARY } from '../actions'
-
-export const libraryStates = {
-  READY: 'READY',
-  FETCHING: 'FETCHING'
-}
+import { LOAD_CATALOG, LOAD_SUMMARY, LOAD_SCENE } from '../actions'
 
 export const initialState = {}
 
@@ -13,7 +8,19 @@ export default (state = initialState, action) => {
       const summary = action.payload.summary
       return {
         ...state,
-        [summary.storyId]: summary
+        [summary.storyId]: {
+          summary
+        }
+      }
+    case LOAD_SCENE:
+      const { storyId, scene } = action.payload
+      return {
+        ...state,
+        [storyId]: {
+          scenes: {
+            [scene.sceneId]: scene
+          }
+        }
       }
     case LOAD_CATALOG:
       if (!action.payload.summaries) {
@@ -21,7 +28,9 @@ export default (state = initialState, action) => {
       }
       let newSummaries = {}
       action.payload.summaries.forEach(summary => {
-        newSummaries[summary.storyId] = summary
+        newSummaries[summary.storyId] = {
+          summary
+        }
       })
       return {
         ...newSummaries

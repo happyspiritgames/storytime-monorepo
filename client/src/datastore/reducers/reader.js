@@ -51,18 +51,6 @@ export default (state = initialState, action) => {
     // TODO someday implement PREFETCH_SCENES -- for background loading
 
     case actions.LOAD_SCENE:
-      // TODO handle error condition
-      if (!action.payload.scene) {
-        console.error('Did not find scene to load')
-        return state
-      } else if (!action.payload.scene.sceneId) {
-        console.error('The scene must have an ID to store in client state.')
-        return state
-      }
-      const newScenes = {
-        ...state.scenes,
-        [action.payload.scene.sceneId]: action.payload.scene
-      }
       status = (state.storyToFetch) ? readerStates.FETCHING : readerStates.NOT_READY;
       copyOfState = { ...state }
       delete copyOfState['sceneToFetch']
@@ -79,7 +67,7 @@ export default (state = initialState, action) => {
       }
       return {
         ...state,
-        currentSceneId: state.summary.firstSceneId,
+        sceneId: state.summary.firstSceneId,
         history: [state.summary.firstSceneId],
         status: readerStates.READY
       }
@@ -92,7 +80,7 @@ export default (state = initialState, action) => {
       // TODO handle scene not in store
       return {
         ...state,
-        currentSceneId: action.payload.sceneId,
+        sceneId: action.payload.sceneId,
         history: [...state.history, action.payload.sceneId],
         status: readerStates.READY
       }

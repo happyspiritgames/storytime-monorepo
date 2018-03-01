@@ -2,7 +2,7 @@ import reader, { initialState, readerStates } from './reader'
 import * as actions from '../actions'
 
 describe('reader reducer', () => {
-  it('should handle initial state', () => {
+  it('should provide initial state', () => {
     expect(
       reader(undefined, {})
     ).toEqual(initialState)
@@ -13,7 +13,6 @@ describe('reader reducer', () => {
       reader(undefined, actions.fetchSummary('abc'))
     ).toEqual({
       ...initialState,
-      storyToFetch: 'abc',
       status: readerStates.FETCHING
     })
   })
@@ -30,7 +29,7 @@ describe('reader reducer', () => {
       reader(undefined, actions.loadSummary(testSummary))
     ).toEqual({
       ...initialState,
-      summary: testSummary,
+      storyId: testSummary,
       status: readerStates.NOT_READY
     })
   })
@@ -53,44 +52,6 @@ describe('reader reducer', () => {
       sceneToFetch: '42',
       status: readerStates.FETCHING
     })
-  })
-
-  it('handles LOAD_SCENE', () => {
-    const testScene = {
-      sceneId: '123',
-      title: 'Start Here',
-      prose: 'Blargy blargy blargy.',
-      endPrompt: 'How do you want to get out of this mess?',
-      signpost: [
-        { sceneId: '124', teaser: 'The easy way.' },
-        { sceneId: '125', teaser: 'The hard way.' }
-      ]
-    }
-    expect (
-      reader(undefined, actions.loadScene(testScene))
-    ).toEqual({
-        ...initialState,
-        scenes: {
-          '123': testScene
-        }
-    })
-  })
-
-  it('handles LOAD_SCENE without scene', () => {
-    // TODO use a spy to check console error messages
-    expect (
-      reader(undefined, actions.loadScene())
-    ).toEqual({ ...initialState })
-  })
-
-  it('handles LOAD_SCENE without proper payload', () => {
-    const garbagePayload = {
-      garbage: '123'
-    }
-    // TODO use a spy to check console error messages
-    expect (
-      reader(undefined, actions.loadScene(garbagePayload))
-    ).toEqual({ ...initialState })
   })
 
   it('handles START_STORY when summary and scene are loaded', () => {

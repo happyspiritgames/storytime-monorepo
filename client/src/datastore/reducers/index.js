@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import reader, { readerStates } from './reader';
 import library, { libraryStates } from './library';
-import summaries from './summaries'
+import stories from './stories'
 
 const storyTimeApp = combineReducers({
   library,
   reader,
-  summaries
+  stories
 });
 
 export default storyTimeApp;
@@ -15,11 +15,11 @@ export default storyTimeApp;
 const dataShape = {
   library: {
     status: libraryStates.FETCHING,  // READY, FETCHING
+    catalog: ['abc', 'abd', 'abe', 'abf', 'abg', 'abh'],
     featured: {
       storyId: 'abc',
       specialMessage: 'On sale this month'
-    },
-    catalog: ['abc', 'abd', 'abe', 'abf', 'abg', 'abh']
+    }
   },
   reader: {
     status: readerStates.READY,  // READY, FETCHING

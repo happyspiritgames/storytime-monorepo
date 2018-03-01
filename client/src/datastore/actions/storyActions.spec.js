@@ -56,10 +56,11 @@ describe('reader actions', () => {
 
   it('loadScene should create LOAD_SCENE action', () => {
     expect(
-      actions.loadScene({ sceneId: '37', title: 'Getting Things Done' })
+      actions.loadScene('bah', { sceneId: '37', title: 'Getting Things Done' })
     ).toEqual({
       type: actions.LOAD_SCENE,
       payload: {
+        storyId: 'bah',
         scene: { sceneId: '37', title: 'Getting Things Done' }
       }
     })

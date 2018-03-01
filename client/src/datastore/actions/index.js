@@ -1,15 +1,5 @@
-export const FETCH_CATALOG = 'FETCH_CATALOG'
-export const fetchCatalog = () => ({
-  type: FETCH_CATALOG,
-})
-
-export const LOAD_CATALOG = 'LOAD_CATALOG'
-export const loadCatalog = (summaries) => ({
-  type: LOAD_CATALOG,
-  payload: {
-    summaries
-  }
-})
+import * as storyActions from './storyActions'
+import * as uiActions from './uiActions'
 
 export const stageCatalog = () => {
   return (dispatch) => {
@@ -22,30 +12,6 @@ export const stageCatalog = () => {
       .then(summaries => dispatch(loadCatalog(summaries)))
   }
 }
-
-export const FETCH_SUMMARY = 'FETCH_SUMMARY'
-export const fetchSummary = (storyId) => ({
-  type: FETCH_SUMMARY,
-  payload: {
-    storyId
-  }
-})
-
-export const LOAD_SUMMARY = 'LOAD_SUMMARY'
-export const loadSummary = (summary) => ({
-  type: LOAD_SUMMARY,
-  payload: {
-    summary
-  }
-})
-
-// TODO handle failures gracefully -- show and clear message on UI
-export const FETCH_FAILED = 'FETCH_FAILED'
-export const fetchFailed = (error) => ({
-  type: FETCH_FAILED,
-  payload: error,
-  error: true
-})
 
 const findCachedSummary = (state, storyId) => {
   if (!state.summaries) {
@@ -72,32 +38,16 @@ export const stageSummary = storyId => {
   }
 }
 
-export const FETCH_SCENE = 'FETCH_SCENE'
-export const fetchScene = (sceneId) => ({
-  type: FETCH_SCENE,
-  payload: {
-    sceneId
-  }
-})
-
-export const LOAD_SCENE = 'LOAD_SCENE'
-export const loadScene = (scene) => ({
-  type: LOAD_SCENE,
-  payload: {
-    scene
-  }
-})
-
-const findCachedScene = (state, sceneId) => {
-  if (!(state.reader && state.reader.scenes)) {
+const findCachedScene = (state, storyId, sceneId) => {
+  if (!(state.stories && state.stories[storyId])) {
     return
   }
-  return state.reader.scenes[sceneId]
+  return state.stories[storyId].scenes[sceneId]
 }
 
 export const stageScene = (storyId, sceneId) => {
   return (dispatch, getState) => {
-    const cachedScene = findCachedScene(getState(), sceneId)
+    const cachedScene = findCachedScene(getState(), storyId, sceneId)
     if (cachedScene) {
       console.log('Found scene in cache')
       return Promise.resolve()
@@ -112,11 +62,6 @@ export const stageScene = (storyId, sceneId) => {
     }
   }
 }
-
-export const BEGIN_STORY = 'BEGIN_STORY'
-export const beginStory = () => ({
-  type: BEGIN_STORY
-})
 
 export const replay = () => {
   return (dispatch) => {
@@ -135,7 +80,7 @@ export const play = (storyId) => {
     }
 
     if (summaries && summaries[storyId]) {
-      dispatch(loadSummary)
+      dispatch(loadSummary())
     }
 
     dispatch(stageSummary(storyId))
@@ -148,14 +93,6 @@ export const play = (storyId) => {
     })
   }
 }
-
-export const VISIT_SCENE = 'VISIT_SCENE'
-export const visitScene = (sceneId) => ({
-  type: VISIT_SCENE,
-  payload: {
-    sceneId
-  }
-})
 
 export const goToScene = (sceneId) => {
   return (dispatch, getState) => {
