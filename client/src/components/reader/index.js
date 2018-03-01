@@ -4,7 +4,7 @@ import { push } from 'react-router-redux'
 import StoryTimePage from '../StoryTimePage'
 import { format } from '../../util/formatter'
 import { readerStates } from '../../datastore/reducers/reader'
-import { storySummaryShape, sceneShape } from '../../services/dataShapes'
+import { storySummaryShape, sceneShape } from '../../datastore/dataShapes'
 import './reader.css'
 
 export default class Reader extends Component {

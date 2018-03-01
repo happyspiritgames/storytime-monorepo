@@ -3,7 +3,7 @@ export const fetchCatalog = () => ({
   type: FETCH_CATALOG,
 })
 
-export const LOAD_CATALOG = 'FETCH_CATALOG'
+export const LOAD_CATALOG = 'LOAD_CATALOG'
 export const loadCatalog = (summaries) => ({
   type: LOAD_CATALOG,
   payload: {
@@ -118,8 +118,26 @@ export const beginStory = () => ({
   type: BEGIN_STORY
 })
 
-export const begin = (storyId) => {
+export const replay = () => {
+  return (dispatch) => {
+    dispatch(beginStory())
+  }
+}
+
+export const play = (storyId) => {
   return (dispatch, getState) => {
+    const { reader, summaries } = getState()
+
+    // story already loaded -- just start at beginning
+    if (reader && reader.summary && reader.summary.storyId === storyId) {
+      replay()
+      return
+    }
+
+    if (summaries && summaries[storyId]) {
+      dispatch(loadSummary)
+    }
+
     dispatch(stageSummary(storyId))
     .then(() => {
       const { storyId, firstSceneId } = getState().reader.summary

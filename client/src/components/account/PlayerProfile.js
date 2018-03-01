@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { playerProfileShape } from '../../services/dataShapes';
+import { playerProfileShape } from '../../datastore/dataShapes';
 import { formatDate } from '../../util/formatter';
 
 export default class PlayerProfile extends Component {

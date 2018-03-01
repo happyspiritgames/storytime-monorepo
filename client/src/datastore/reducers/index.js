@@ -14,29 +14,31 @@ export default storyTimeApp;
 // sample for reference
 const dataShape = {
   library: {
-    status: libraryStates.FETCHING,
-    featured: 'abc',
-    catalog: ['abc', 'abd, abe, abf, abg, abh']
+    status: libraryStates.FETCHING,  // READY, FETCHING
+    featured: {
+      storyId: 'abc',
+      specialMessage: 'On sale this month'
+    },
+    catalog: ['abc', 'abd', 'abe', 'abf', 'abg', 'abh']
   },
   reader: {
-    status: readerStates.READY,
-    isFetchingSummary: false,
-    isFetchingScene: false,
-    showErrors: false,
+    status: readerStates.READY,  // READY, FETCHING
+    storyId: 'abc',
+    sceneId: '42',
+    history: ['37', '42'],
     errors: [],
-    summary: {},
-    scenes: {
-      '37': {},
-      '42': {},
-      '99': {}
-    },
-    currentSceneId: '42',
-    storyToFetch: 'abc',
-    sceneToFetch: '99',
-    history: ['37', '42']
+    showErrors: false  // hides error messages from player
   },
-  summaries: {
-    'abc': {},
+  stories: {
+    'abc': {
+      summary: {
+      },
+      scenes: {
+        '37': {},
+        '42': {},
+        '99': {}
+      }
+    },
     'abd': {},
     'abe': {},
     'abf': {},

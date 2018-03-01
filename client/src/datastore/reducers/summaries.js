@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         newSummaries[summary.storyId] = summary
       })
       return {
-        newSummaries
+        ...newSummaries
       }
     default:
       return state

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import Library from './components/library';
+import LibraryPage from './containers/LibraryPage';
 import ReaderPage from './containers/ReaderPage';
 import WritingDesk from './components/writingdesk';
 import EditStory from './components/writingdesk/EditStory';
@@ -17,7 +17,7 @@ export default class StoryTimeApp extends Component {
   render() {
     return (
       <div>
-        <Route exact path="/" component={Library} />
+        <Route exact path="/" component={LibraryPage} />
         <Route path="/reader/:storyId" component={ReaderPage} />
         <Route exact path="/writingdesk" component={WritingDesk} />
         <Route exact path="/writingdesk/:draftId" component={EditStory} />
