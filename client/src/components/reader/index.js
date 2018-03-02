@@ -78,7 +78,9 @@ export default class Reader extends Component {
   }
 
   render() {
-    const { status, summary, scene, onGoToScene, onBegin, dispatch } = this.props
+    const { status, summary, scene, onGoToScene, onPlay, dispatch } = this.props
+
+    console.log('status', status, 'summary', summary, 'scene', scene)
 
     if (status === readerStates.FETCHING) {
       return this.renderNotReady('Loading...one moment please.')
@@ -88,8 +90,12 @@ export default class Reader extends Component {
       return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
     }
 
+    if (!scene) {
+      throw new Error('got to here without scene. what the?!?')
+    }
+
     const formattedProse = this.formatProse(scene.prose)
-    const playAgain = () => { onBegin(summary.storyId) }
+    const playAgain = () => { onPlay(summary.storyId) }
     const goToLibrary = () => { dispatch(push('/')) }
 
     return (

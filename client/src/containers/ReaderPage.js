@@ -3,7 +3,7 @@ import Reader from '../components/reader'
 import { play, goToScene } from '../datastore/actions';
 
 const mapStateToProps = (state, ownProps) => {
-  const { storyId } = ownProps.match.params.storyId
+  const { storyId } = ownProps.match.params
   let summary, scene
   if (state.stories[storyId]) {
     summary = state.stories[storyId].summary
@@ -25,7 +25,8 @@ const mapDispatchToProps = dispatch => {
     },
     onGoToScene: sceneId => {
       dispatch(goToScene(sceneId))
-    }
+    },
+    dispatch
   }
 }
 
