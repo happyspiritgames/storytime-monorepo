@@ -139,7 +139,7 @@ export const refreshCatalog = () => {
   }
 }
 
-export const retrieveSummary = storyId => {
+export const retrieveSummary = (storyId, next) => {
   return (dispatch) => {
     dispatch(fetchSummary(storyId))
     return fetch(`/api/stories/${storyId}`)
@@ -153,11 +153,14 @@ export const retrieveSummary = storyId => {
       )
       .then(summary => {
         dispatch(fetchedSummary(summary))
+        if (next) {
+          next()
+        }
       })
   }
 }
 
-export const retrieveScene = (storyId, sceneId) => {
+export const retrieveScene = (storyId, sceneId, next) => {
   return (dispatch, getState) => {
     dispatch(fetchScene(storyId, sceneId))
     return fetch(`/api/stories/${storyId}/scenes/${sceneId}`)
@@ -171,6 +174,9 @@ export const retrieveScene = (storyId, sceneId) => {
       )
       .then(scene => {
         dispatch(fetchedScene(storyId, scene))
+        if (next) {
+          next()
+        }
       })
   }
 }
@@ -187,11 +193,16 @@ export const play = (storyId) => {
 
     // story not cached
     if (!stories[storyId]) {
+      console.log('story not in cache', storyId)
       dispatch(retrieveSummary(storyId))
         .then(() => {
           const sceneId = getState().stories[storyId].summary.firstSceneId
-          dispatch(retrieveScene(storyId, sceneId))
-            .then(dispatch(beginStory(storyId, sceneId)))
+          dispatch(beginStory(storyId, sceneId))
+          dispatch(
+            retrieveScene(storyId, sceneId, () => {
+              dispatch(readerReady())
+            })
+          )
         }
       )
       return
@@ -200,13 +211,15 @@ export const play = (storyId) => {
     // story cached but not scene
     const { firstSceneId } = stories[storyId].summary
     if (!stories[storyId].scenes || !stories[storyId].scenes[firstSceneId]) {
-      dispatch(readerFetching())
-      dispatch(fetchScene(storyId, getState().stories[storyId].summary.firstSceneId))
-        .then(dispatch(beginStory()))
+      console.log('scene not in cache', storyId, firstSceneId)
+      dispatch(retrieveScene(storyId, firstSceneId))
+      //     .then(dispatch(beginStory()))
+      // )
       return
     }
 
     // story and first scene cached
+    console.log('story and scene in cache', storyId, firstSceneId)
     dispatch(beginStory(storyId, firstSceneId))
   }
 }
