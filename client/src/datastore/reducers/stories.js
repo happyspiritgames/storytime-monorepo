@@ -1,10 +1,11 @@
-import { LOAD_CATALOG, LOAD_SUMMARY, LOAD_SCENE } from '../actions'
+import { FETCHED_CATALOG, FETCHED_SUMMARY, FETCHED_SCENE } from '../actions'
+import sceneReducer from './scene'
 
 export const initialState = {}
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_SUMMARY:
+    case FETCHED_SUMMARY:
       const summary = action.payload.summary
       return {
         ...state,
@@ -12,17 +13,17 @@ export default (state = initialState, action) => {
           summary
         }
       }
-    case LOAD_SCENE:
-      const { storyId, scene } = action.payload
+    case FETCHED_SCENE:
+      const { storyId } = action.payload
+      const scenes = (state[storyId] && state[storyId].scenes)
+        ? state[storyId].scenes : {}
       return {
         ...state,
         [storyId]: {
-          scenes: {
-            [scene.sceneId]: scene
-          }
+          scenes: sceneReducer(scenes, action)
         }
       }
-    case LOAD_CATALOG:
+    case FETCHED_CATALOG:
       if (!action.payload.summaries) {
         return state
       }

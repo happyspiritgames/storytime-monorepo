@@ -1,65 +1,185 @@
-import * as storyActions from './storyActions'
-import * as uiActions from './uiActions'
+// story actions
 
-export const stageCatalog = () => {
+export const FETCH_CATALOG = 'FETCH_CATALOG'
+export const fetchCatalog = () => ({
+  type: FETCH_CATALOG,
+})
+
+export const FETCHED_CATALOG = 'FETCHED_CATALOG'
+export const fetchedCatalog = (summaries) => ({
+  type: FETCHED_CATALOG,
+  payload: {
+    summaries
+  }
+})
+
+export const FETCH_CATALOG_FAILED = 'FETCH_CATALOG_FAILED'
+export const fetchCatalogFailed = (error) => ({
+  type: FETCH_CATALOG_FAILED,
+  payload: error,
+  error: true
+})
+
+export const FETCH_SUMMARY = 'FETCH_SUMMARY'
+export const fetchSummary = (storyId) => ({
+  type: FETCH_SUMMARY,
+  payload: {
+    storyId
+  }
+})
+
+export const FETCHED_SUMMARY = 'FETCHED_SUMMARY'
+export const fetchedSummary = (summary) => ({
+  type: FETCHED_SUMMARY,
+  payload: {
+    summary
+  }
+})
+
+export const FETCH_SUMMARY_FAILED = 'FETCH_SUMMARY_FAILED'
+export const fetchSummaryFailed = (error, storyId) => ({
+  type: FETCH_SUMMARY_FAILED,
+  payload: error,
+  error: true,
+  meta: {
+    storyId
+  }
+})
+
+export const FETCH_SCENE = 'FETCH_SCENE'
+export const fetchScene = (storyId, sceneId) => ({
+  type: FETCH_SCENE,
+  payload: {
+    storyId,
+    sceneId
+  }
+})
+
+export const FETCHED_SCENE = 'FETCHED_SCENE'
+export const fetchedScene = (storyId, scene) => ({
+  type: FETCHED_SCENE,
+  payload: {
+    storyId,
+    scene
+  }
+})
+
+export const FETCH_SCENE_FAILED = 'FETCH_SCENE_FAILED'
+export const fetchSceneFailed = (error, storyId, sceneId) => ({
+  type: FETCH_SCENE_FAILED,
+  payload: error,
+  error: true,
+  meta: {
+    storyId,
+    sceneId
+  }
+})
+
+
+// UI actions
+
+export const LIBRARY_FETCHING = 'LIBRARY_FETCHING'
+export const libraryFetching = () => ({
+  type: LIBRARY_FETCHING
+})
+
+export const LIBRARY_READY = 'LIBRARY_READY'
+export const libraryReady = () => ({
+  type: LIBRARY_READY
+})
+
+export const READER_FETCHING = 'READER_FETCHING'
+export const readerFetching = () => ({
+  type: READER_FETCHING
+})
+
+export const READER_READY = 'READER_READY'
+export const readerReady = () => ({
+  type: READER_READY
+})
+
+export const BEGIN_STORY = 'BEGIN_STORY'
+export const beginStory = (storyId, sceneId) => ({
+  type: BEGIN_STORY,
+  payload: {
+    storyId,
+    sceneId
+  }
+})
+
+export const VISIT_SCENE = 'VISIT_SCENE'
+export const visitScene = (sceneId) => ({
+  type: VISIT_SCENE,
+  payload: {
+    sceneId
+  }
+})
+
+
+// composite actions
+
+export const refreshCatalog = () => {
   return (dispatch) => {
+    dispatch(libraryFetching())
     dispatch(fetchCatalog())
     return fetch('/api/stories')
       .then(
         res => res.json(),
-        error => console.error('Could not fetch catalog', error)
+        error => {
+          dispatch(fetchCatalogFailed(
+            new Error('Could not fetch catalog'))
+          )
+          dispatch(libraryReady())
+        }
       )
-      .then(summaries => dispatch(loadCatalog(summaries)))
+      .then(summaries => {
+        dispatch(fetchedCatalog(summaries))
+        dispatch(libraryReady())
+      })
   }
 }
 
-const findCachedSummary = (state, storyId) => {
-  if (!state.summaries) {
-    return
+export const retrieveSummary = storyId => {
+  return (dispatch) => {
+    dispatch(readerFetching())
+    dispatch(fetchSummary(storyId))
+    return fetch(`/api/stories/${storyId}`)
+      .then(
+        res => res.json(),
+        error => {
+          dispatch(fetchSummaryFailed(
+            new Error(`Could not fetch summary for story with ID ${storyId}`),
+            storyId)
+          )
+          dispatch(readerReady())
+        }
+      )
+      .then(summary => {
+        dispatch(fetchedSummary(summary))
+        dispatch(readerReady())
+      })
   }
-  return state.summaries[storyId]
 }
 
-export const stageSummary = storyId => {
+export const retrieveScene = (storyId, sceneId) => {
   return (dispatch, getState) => {
-    const cachedSummary = findCachedSummary(getState(), storyId)
-    if (cachedSummary) {
-      console.log('found summary in cache')
-      dispatch(loadSummary(cachedSummary))
-    } else {
-      dispatch(fetchSummary(storyId))
-      return fetch(`/api/stories/${storyId}`)
-        .then(
-          res => res.json(),
-          error => console.error('Something bad happened', error)
-        )
-        .then(summary => dispatch(loadSummary(summary)))
-    }
-  }
-}
-
-const findCachedScene = (state, storyId, sceneId) => {
-  if (!(state.stories && state.stories[storyId])) {
-    return
-  }
-  return state.stories[storyId].scenes[sceneId]
-}
-
-export const stageScene = (storyId, sceneId) => {
-  return (dispatch, getState) => {
-    const cachedScene = findCachedScene(getState(), storyId, sceneId)
-    if (cachedScene) {
-      console.log('Found scene in cache')
-      return Promise.resolve()
-    } else {
-      dispatch(fetchScene(sceneId))
-      return fetch(`/api/stories/${storyId}/scenes/${sceneId}`)
-        .then(
-          res => res.json(),
-          error => console.error('Something bad happened', error)
-        )
-        .then(scene => dispatch(loadScene(scene)))
-    }
+    dispatch(readerFetching())
+    dispatch(fetchScene(storyId, sceneId))
+    return fetch(`/api/stories/${storyId}/scenes/${sceneId}`)
+      .then(
+        res => res.json(),
+        error => {
+          dispatch(fetchSceneFailed(
+            new Error(`Could not fetch scene with ID ${sceneId} for story ${storyId}`),
+            storyId, sceneId)
+          )
+          dispatch(readerReady())
+        }
+      )
+      .then(scene => {
+        dispatch(fetchedScene(storyId, scene))
+        dispatch(readerReady())
+      })
   }
 }
 
@@ -71,40 +191,50 @@ export const replay = () => {
 
 export const play = (storyId) => {
   return (dispatch, getState) => {
-    const { reader, summaries } = getState()
+    const { reader, stories } = getState()
 
-    // story already loaded -- just start at beginning
-    if (reader && reader.summary && reader.summary.storyId === storyId) {
-      replay()
+    // story not cached
+    if (!stories[storyId]) {
+      dispatch(readerFetching())
+      dispatch(fetchSummary(storyId))
+        .then(
+          dispatch(fetchScene(storyId, getState().stories[storyId].summary.firstSceneId))
+            .then(dispatch(beginStory()))
+      )
       return
     }
 
-    if (summaries && summaries[storyId]) {
-      dispatch(loadSummary())
+    // story cached but not scene
+    const { firstSceneId } = stories[storyId].summary
+    if (!stories[storyId].scenes[firstSceneId]) {
+      dispatch(readerFetching())
+      dispatch(fetchScene(storyId, getState().stories[storyId].summary.firstSceneId))
+        .then(dispatch(beginStory()))
+      return
     }
 
-    dispatch(stageSummary(storyId))
-    .then(() => {
-      const { storyId, firstSceneId } = getState().reader.summary
-      dispatch(stageScene(storyId, firstSceneId))
-      .then(() => {
-        dispatch(beginStory())
-      })
-    })
+    // story and first scene cached
+    dispatch(beginStory())
   }
 }
 
 export const goToScene = (sceneId) => {
   return (dispatch, getState) => {
-    const { storyId } = getState().reader.summary
+    const { storyId } = getState().reader
     if (!storyId) {
-      console.error('Story summary is not loaded')
+      console.error('Unknown story ID')
       return
     }
-    dispatch(stageScene(storyId, sceneId))
-    .then(() => {
+
+    // scene cached
+    if (getState().stories[storyId].scenes[sceneId]) {
       dispatch(visitScene(sceneId))
-    })
+      return
+    }
+
+    // scene not cached
+    dispatch(fetchScene(storyId, sceneId))
+    .then(dispatch(visitScene(sceneId)))
   }
 }
 

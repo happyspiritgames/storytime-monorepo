@@ -1,42 +1,52 @@
 import library, { initialState, libraryStates } from './library'
 import * as actions from '../actions'
 
-const summary1 = { storyId: 'blah', title: 'Alice in Wonderland' }
-const summary2 = { storyId: 'blargy', title: 'Beetleguise' }
-const summaries = [ summary1, summary2 ]
-
 describe('library reducer', () => {
+  const summaries = [
+    { storyId: 'blah', title: 'Alice in Wonderland' },
+    { storyId: 'blargy', title: 'Beetleguise' }
+  ]
+
   it('should provide initial state', () => {
     expect(
       library(undefined, {})
     ).toEqual(initialState)
   })
 
-  it('should handle FETCH_CATALOG', () => {
+  it('handles LIBRARY_FETCHING', () => {
     expect(
-      library(undefined, actions.fetchCatalog())
+      library(undefined, actions.libraryFetching())
     ).toEqual({
       ...initialState,
       status: libraryStates.FETCHING
     })
   })
 
-  it('should handle LOAD_CATALOG', () => {
+  it('handles LIBRARY_READY', () => {
     expect(
-      library(undefined, actions.loadCatalog(summaries))
+      library(undefined, actions.libraryReady())
+    ).toEqual({
+      ...initialState,
+      status: libraryStates.READY
+    })
+  })
+
+  it('handles FETCHED_CATALOG', () => {
+    expect(
+      library(undefined, actions.fetchedCatalog(summaries))
     ).toEqual({
       ...initialState,
       catalog: ['blah', 'blargy']
     })
   })
 
-  it('should handle LOAD_CATALOG with dirty catalog prop', () => {
+  it('handles FETCHED_CATALOG with dirty catalog prop', () => {
     const startState = {
       ...initialState,
       catalog: ['arg', 'arf']
     }
     expect(
-      library(startState, actions.loadCatalog(summaries))
+      library(startState, actions.fetchedCatalog(summaries))
     ).toEqual({
       ...initialState,
       catalog: ['blah', 'blargy']

@@ -1,7 +1,9 @@
-import * as actions from './actions'
+import * as actions from './index'
 
 describe('reader actions', () => {
-  it('fetchCatalog should create FETCH_CATALOG action', () => {
+  const testError = new Error('bah')
+
+  it('creates FETCH_CATALOG action', () => {
     expect(
       actions.fetchCatalog()
     ).toEqual({
@@ -9,19 +11,29 @@ describe('reader actions', () => {
     })
   })
 
-  it('loadCatalog should create LOAD_CATALOG action', () => {
+  it('creates FETCHED_CATALOG action', () => {
     const catalog = [{ storyId: 'blah', title: 'Blah' }, { storyId: 'blargy', title: 'Blargy' }]
     expect(
-      actions.loadCatalog(catalog)
+      actions.fetchedCatalog(catalog)
     ).toEqual({
-      type: actions.LOAD_CATALOG,
+      type: actions.FETCHED_CATALOG,
       payload: {
         summaries: catalog
       }
     })
   })
 
-  it('fetchSummary should create FETCH_SUMMARY action', () => {
+  it('creates FETCH_CATALOG_FAILED action', () => {
+    expect(
+      actions.fetchCatalogFailed(testError)
+    ).toEqual({
+      type: actions.FETCH_CATALOG_FAILED,
+      payload: testError,
+      error: true
+    })
+  })
+
+  it('creates FETCH_SUMMARY action', () => {
     expect(
       actions.fetchSummary('blah')
     ).toEqual({
@@ -32,59 +44,67 @@ describe('reader actions', () => {
     })
   })
 
-  it('loadSummary should create LOAD_SUMMARY action', () => {
+  it('creates FETCHED_SUMMARY action', () => {
     expect(
-      actions.loadSummary({ storyId: 'blah', title: 'Blargy Blah' })
+      actions.fetchedSummary({ storyId: 'blah', title: 'Blargy Blah' })
     ).toEqual({
-        type: actions.LOAD_SUMMARY,
+        type: actions.FETCHED_SUMMARY,
         payload: {
           summary: { storyId: 'blah', title: 'Blargy Blah' }
         }
     })
   })
 
-  it('fetchScene should create FETCH_SCENE action', () => {
+  it('creates FETCH_SUMMARY_FAILED action', () => {
     expect(
-      actions.fetchScene('37')
+      actions.fetchSummaryFailed(testError, 'blah')
+    ).toEqual({
+      type: actions.FETCH_SUMMARY_FAILED,
+      payload: testError,
+      error: true,
+      meta: {
+        storyId: 'blah'
+      }
+    })
+  })
+
+  it('creates FETCH_SCENE action', () => {
+    expect(
+      actions.fetchScene('blah', '37')
     ).toEqual({
       type: actions.FETCH_SCENE,
       payload: {
+        storyId: 'blah',
         sceneId: '37'
       }
     })
   });
 
-  it('loadScene should create LOAD_SCENE action', () => {
+  it('loadScene should create FETCHED_SCENE action', () => {
     expect(
-      actions.loadScene('bah', { sceneId: '37', title: 'Getting Things Done' })
+      actions.fetchedScene('blah', { sceneId: '37', title: 'Getting Things Done' })
     ).toEqual({
-      type: actions.LOAD_SCENE,
+      type: actions.FETCHED_SCENE,
       payload: {
-        storyId: 'bah',
+        storyId: 'blah',
         scene: { sceneId: '37', title: 'Getting Things Done' }
       }
     })
   });
 
-  it('beginStory should create BEGIN_STORY action', () => {
+  it('creates FETCH_SCENE_FAILED action', () => {
     expect(
-      actions.beginStory()
+      actions.fetchSceneFailed(testError, 'blah', '42')
     ).toEqual({
-      type: actions.BEGIN_STORY
-    })
-  })
-
-  it('visitScene should create VISIT_SCENE action', () => {
-    expect(
-      actions.visitScene('blah')
-    ).toEqual({
-      type: actions.VISIT_SCENE,
-      payload: {
-        sceneId: 'blah'
+      type: actions.FETCH_SCENE_FAILED,
+      payload: testError,
+      error: true,
+      meta: {
+        storyId: 'blah',
+        sceneId: '42'
       }
     })
   })
 
   // TODO handle error payloads
-  // TODO test thunks
 })

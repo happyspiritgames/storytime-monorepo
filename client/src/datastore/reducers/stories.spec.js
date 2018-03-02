@@ -15,26 +15,67 @@ describe('stories reducer', () => {
     ).toEqual(initialState)
   })
 
-  it('handles LOAD_SUMMARY', () => {
-    const summary = summary1
-    expect(
-      stories(undefined, actions.loadSummary(summary))
-    ).toEqual({
-      blah: {
-        summary
+  it('handles FETCHED_SUMMARY', () => {
+    let newState = stories(undefined, actions.fetchedSummary(summary1))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        summary: summary1
       }
     })
   })
 
-  xit('handles LOAD_SCENE', () => {
-    const newState = stories(undefined, actions.loadScene(summary1.storyId, scene1))
-    console.log('load scene test', newState)
-    expect()
+  it('handles multiple calls to FETCHED_SUMMARY', () => {
+    let newState = stories(undefined, actions.fetchedSummary(summary1))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        summary: summary1
+      }
+    })
+    newState = stories(newState, actions.fetchedSummary(summary2))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        summary: summary1
+      },
+      [summary2.storyId]: {
+        summary: summary2
+      }
+    })
   })
 
-  it('handles LOAD_CATALOG from initial state', () => {
+  it('handles FETCHED_SCENE', () => {
+    let newState = stories(undefined, actions.fetchedScene(summary1.storyId, scene1))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        scenes: {
+          [scene1.sceneId]: scene1
+        }
+      }
+    })
+  })
+
+  it('handles multiple calls to FETCHED_SCENE', () => {
+    let newState = stories(undefined, actions.fetchedScene(summary1.storyId, scene1))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        scenes: {
+          [scene1.sceneId]: scene1
+        }
+      }
+    })
+    newState = stories(newState, actions.fetchedScene(summary1.storyId, scene2))
+    expect(newState).toEqual({
+      [summary1.storyId]: {
+        scenes: {
+          [scene1.sceneId]: scene1,
+          [scene2.sceneId]: scene2
+        }
+      }
+    })
+  })
+
+  it('handles FETCHED_CATALOG from initial state', () => {
     expect(
-      stories(undefined, actions.loadCatalog(summaries))
+      stories(undefined, actions.fetchedCatalog(summaries))
     ).toEqual({
       'blah': {
         summary: summary1
@@ -45,7 +86,7 @@ describe('stories reducer', () => {
     })
   })
 
-  it('handles LOAD_CATALOG from dirty state', () => {
+  it('handles FETCHED_CATALOG from dirty state', () => {
     const dirtyState = {
       'wotcherHarry': {
         summary: {
@@ -55,7 +96,7 @@ describe('stories reducer', () => {
       }
     }
     expect(
-      stories(dirtyState, actions.loadCatalog(summaries))
+      stories(dirtyState, actions.fetchedCatalog(summaries))
     ).toEqual({
       'blah': {
         summary: summary1

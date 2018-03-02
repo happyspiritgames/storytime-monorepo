@@ -8,71 +8,33 @@ describe('reader reducer', () => {
     ).toEqual(initialState)
   })
 
-  it('handles FETCH_SUMMARY', () => {
+  it('handles READER_FETCHING', () => {
     expect(
-      reader(undefined, actions.fetchSummary('abc'))
+      reader(undefined, actions.readerFetching())
     ).toEqual({
       ...initialState,
       status: readerStates.FETCHING
     })
   })
 
-  it('handles LOAD_SUMMARY', () => {
-    const testSummary = {
-      storyId: 'ABCDEFG',
-      title: 'Winner',
-      penName: 'Onthe Money',
-      tagLine: 'A tale of winning beyond belief',
-      about: 'You think winning is easy?  Well why not?!'
-    }
+  it('handles READER_READY', () => {
     expect(
-      reader(undefined, actions.loadSummary(testSummary))
+      reader(undefined, actions.readerReady())
     ).toEqual({
       ...initialState,
-      storyId: testSummary,
-      status: readerStates.NOT_READY
+      status: readerStates.READY
     })
   })
 
-  it('handles LOAD_SUMMARY without payload', () => {
-    // TODO use a spy to check console error messages
+  it('handles BEGIN_STORY', () => {
     expect(
-      reader(undefined, actions.loadSummary())
+      reader(undefined, actions.beginStory('abc', '1'))
     ).toEqual({
       ...initialState,
-      status: readerStates.NOT_READY
+      storyId: 'abc',
+      sceneId: '1',
+      history: [ '1' ]
     })
-  })
-
-  it('handles FETCH_SCENE', () => {
-    expect(
-      reader(undefined, actions.fetchScene('42'))
-    ).toEqual({
-      ...initialState,
-      sceneToFetch: '42',
-      status: readerStates.FETCHING
-    })
-  })
-
-  it('handles START_STORY when summary and scene are loaded', () => {
-    const testState = {
-      summary: {
-        storyId: 'ABCDEFG',
-        title: 'Winner',
-        penName: 'Onthe Money',
-        tagLine: 'A tale of winning beyond belief',
-        about: 'You think winning is easy?  Well why not?!',
-        firstSceneId: '42'
-      },
-      scenes: {
-        '42': {}
-      },
-      state: readerStates.NOT_READY
-    }
-    const result = reader(testState, actions.beginStory())
-    expect(result.currentSceneId).toEqual('42')
-    expect(result.status).toEqual(readerStates.READY)
-    expect(result.history).toEqual(['42'])
   })
 
   it('handles VISIT_SCENE', () => {
@@ -80,9 +42,8 @@ describe('reader reducer', () => {
       reader(undefined, actions.visitScene('42'))
     ).toEqual({
       ...initialState,
-      currentSceneId: '42',
-      history: ['42'],
-      status: readerStates.READY
+      sceneId: '42',
+      history: ['42']
     })
   })
 
@@ -90,8 +51,6 @@ describe('reader reducer', () => {
     // TODO use a spy to check console error messages
     expect (
       reader(undefined, actions.visitScene())
-    ).toEqual({
-      ...initialState
-    })
+    ).toEqual(initialState)
   })
 })

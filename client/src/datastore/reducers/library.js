@@ -1,4 +1,4 @@
-import { FETCH_CATALOG, LOAD_CATALOG } from '../actions'
+import { LIBRARY_FETCHING, LIBRARY_READY, FETCHED_CATALOG } from '../actions'
 
 export const libraryStates = {
   READY: 'READY',
@@ -12,18 +12,22 @@ export const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_CATALOG:
+    case LIBRARY_FETCHING:
       return {
         ...state,
         status: libraryStates.FETCHING
       }
-    case LOAD_CATALOG:
-      const storyIds = (!action.payload.summaries) ? []
+    case LIBRARY_READY:
+      return {
+        ...state,
+        status: libraryStates.READY
+      }
+    case FETCHED_CATALOG:
+      const catalogStoryIds = (!action.payload.summaries) ? []
         : action.payload.summaries.map(summary => (summary.storyId))
       return {
         ...state,
-        catalog: storyIds,
-        status: libraryStates.READY
+        catalog: catalogStoryIds
       }
     default:
       return state
