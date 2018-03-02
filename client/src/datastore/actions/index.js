@@ -141,44 +141,36 @@ export const refreshCatalog = () => {
 
 export const retrieveSummary = storyId => {
   return (dispatch) => {
-    dispatch(readerFetching())
     dispatch(fetchSummary(storyId))
     return fetch(`/api/stories/${storyId}`)
       .then(
         res => res.json(),
-        error => {
-          dispatch(fetchSummaryFailed(
+        error => dispatch(
+          fetchSummaryFailed(
             new Error(`Could not fetch summary for story with ID ${storyId}`),
             storyId)
-          )
-          dispatch(readerReady())
-        }
+        )
       )
       .then(summary => {
         dispatch(fetchedSummary(summary))
-        dispatch(readerReady())
       })
   }
 }
 
 export const retrieveScene = (storyId, sceneId) => {
   return (dispatch, getState) => {
-    dispatch(readerFetching())
     dispatch(fetchScene(storyId, sceneId))
     return fetch(`/api/stories/${storyId}/scenes/${sceneId}`)
       .then(
         res => res.json(),
-        error => {
-          dispatch(fetchSceneFailed(
+        error => dispatch(
+          fetchSceneFailed(
             new Error(`Could not fetch scene with ID ${sceneId} for story ${storyId}`),
             storyId, sceneId)
-          )
-          dispatch(readerReady())
-        }
+        )
       )
       .then(scene => {
         dispatch(fetchedScene(storyId, scene))
-        dispatch(readerReady())
       })
   }
 }
@@ -191,22 +183,23 @@ export const replay = () => {
 
 export const play = (storyId) => {
   return (dispatch, getState) => {
-    const { reader, stories } = getState()
+    const { stories } = getState()
 
     // story not cached
     if (!stories[storyId]) {
-      dispatch(readerFetching())
-      dispatch(fetchSummary(storyId))
-        .then(
-          dispatch(fetchScene(storyId, getState().stories[storyId].summary.firstSceneId))
-            .then(dispatch(beginStory()))
+      dispatch(retrieveSummary(storyId))
+        .then(() => {
+          const sceneId = getState().stories[storyId].summary.firstSceneId
+          dispatch(retrieveScene(storyId, sceneId))
+            .then(dispatch(beginStory(storyId, sceneId)))
+        }
       )
       return
     }
 
     // story cached but not scene
     const { firstSceneId } = stories[storyId].summary
-    if (!stories[storyId].scenes[firstSceneId]) {
+    if (!stories[storyId].scenes || !stories[storyId].scenes[firstSceneId]) {
       dispatch(readerFetching())
       dispatch(fetchScene(storyId, getState().stories[storyId].summary.firstSceneId))
         .then(dispatch(beginStory()))
@@ -214,7 +207,7 @@ export const play = (storyId) => {
     }
 
     // story and first scene cached
-    dispatch(beginStory())
+    dispatch(beginStory(storyId, firstSceneId))
   }
 }
 

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { setIdToken, setAccessToken, setRoles } from '../../util/authentication';
-import { getRoles } from '../../services/storyTimeApi';
+import { getRoles } from '../../apis/storyTimeApi';
 
 export default class Callback extends Component {
 

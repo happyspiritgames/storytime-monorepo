@@ -9,7 +9,8 @@ export default class Library extends Component {
   static propTypes = {
     catalog: PropTypes.arrayOf(storySummaryShape),
     featured: storySummaryShape,
-    onPlay: PropTypes.func.isRequired
+    onPlay: PropTypes.func.isRequired,
+    onLoadCatalog: PropTypes.func.isRequired
   }
 
   componentDidMount() {

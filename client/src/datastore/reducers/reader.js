@@ -13,8 +13,6 @@ export const initialState = {
 }
 
 export default (state = initialState, action) => {
-  let storyId
-  let sceneId
   switch (action.type) {
     case actions.READER_FETCHING:
       return {

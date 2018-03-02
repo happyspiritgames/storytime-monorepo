@@ -12,19 +12,25 @@ export default class Reader extends Component {
     status: PropTypes.string,
     summary: storySummaryShape,
     scene: sceneShape,
-    onBegin: PropTypes.func.isRequired,
+    onPlay: PropTypes.func.isRequired,
     onGoToScene: PropTypes.func.isRequired
   }
 
+  isFetching() {
+    return this.props.status === readerStates.FETCHING
+  }
+
   componentDidMount() {
-    const { onBegin } = this.props
-    const { storyId, sceneId } = this.props.match.params
-    if (storyId && sceneId) {
-      // TODO implement visit
-      // dispatch(visit(storyId, sceneId))
-      console.log('implement visit() please')
-    } else if (storyId) {
-      onBegin(storyId)
+    const { storyId } = this.props.match.params
+    if (!storyId) {
+      throw new Error('route did not include storyId')
+    }
+    if (!this.props.summary) {
+      this.props.onPlay(storyId)
+      // if (!this.isFetching()) {
+      // } else {
+      //   console.log('already fetching something')
+      // }
     }
   }
 

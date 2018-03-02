@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
 import PlayerInfoCard from './PlayerInfoCard';
 import { isLoggedIn } from '../../util/authentication';
-import { getProfile, updateProfile } from '../../services/storyTimeApi';
+import { getProfile, updateProfile } from '../../apis/storyTimeApi';
 
 export default class Account extends Component {
   constructor(props) {

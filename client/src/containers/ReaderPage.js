@@ -1,22 +1,31 @@
 import { connect } from 'react-redux'
 import Reader from '../components/reader'
-import { begin, goToScene } from '../datastore/actions';
+import { play, goToScene } from '../datastore/actions';
 
-const mapStateToProps = state => ({
-  status: state.reader.status,
-  summary: state.reader.summary,
-  scene: state.reader.scenes[state.reader.currentSceneId]
-})
+const mapStateToProps = (state, ownProps) => {
+  const { storyId } = ownProps.match.params.storyId
+  let summary, scene
+  if (state.stories[storyId]) {
+    summary = state.stories[storyId].summary
+  }
+  if (state.stories[storyId] && state.stories[storyId].scenes && state.reader.sceneId) {
+    scene = state.stories[storyId].scenes[state.reader.sceneId]
+  }
+  return {
+    status: state.reader.status,
+    summary: summary,
+    scene: scene
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
-    onBegin: storyId => {
-      dispatch(begin(storyId))
+    onPlay: storyId => {
+      dispatch(play(storyId))
     },
     onGoToScene: sceneId => {
       dispatch(goToScene(sceneId))
-    },
-    dispatch
+    }
   }
 }
 

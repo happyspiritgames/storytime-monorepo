@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { stageCatalog } from '../datastore/actions'
+import { refreshCatalog } from '../datastore/actions'
 import Library from '../components/library'
 
 const mapStateToProps = (state) => {
-  const catalog = state.library.catalog.map(storyId => state.summaries[storyId])
-  const featured = (catalog.length === 0) ? undefined : state.summaries[state.library.catalog[0]]
+  const catalog = state.library.catalog.map(storyId => state.stories[storyId].summary)
+  const featured = (catalog.length > 0) ? state.stories[state.library.catalog[0]].summary : undefined
   return {
     catalog,
     featured
@@ -18,7 +18,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(push(`/reader/${storyId}`))
     },
     onLoadCatalog: () => {
-      dispatch(stageCatalog())
+      dispatch(refreshCatalog())
     }
   }
 }

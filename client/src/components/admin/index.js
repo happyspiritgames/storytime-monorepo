@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import StoryTimePage from '../StoryTimePage';
-import { getPlayers, getPlayer, suspendPlayer, activatePlayer } from '../../services/adminApi';
-import { getPlayerStatusCodes } from '../../services/storyTimeApi';
+import { getPlayers, getPlayer, suspendPlayer, activatePlayer } from '../../apis/adminApi';
+import { getPlayerStatusCodes } from '../../apis/storyTimeApi';
 import PlayersList from './PlayersList';
 import PlayerDetails from './PlayerDetails';
 

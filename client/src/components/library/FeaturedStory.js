@@ -17,7 +17,7 @@ export default class FeaturedStory extends Component {
         <h4 className="text-muted">by {penName}</h4>
         <p><em>{tagLine}</em></p>
         <p>{about}</p>
-        <p><a className="btn btn-primary" role="button" href="" onClick={ () => {onPlay(storyId)} }>Play</a></p>
+        <p><button className="btn btn-primary" onClick={ () => {onPlay(storyId)} }>Play</button></p>
       </div>
     )
   }
