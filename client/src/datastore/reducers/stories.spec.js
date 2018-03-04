@@ -106,4 +106,7 @@ describe('stories reducer', () => {
       }
     })
   })
+
+  // TODO write this test and fix the code to make it pass
+  xit('preserves cached scenes when FETCHED_CATALOG action is handled')
 })

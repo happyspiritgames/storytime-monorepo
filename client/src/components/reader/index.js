@@ -25,13 +25,7 @@ export default class Reader extends Component {
     if (!storyId) {
       throw new Error('route did not include storyId')
     }
-    if (!this.props.summary) {
-      this.props.onPlay(storyId)
-      // if (!this.isFetching()) {
-      // } else {
-      //   console.log('already fetching something')
-      // }
-    }
+    this.props.onPlay(storyId)
   }
 
   renderSignpost(scene, goToScene, playAgain, goToLibrary) {
@@ -80,12 +74,10 @@ export default class Reader extends Component {
   render() {
     const { status, summary, scene, onGoToScene, onPlay, dispatch } = this.props
 
-    console.log('status', status, 'summary', summary, 'scene', scene)
+    // console.log('status', status, 'summary', summary, 'scene', scene)
 
     if (status === readerStates.FETCHING) {
       return this.renderNotReady('Loading...one moment please.')
-    } else if (status === readerStates.HAS_ERRORS) {
-      return this.renderNotReady('Oh no.  Something went wrong.')
     } else if (status !== readerStates.READY) {
       return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
     }

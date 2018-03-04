@@ -33,6 +33,14 @@ describe('ui actions', () => {
     })
   })
 
+  it('creates READER_NOT_READY action', () => {
+    expect(
+      actions.readerNotReady()
+    ).toEqual({
+      type: actions.READER_NOT_READY
+    })
+  })
+
   it('creates BEGIN_STORY action', () => {
     expect(
       actions.beginStory('blah')

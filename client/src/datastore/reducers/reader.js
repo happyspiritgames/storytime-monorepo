@@ -3,8 +3,7 @@ import * as actions from '../actions'
 export const readerStates = {
   NOT_READY: 'NOT_READY',
   READY: 'READY',
-  FETCHING: 'FETCHING',
-  HAS_ERRORS: 'HAS_ERRORS'
+  FETCHING: 'FETCHING'
 }
 
 export const initialState = {
@@ -24,6 +23,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         status: readerStates.READY
+      }
+
+    case actions.READER_NOT_READY:
+      return {
+        ...state,
+        status: readerStates.NOT_READY
       }
 
     case actions.BEGIN_STORY:

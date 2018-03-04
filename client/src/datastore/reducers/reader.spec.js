@@ -2,6 +2,8 @@ import reader, { initialState, readerStates } from './reader'
 import * as actions from '../actions'
 
 describe('reader reducer', () => {
+  let nextState
+
   it('should provide initial state', () => {
     expect(
       reader(undefined, {})
@@ -18,11 +20,22 @@ describe('reader reducer', () => {
   })
 
   it('handles READER_READY', () => {
+    nextState = reader(undefined, actions.readerFetching())
     expect(
-      reader(undefined, actions.readerReady())
+      reader(nextState, actions.readerReady())
     ).toEqual({
       ...initialState,
       status: readerStates.READY
+    })
+  })
+
+  it('handles READER_NOT_READY', () => {
+    nextState = reader(undefined, actions.readerReady())
+    expect(
+      reader(nextState, actions.readerNotReady())
+    ).toEqual({
+      ...initialState,
+      status: readerStates.NOT_READY
     })
   })
 

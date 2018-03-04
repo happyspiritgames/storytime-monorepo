@@ -98,6 +98,11 @@ export const readerReady = () => ({
   type: READER_READY
 })
 
+export const READER_NOT_READY = 'READER_NOT_READY'
+export const readerNotReady = () => ({
+  type: READER_NOT_READY
+})
+
 export const BEGIN_STORY = 'BEGIN_STORY'
 export const beginStory = (storyId, sceneId) => ({
   type: BEGIN_STORY,
@@ -189,58 +194,67 @@ export const replay = () => {
 
 export const play = (storyId) => {
   return (dispatch, getState) => {
-    const { stories } = getState()
+    dispatch(readerNotReady())
 
+    const { stories } = getState()
     // story not cached
     if (!stories[storyId]) {
-      console.log('story not in cache', storyId)
+      console.log('play ==> story not in state', storyId)
+      dispatch(readerFetching())
       dispatch(retrieveSummary(storyId))
         .then(() => {
           const sceneId = getState().stories[storyId].summary.firstSceneId
-          dispatch(beginStory(storyId, sceneId))
-          dispatch(
-            retrieveScene(storyId, sceneId, () => {
+          dispatch(retrieveScene(storyId, sceneId, () => {
+              dispatch(beginStory(storyId, sceneId))
               dispatch(readerReady())
             })
           )
-        }
-      )
+        })
       return
     }
 
-    // story cached but not scene
+    // story cached, scene not cached
     const { firstSceneId } = stories[storyId].summary
     if (!stories[storyId].scenes || !stories[storyId].scenes[firstSceneId]) {
-      console.log('scene not in cache', storyId, firstSceneId)
-      dispatch(retrieveScene(storyId, firstSceneId))
-      //     .then(dispatch(beginStory()))
-      // )
+      console.log('play ==> scene not in state', storyId, firstSceneId)
+      dispatch(readerFetching())
+      dispatch(retrieveScene(storyId, firstSceneId, () => {
+        dispatch(beginStory(storyId, firstSceneId))
+        dispatch(readerReady())
+      }))
       return
     }
 
-    // story and first scene cached
-    console.log('story and scene in cache', storyId, firstSceneId)
+    // story and scene cached
+    console.log('play ==> found story and scene in state', storyId, firstSceneId)
     dispatch(beginStory(storyId, firstSceneId))
+    dispatch(readerReady())
   }
 }
 
 export const goToScene = (sceneId) => {
   return (dispatch, getState) => {
+    const { stories } = getState()
     const { storyId } = getState().reader
     if (!storyId) {
       console.error('Unknown story ID')
       return
     }
 
-    // scene cached
-    if (getState().stories[storyId].scenes[sceneId]) {
-      dispatch(visitScene(sceneId))
+    // scene not cached
+    if (!stories[storyId].scenes || !stories[storyId].scenes[sceneId]) {
+      console.log('goToScene ==> scene not in state', storyId, sceneId)
+      dispatch(readerFetching())
+      dispatch(retrieveScene(storyId, sceneId, () => {
+        dispatch(visitScene(sceneId))
+        dispatch(readerReady())
+      }))
       return
     }
 
-    // scene not cached
-    dispatch(fetchScene(storyId, sceneId))
-    .then(dispatch(visitScene(sceneId)))
+    // scene cached
+    console.log('goToScene ==> found scene in state', storyId, sceneId)
+    dispatch(visitScene(sceneId))
   }
 }
 
