@@ -107,6 +107,24 @@ describe('stories reducer', () => {
     })
   })
 
+  it('handles FETCHED_CATALOG without removing cached scenes', () => {
+    const starting = {
+      [summary1.storyId]: {
+        summary: summary1,
+        scenes: {
+          [scene1.sceneId]: scene1
+        }
+      }
+    }
+    console.log(starting)
+    expect(stories(starting, actions.fetchedCatalog(summaries)))
+      .toEqual({
+        ...starting,
+        [summary2.storyId]: {
+          summary: summary2
+        }
+      })
+  })
   // TODO write this test and fix the code to make it pass
   xit('preserves cached scenes when FETCHED_CATALOG action is handled')
 })

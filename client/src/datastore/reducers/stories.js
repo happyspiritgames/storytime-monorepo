@@ -1,9 +1,10 @@
-import { FETCHED_CATALOG, FETCHED_SUMMARY, FETCHED_SCENE } from '../actions'
+import { FETCHED_CATALOG, FETCHED_SUMMARY, FETCHED_SCENE, fetchedSummary } from '../actions'
 import storyReducer from './story'
 
 export const initialState = {}
 
 export default (state = initialState, action) => {
+  let story, storyId
   switch (action.type) {
     case FETCHED_SUMMARY:
       const summary = action.payload.summary
@@ -13,8 +14,8 @@ export default (state = initialState, action) => {
         [summary.storyId]: storyReducer(storyState, action)
       }
     case FETCHED_SCENE:
-      const { storyId } = action.payload
-      const story = state[storyId]
+      storyId = action.payload.storyId
+      story = state[storyId]
       return {
         ...state,
         [storyId]: storyReducer(story, action)
@@ -23,14 +24,20 @@ export default (state = initialState, action) => {
       if (!action.payload.summaries) {
         return state
       }
-      let newSummaries = {}
+
+      // TODO fix this -- stop clobbering cached
+
+      let nextStories = {}
       action.payload.summaries.forEach(summary => {
-        newSummaries[summary.storyId] = {
-          summary
+        const storyState = state[summary.storyId] || {}
+        nextStories = {
+          ...nextStories,
+          [summary.storyId]: storyReducer(storyState, fetchedSummary(summary))
         }
       })
       return {
-        ...newSummaries
+        ...story,
+        ...nextStories
       }
     default:
       return state

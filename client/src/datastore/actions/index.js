@@ -131,9 +131,7 @@ export const refreshCatalog = () => {
       .then(
         res => res.json(),
         error => {
-          dispatch(fetchCatalogFailed(
-            new Error('Could not fetch catalog'))
-          )
+          dispatch(fetchCatalogFailed(new Error('Could not fetch catalog')))
           dispatch(libraryReady())
         }
       )

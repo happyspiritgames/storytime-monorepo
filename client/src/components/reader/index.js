@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { push } from 'react-router-redux'
+import Signpost from './Signpost'
 import StoryTimePage from '../StoryTimePage'
 import { format } from '../../util/formatter'
 import { readerStates } from '../../datastore/reducers/reader'
@@ -13,11 +14,24 @@ export default class Reader extends Component {
     summary: storySummaryShape,
     scene: sceneShape,
     onPlay: PropTypes.func.isRequired,
-    onGoToScene: PropTypes.func.isRequired
+    onGoToScene: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired
+  }
+
+  constructor() {
+    super()
+    this.state = {
+      internalState: readerStates.READY
+    }
   }
 
   isFetching() {
     return this.props.status === readerStates.FETCHING
+  }
+
+  isReady() {
+    return this.props.storyId === this.props.match.params.storyId &&
+      this.props.status === readerStates.READY
   }
 
   componentDidMount() {
@@ -26,35 +40,6 @@ export default class Reader extends Component {
       throw new Error('route did not include storyId')
     }
     this.props.onPlay(storyId)
-  }
-
-  renderSignpost(scene, goToScene, playAgain, goToLibrary) {
-    const { endPrompt, signpost } = scene
-    let signs
-    if (signpost) {
-      signs = signpost.map(sign => {
-        let signKey = `${sign.sceneId}|${sign.teaser}`
-        return (<li key={signKey} className="list-group-item" onClick={() => { goToScene(sign.sceneId) }}>{sign.teaser}</li>)
-      })
-    } else {
-      signs = [
-        <li key='replay' className="list-group-item" onClick={() => { playAgain() }}>Go back to the beginning and try again.</li>,
-        <li key='feedback' className="list-group-item">Give some feedback.</li>,
-        <li key='somethingElse' className="list-group-item" onClick={() => { goToLibrary() }}>Find another story.</li>
-      ]
-    }
-    return (
-      <div className="card">
-        <div className="card-header prompt">
-          <h5 className="mb-0">{endPrompt}</h5>
-        </div>
-        <div className="card-body">
-          <ul className="list-group">
-            {signs}
-          </ul>
-        </div>
-    </div>
-    )
   }
 
   formatProse(prose) {
@@ -76,9 +61,9 @@ export default class Reader extends Component {
 
     // console.log('status', status, 'summary', summary, 'scene', scene)
 
-    if (status === readerStates.FETCHING) {
+    if (this.isFetching()) {
       return this.renderNotReady('Loading...one moment please.')
-    } else if (status !== readerStates.READY) {
+    } else if (!this.isReady()) {
       return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
     }
 
@@ -102,7 +87,12 @@ export default class Reader extends Component {
             {formattedProse}
           </div>
         </div>
-        {this.renderSignpost(scene, onGoToScene, playAgain, goToLibrary)}
+        <Signpost
+          scene={scene}
+          goToScene={onGoToScene}
+          playAgain={playAgain}
+          goToLibrary={goToLibrary}
+        />
       </StoryTimePage>
     )
   }

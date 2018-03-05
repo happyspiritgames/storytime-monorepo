@@ -13,6 +13,7 @@ const mapStateToProps = (state, ownProps) => {
   }
   return {
     status: state.reader.status,
+    storyId: state.reader.storyId,
     summary: summary,
     scene: scene
   }
