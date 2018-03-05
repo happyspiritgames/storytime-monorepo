@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { push } from 'react-router-redux'
-import Signpost from './Signpost'
 import StoryTimePage from '../StoryTimePage'
-import { format } from '../../util/formatter'
+import FormattedProse from './FormattedProse'
+import Signpost from './Signpost'
 import { readerStates } from '../../datastore/reducers/reader'
 import { storySummaryShape, sceneShape } from '../../datastore/dataShapes'
 import './reader.css'
@@ -42,12 +42,6 @@ export default class Reader extends Component {
     this.props.onPlay(storyId)
   }
 
-  formatProse(prose) {
-    return prose.split('\n').map((paragraph, index) =>
-      (<p className="card-text" key={index}>{ format(paragraph) }</p>)
-    )
-  }
-
   renderNotReady(message) {
     return (
       <StoryTimePage id="reader">
@@ -57,21 +51,18 @@ export default class Reader extends Component {
   }
 
   render() {
-    const { status, summary, scene, onGoToScene, onPlay, dispatch } = this.props
-
-    // console.log('status', status, 'summary', summary, 'scene', scene)
+    const { summary, scene, onGoToScene, onPlay, dispatch } = this.props
 
     if (this.isFetching()) {
       return this.renderNotReady('Loading...one moment please.')
     } else if (!this.isReady()) {
-      return this.renderNotReady('Nothing is happening.  Must...wait...forever...')
+      return this.renderNotReady('Please wait while we set the scene...this should only take a second or two.')
     }
 
     if (!scene) {
-      throw new Error('got to here without scene. what the?!?')
+      throw new Error('Whoops!  The Reader thinks it is ready, but there is nothing to read.')
     }
 
-    const formattedProse = this.formatProse(scene.prose)
     const playAgain = () => { onPlay(summary.storyId) }
     const goToLibrary = () => { dispatch(push('/')) }
 
@@ -84,7 +75,7 @@ export default class Reader extends Component {
             <h5 className="mb-0">{scene.title}</h5>
           </div>
           <div className="card-body">
-            {formattedProse}
+            <FormattedProse prose={scene.prose} />
           </div>
         </div>
         <Signpost

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Sign from './Sign'
 import { sceneShape } from '../../datastore/dataShapes'
 
 const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
@@ -8,13 +9,13 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
   if (signpost) {
     signs = signpost.map(sign => {
       let signKey = `${sign.sceneId}|${sign.teaser}`
-      return (<li key={signKey} className="list-group-item" onClick={() => { goToScene(sign.sceneId) }}>{sign.teaser}</li>)
+      return (<Sign key={signKey} onClick={() => { goToScene(sign.sceneId) }} text={sign.teaser} />)
     })
   } else {
     signs = [
-      <li key='replay' className="list-group-item" onClick={() => { playAgain() }}>Go back to the beginning and try again.</li>,
-      <li key='feedback' className="list-group-item">Give some feedback.</li>,
-      <li key='somethingElse' className="list-group-item" onClick={() => { goToLibrary() }}>Find another story.</li>
+      <Sign key='replay' onClick={() => { playAgain() }} text='Go back to the beginning and try again.' />,
+      <Sign key='feedback' onClick={() => { console.log('implement feedback') }} text='Give some feedback.' />,
+      <Sign key='library' onClick={() => { goToLibrary() }} text='Find another story.' />
     ]
   }
   return (
@@ -27,7 +28,7 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
           {signs}
         </ul>
       </div>
-  </div>
+    </div>
   )
 }
 
