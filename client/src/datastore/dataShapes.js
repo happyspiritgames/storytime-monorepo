@@ -18,10 +18,12 @@ export const sceneShape = PropTypes.shape({
 })
 
 export const playerProfileShape = PropTypes.shape({
-  playerId: PropTypes.string,
+  id: PropTypes.string,
   email: PropTypes.string,
   nickname: PropTypes.string,
-  agreedToEmailOn: PropTypes.string,
-  agreedToTermsOfAuthorOn: PropTypes.string,
+  createdAt: PropTypes.string,
+  status: PropTypes.number,
+  emailOptInAt: PropTypes.string,
+  authorOptInAt: PropTypes.string,
   penName: PropTypes.string
 })

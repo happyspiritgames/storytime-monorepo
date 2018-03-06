@@ -13,6 +13,8 @@ export default class TermsOfAuthor extends Component {
       ? <h4 className="text-center">You agreed to these terms on {formatDate(agreedOn)}.</h4>
       : <button className="btn btn-primary action-button" type="button">I Agree</button>
 
+    // TODO put checkbox next to each term; people need to check all for button to be enabled
+
     return (
       <div className="card">
         <div className="card-body">

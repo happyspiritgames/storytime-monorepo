@@ -116,7 +116,6 @@ describe('stories reducer', () => {
         }
       }
     }
-    console.log(starting)
     expect(stories(starting, actions.fetchedCatalog(summaries)))
       .toEqual({
         ...starting,
