@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
+import React, { Component } from 'react'
 
 export default class Contact extends Component {
   render() {
     return (
-      <StoryTimePage id="contact">
+      <div id="contact">
         <form method="post">
           <h2 className="text-center">Contact us</h2>
           <div className="alert alert-warning" role="alert">
@@ -20,7 +19,7 @@ export default class Contact extends Component {
             <button className="btn btn-primary" type="submit">Send to Happy Spirit Games</button>
           </div>
         </form>
-      </StoryTimePage>
-    );
+      </div>
+    )
   }
 }

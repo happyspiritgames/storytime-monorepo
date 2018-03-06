@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "storyId": "twistoffate",
+    "title": "A Twist of Fate",
+    "penName": "Bubba Gump",
+    "tagLine": "Blargy blargy blargy. Now read this.",
+    "about": "Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.",
+    "firstSceneId": "1",
+    "publishedAt": "2018-01-21T09:51:37.000Z"
+  },
+  "scenes": {
+    "1": {
+      "sceneId": "1",
+      "title": "A Twist of Fate",
+      "prose": "You wake up with a headache. Something is wrong and it is not the usual. Although you do remember having a drink, the night took a turn before you could finish the bottle.",
+      "endPrompt": "What do you want to try?",
+      "signpost": [
+        {
+          "sceneId": "2",
+          "teaser": "Go back to sleep.  Maybe this will all go away."
+        },
+        {
+          "sceneId": "3",
+          "teaser": "Ring your friend, and get his take on what happened."
+        }
+      ]
+    }
+  }
+}

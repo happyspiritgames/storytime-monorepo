@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class WritingDesk extends Component {
   render() {
     return (
-      <StoryTimePage id="writing-desk">
+      <div id="writing-desk">
         <h3 className="text-center">StoryTime Writing Desk</h3><img className="img-fluid" alt="wooden texture of a writing desk" />
         <div className="row section">
           <div className="col">
@@ -50,7 +49,7 @@ export default class WritingDesk extends Component {
             </div>
           </div>
         </div>
-      </StoryTimePage>
-    );
+      </div>
+    )
   }
 }

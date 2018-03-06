@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { login, logout, isLoggedIn, hasRole } from '../../util/authentication';
-import './navigation.css';
+import React, { Component } from 'react'
+import { withRouter, Link } from 'react-router-dom'
+import { login, logout, isLoggedIn, hasRole } from '../../util/authentication'
+import './navigation.css'
 
 class Navigation extends Component {
 
   redirectHome = () => {
-    const { history } = this.props;
-    history.push('/');
+    const { history } = this.props
+    history.push('/')
   }
 
   render() {
@@ -19,7 +19,7 @@ class Navigation extends Component {
 
     return (
       <nav className="navbar navbar-light navbar-expand-md navigation-clean">
-        <a className="navbar-brand" href="/">StoryTime</a>
+        <Link className="navbar-brand" to="/">StoryTime</Link>
         <button className="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
           <span className="sr-only">Toggle navigation</span>
           <span className="navbar-toggler-icon"></span>
@@ -28,17 +28,17 @@ class Navigation extends Component {
           <ul className="nav navbar-nav ml-auto">
           {
             (isSignedIn && hasAuthorRole) ? (
-              <li className="nav-item" role="presentation"><a className="nav-link" href="/writingdesk">Writing Desk</a></li>
+              <li className="nav-item" role="presentation"><Link className="nav-link" to="/writingdesk">Writing Desk</Link></li>
             ) : ''
           }
           {
             (isSignedIn) ? (
-              <li className="nav-item" role="presentation"><a className="nav-link" href="/account">Account</a></li>
+              <li className="nav-item" role="presentation"><Link className="nav-link" to="/account">Account</Link></li>
             ) : ''
           }
           {
             (isSignedIn && hasAdminRole) ? (
-              <li className="nav-item" role="presentation"><a className="nav-link" href="/admin">Admin</a></li>
+              <li className="nav-item" role="presentation"><Link className="nav-link" to="/admin">Admin</Link></li>
             ) : ''
           }
           {
@@ -51,8 +51,8 @@ class Navigation extends Component {
           </ul>
         </div>
       </nav>
-    );
+    )
   }
 }
 
-export default withRouter(Navigation);
+export default withRouter(Navigation)

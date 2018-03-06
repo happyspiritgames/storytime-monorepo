@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class EditStory extends Component {
   render() {
     return (
-      <StoryTimePage id="edit-story">
+      <div id="edit-story">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><a><span>Projects</span></a></li>
@@ -71,7 +70,7 @@ export default class EditStory extends Component {
             </ul>
           </div>
         </div>
-      </StoryTimePage>
-    );
+      </div>
+    )
   }
 }

@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
+import React, { Component } from 'react'
 
 export default class EditScene extends Component {
   render() {
     return (
-      <StoryTimePage id="edit-scene">
+      <div id="edit-scene">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><a><span>Projects</span></a></li>
@@ -108,7 +107,7 @@ export default class EditScene extends Component {
             </form>
           </div>
         </div>
-      </StoryTimePage>
-    );
+      </div>
+    )
   }
 }

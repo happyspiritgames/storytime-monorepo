@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "storyId": "hockeyshots",
+    "title": "Hockey Shots",
+    "penName": "Stix McClellan",
+    "tagLine": "He shoots, he scores, he's the greatest!!!",
+    "about": "Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.",
+    "firstSceneId": "1",
+    "publishedAt": "2017-02-01T10:51:37.000Z"
+  },
+  "scenes": {
+    "1": {
+      "sceneId": "1",
+      "title": "Hockey Shotz",
+      "prose": "Today is the big day. You have been waiting all week for this game, the one that decides it all.",
+      "endPrompt": "How will you start the day?",
+      "signpost": [
+        {
+          "sceneId": "2",
+          "teaser": "Eat a big breakfast."
+        },
+        {
+          "sceneId": "3",
+          "teaser": "Eat lightly."
+        },
+        {
+          "sceneId": "4",
+          "teaser": "Skip breakfast.  Practice your shot in the backyard."
+        }
+      ]
+    }
+  }
+}

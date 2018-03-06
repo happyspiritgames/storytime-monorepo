@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Card, CardHeader, CardBody, CardFooter, Row, Col, Button } from 'reactstrap';
-import { formatDateTime } from '../../util/formatter';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { Card, CardHeader, CardBody, CardFooter, Row, Col, Button } from 'reactstrap'
+import { formatDateTime } from '../../util/formatter'
 
 export default class PlayerDetails extends Component {
   static propTypes = {
@@ -11,32 +11,32 @@ export default class PlayerDetails extends Component {
       suspend: PropTypes.func
     }),
     statusCodeLookup: PropTypes.func
-  };
+  }
 
   handleSuspendPlayer = (playerId) => {
     return () => {
       this.props.onStatusChange.suspend(playerId);
-    };
+    }
   }
 
   handleActivatePlayer = (playerId) => {
     return () => {
       this.props.onStatusChange.activate(playerId);
-    };
+    }
   }
 
   render() {
-    const { player, statusCodeLookup } = this.props;
+    const { player, statusCodeLookup } = this.props
     if (player === undefined || player === {}) {
-      return <p><strong>Select a player from the list above.</strong></p>;
+      return <p><strong>Select a player from the list above.</strong></p>
     }
-    const joinedOnDisplayValue = formatDateTime(player.createdAt);
-    let emailOptInDisplayValue = 'No';
+    const joinedOnDisplayValue = formatDateTime(player.createdAt)
+    let emailOptInDisplayValue = 'No'
     if (player.emailOptInAt) {
-      emailOptInDisplayValue = `Yes, ${formatDateTime(player.emailOptInAt)}`;
+      emailOptInDisplayValue = `Yes, ${formatDateTime(player.emailOptInAt)}`
     }
-    const playerStatusCode = statusCodeLookup(player.status);
-    const statusToShow = (playerStatusCode) ? playerStatusCode.displayName : player.status;
+    const playerStatusCode = statusCodeLookup(player.status)
+    const statusToShow = (playerStatusCode) ? playerStatusCode.displayName : player.status
     return (
       <Card>
         <CardHeader>
@@ -85,6 +85,6 @@ export default class PlayerDetails extends Component {
           }
         </CardFooter>
       </Card>
-    );
+    )
   }
 }

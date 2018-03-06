@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import './footer.css';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import './footer.css'
 
 export default class Footer extends Component {
 
@@ -14,14 +15,14 @@ export default class Footer extends Component {
             <a href="https://www.facebook.com/"><i className="icon ion-social-facebook"></i></a>
           </div>
           <ul className="list-inline">
-            <li className="list-inline-item"><a href="/about">About</a></li>
+            <li className="list-inline-item"><Link to='/about'>About</Link></li>
             <li className="list-inline-item"><a href="https://happyspiritgames.blog/terms-of-service/">Terms</a></li>
             <li className="list-inline-item"><a href="https://happyspiritgames.blog/privacy-policy/">Privacy Policy</a></li>
-            <li className="list-inline-item"><a href="/contact">Contact Us</a></li>
+            <li className="list-inline-item"><Link to='/contact'>Contact Us</Link></li>
           </ul>
           <p className="copyright">Happy Spirit Games © 2018</p>
         </footer>
       </div>
-    );
+    )
   }
 }

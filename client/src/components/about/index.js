@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import StoryTimePage from '../StoryTimePage';
-import { Link } from 'react-router-dom';
-import './about.css';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import './about.css'
 
 export default class About extends Component {
   render() {
     return (
-      <StoryTimePage id="about">
+      <div id="about">
         <div className="message">
           <p>Greetings! <img className="float-right headshot" src="/img/DaveMount.png" width="150" alt="The Happy Spirit" /></p>
           <p>You have found StoryTime, the first game produced by Happy Spirit Games. If you are new to
@@ -24,7 +23,7 @@ export default class About extends Component {
             blog</a>.</p>
           <p>Have a blast!<br/><em>Dave Mount, a.k.a. The Happy Spirit</em></p>
         </div>
-      </StoryTimePage>
-    );
+      </div>
+    )
   }
 }

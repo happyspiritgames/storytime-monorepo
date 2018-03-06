@@ -1,80 +1,42 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { ListGroup, ListGroupItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { format } from '../../util/formatter';
-import { FIRST_SCENE } from './Reader';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Sign from './Sign'
+import { sceneShape } from '../../datastore/dataShapes'
 
-class SignOption extends Component {
-  handleSceneChange = () => {
-    const { destination, onClick } = this.props;
-    onClick(destination);
-  };
-
-  render() {
-    const { teaser } = this.props;
-    const formattedTeaser = format(teaser);
-    return (
-      <ListGroupItem color="default" action={true} onClick={this.handleSceneChange}>
-        {formattedTeaser}
-      </ListGroupItem>
-    );
+const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
+  const { endPrompt, signpost } = scene
+  let signs
+  if (signpost) {
+    signs = signpost.map(sign => {
+      let signKey = `${sign.sceneId}|${sign.teaser}`
+      return (<Sign key={signKey} onClick={() => { goToScene(sign.sceneId) }} text={sign.teaser} />)
+    })
+  } else {
+    signs = [
+      <Sign key='replay' onClick={() => { playAgain() }} text='Go back to the beginning and try again.' />,
+      <Sign key='feedback' onClick={() => { console.log('implement feedback') }} text='Give some feedback.' />,
+      <Sign key='library' onClick={() => { goToLibrary() }} text='Find another story.' />
+    ]
   }
+  return (
+    <div className="card">
+      <div className="card-header prompt">
+        <h5 className="mb-0">{endPrompt}</h5>
+      </div>
+      <div className="card-body">
+        <ul className="list-group">
+          {signs}
+        </ul>
+      </div>
+    </div>
+  )
 }
 
-const isTheEnd = (signpost) => {
-  return !signpost || !signpost.options || signpost.options.length === 0;
+Signpost.propTypes = {
+  scene: sceneShape,
+  goToScene: PropTypes.func,
+  playAgain: PropTypes.func,
+  goToLibrary: PropTypes.func
 }
 
-export default class Signpost extends Component {
-  static propTypes = {
-    signpost: PropTypes.object,
-    onSceneChange: PropTypes.func
-  }
-
-  renderTheEnd() {
-    return (
-      <div>
-        <h5 className="text-center">The End</h5>
-        <ListGroup>
-          <SignOption
-            key={FIRST_SCENE}
-            teaser="Click or tap here to play again."
-            destination={FIRST_SCENE}
-            onClick={this.props.onSceneChange}
-          />
-          <ListGroupItem>
-            When you are finished exploring this story, try something else.
-            <ul>
-              <li><Link to="/library">Choose another story from the library.</Link></li>
-              <li><a href="https://www.surveymonkey.com/r/DNXPPJG">Take a quick survey, and give feedback about StoryTime.</a></li>
-            </ul>
-          </ListGroupItem>
-        </ListGroup>
-      </div>
-    );
-  }
-
-  render() {
-    const { signpost, onSceneChange } = this.props;
-    if (isTheEnd(signpost)) {
-      return this.renderTheEnd();
-    }
-    const nextSceneOptions = signpost.options.map(option => (
-      <SignOption key={option.sceneKey}
-        teaser={option.teaser}
-        destination={option.sceneKey}
-        onClick={onSceneChange}
-      />
-    ));
-    const promptToRender = signpost.prompt || 'Choose your destiny.';
-    return (
-      <div>
-        <h5>{promptToRender}</h5>
-        <ListGroup>
-          {nextSceneOptions}
-        </ListGroup>
-      </div>
-    );
-  }
-};
+export default Signpost
