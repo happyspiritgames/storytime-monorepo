@@ -44,9 +44,12 @@ describe('player actions', () => {
   })
 
   it('creates EDIT_PROFILE action', () => {
-    expect(actions.editProfile())
+    expect(actions.editProfile(testProfile))
     .toEqual({
-      type: actions.EDIT_PROFILE
+      type: actions.EDIT_PROFILE,
+      payload: {
+        profileToUpdate: testProfile
+      }
     })
   })
 

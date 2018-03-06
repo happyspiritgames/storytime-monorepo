@@ -7,7 +7,7 @@ describe('library reducer', () => {
     { storyId: 'blargy', title: 'Beetleguise' }
   ]
 
-  it('should provide initial state', () => {
+  it('provides initial state', () => {
     expect(
       library(undefined, {})
     ).toEqual(initialState)

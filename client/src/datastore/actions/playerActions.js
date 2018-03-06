@@ -21,8 +21,11 @@ export const fetchProfileFailed = (error) => ({
 })
 
 export const EDIT_PROFILE = 'EDIT_PROFILE'
-export const editProfile = () => ({
-  type: EDIT_PROFILE
+export const editProfile = (profileToUpdate) => ({
+  type: EDIT_PROFILE,
+  payload: {
+    profileToUpdate
+  }
 })
 
 // capture local changes to profileUpdate in data store
