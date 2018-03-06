@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { Row, Col, Button } from 'reactstrap';
 import { formatDateTime } from '../../util/formatter';

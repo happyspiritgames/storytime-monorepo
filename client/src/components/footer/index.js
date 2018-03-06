@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import './footer.css';
+import React, { Component } from 'react'
+import './footer.css'
 
 export default class Footer extends Component {
 
@@ -22,6 +22,6 @@ export default class Footer extends Component {
           <p className="copyright">Happy Spirit Games © 2018</p>
         </footer>
       </div>
-    );
+    )
   }
 }

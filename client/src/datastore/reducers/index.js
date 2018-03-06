@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
-import library from './library';
-import reader from './reader';
+import { combineReducers } from 'redux'
+import library from './library'
+import reader from './reader'
 import stories from './stories'
 
 const storyTimeApp = combineReducers({
   library,
   reader,
   stories
-});
+})
 
 export default storyTimeApp;
 

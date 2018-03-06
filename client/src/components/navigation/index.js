@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { login, logout, isLoggedIn, hasRole } from '../../util/authentication';
-import './navigation.css';
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import { login, logout, isLoggedIn, hasRole } from '../../util/authentication'
+import './navigation.css'
 
 class Navigation extends Component {
 
   redirectHome = () => {
-    const { history } = this.props;
-    history.push('/');
+    const { history } = this.props
+    history.push('/')
   }
 
   render() {
@@ -51,8 +51,8 @@ class Navigation extends Component {
           </ul>
         </div>
       </nav>
-    );
+    )
   }
 }
 
-export default withRouter(Navigation);
+export default withRouter(Navigation)

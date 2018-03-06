@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { formatDate } from '../../util/formatter';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { formatDate } from '../../util/formatter'
 
 export default class TermsOfAuthor extends Component {
   static propTypes = {
     agreedOn: PropTypes.string
-  };
+  }
 
   render() {
     const { agreedOn } = this.props;
     const agreementPrompt = (agreedOn)
       ? <h4 className="text-center">You agreed to these terms on {formatDate(agreedOn)}.</h4>
-      : <button className="btn btn-primary action-button" type="button">I Agree</button>;
+      : <button className="btn btn-primary action-button" type="button">I Agree</button>
 
     return (
       <div className="card">
@@ -29,6 +29,6 @@ export default class TermsOfAuthor extends Component {
           {agreementPrompt}
         </div>
       </div>
-    );
+    )
   }
 }

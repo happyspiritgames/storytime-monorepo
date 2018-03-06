@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
 export const storySummaryShape = PropTypes.shape({
   storyId: PropTypes.string,
@@ -8,14 +8,14 @@ export const storySummaryShape = PropTypes.shape({
   about: PropTypes.string,
   firstSceneId: PropTypes.string,
   publishedAt: PropTypes.string
-});
+})
 
 export const sceneShape = PropTypes.shape({
   sceneId: PropTypes.string,
   title: PropTypes.string,
   prose: PropTypes.string,
   signpost: PropTypes.array
-});
+})
 
 export const playerProfileShape = PropTypes.shape({
   playerId: PropTypes.string,
@@ -24,4 +24,4 @@ export const playerProfileShape = PropTypes.shape({
   agreedToEmailOn: PropTypes.string,
   agreedToTermsOfAuthorOn: PropTypes.string,
   penName: PropTypes.string
-});
+})
