@@ -35,7 +35,7 @@ export const getProfile = (handleResponse, handleError) => {
     .catch(err => handleError(err))
 }
 
-export const updateProfile = (profileUpdates, processResponse) => {
+export const updateProfile = (profileUpdates, handleResponse, handleError) => {
   console.log('updateProfile: sending updates', profileUpdates)
   const putOptions = {
     method: 'PUT',
@@ -44,8 +44,8 @@ export const updateProfile = (profileUpdates, processResponse) => {
   };
   fetch('/api/self/profile', putOptions)
     .then(res => res.json())
-    .then(message => processResponse(message))
-    .catch(err => console.log('Failed to update player profile', err))
+    .then(message => handleResponse(message))
+    .catch(err => handleError(err))
 }
 
 export const getPlayerStatusCodes = (processStatusCodes) => {

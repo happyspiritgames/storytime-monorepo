@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { loadProfile } from '../../datastore/actions'
+import { loadProfile, saveProfileUpdates, changeProfile } from '../../datastore/actions'
 import Account from './Account'
 
 const mapStateToProps = (state) => {
@@ -17,6 +17,12 @@ const mapDispatchToProps = dispatch => {
   return {
     loadProfile: () => {
       dispatch(loadProfile())
+    },
+    changeProfile: (update) => {
+      dispatch(changeProfile(update))
+    },
+    saveProfile: () => {
+      dispatch(saveProfileUpdates())
     }
   }
 }
