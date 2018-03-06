@@ -35,7 +35,7 @@ export default class StoryTimeApp extends Component {
                 <Route path="/contact" component={Contact} />
                 <Route path="/reader/:storyId" component={ReaderPage} />
                 <Route exact path="/writingdesk" component={WritingDesk} />
-                <Route path="/writingdesk/:draftId" component={EditStory} />
+                <Route exact path="/writingdesk/:draftId" component={EditStory} />
                 <Route path="/writingdesk/:draftId/:sceneId" component={EditScene} />
               </Switch>
             </div>
