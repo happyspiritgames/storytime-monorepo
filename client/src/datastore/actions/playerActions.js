@@ -30,10 +30,11 @@ export const editProfile = (profileToUpdate) => ({
 
 // capture local changes to profileUpdate in data store
 export const CHANGE_PROFILE = 'CHANGE_PROFILE'
-export const changeProfile = (profileUpdate) => ({
+export const changeProfile = (field, value) => ({
   type: CHANGE_PROFILE,
   payload: {
-    profileUpdate
+    field,
+    value
   }
 })
 

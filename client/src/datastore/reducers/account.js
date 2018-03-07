@@ -25,7 +25,20 @@ export default (state = initialState, action) => {
         editMode: false
       }
     case CHANGE_PROFILE:
-      return state
+      const editMode = state.editMode
+      const changes = state.profileChanges
+      const { field, value } = action.payload
+      if (!editMode || !changes || !field) {
+        return state
+      }
+      const nextChanges = {
+        ...changes,
+        [field]: value
+      }
+      return {
+        ...state,
+        profileChanges: nextChanges
+      }
     default:
       return state
   }

@@ -54,11 +54,12 @@ describe('player actions', () => {
   })
 
   it('creates CHANGE_PROFILE action', () => {
-    expect(actions.changeProfile(profileUpdate))
+    expect(actions.changeProfile('name', 'Bubba'))
     .toEqual({
       type: actions.CHANGE_PROFILE,
       payload: {
-        profileUpdate
+        field: 'name',
+        value: 'Bubba'
       }
     })
   })
