@@ -84,7 +84,7 @@ export const loadProfile = () => {
   }
 }
 
-// send whatever is found in profileUpdate to remote service
+// TODO stop this from clobbering the store
 export const saveProfile = (update) => {
   return (dispatch, state) => {
     dispatch(updateProfile())
