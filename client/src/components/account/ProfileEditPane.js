@@ -11,9 +11,8 @@ export default class ProfileEditPane extends Component {
   }
 
   handleChange = (event) => {
-    console.log('profile change', event)
-    event.preventDefault()
-    // this.props.change(event.target.name, event.target.value)
+    console.log('profile change', event.target)
+    this.props.change(event.target.id, event.target.value)
   }
 
   handleSave = () => {
@@ -24,6 +23,8 @@ export default class ProfileEditPane extends Component {
     this.props.cancel()
   }
 
+  // TODO use local state for changes -- update locally, then call actions??
+  
   render() {
     const { profileChanges } = this.props
     if (!profileChanges) {
@@ -31,8 +32,9 @@ export default class ProfileEditPane extends Component {
       return null
     }
 
-    const { nickname, optInEmail, penName } = profileChanges;
-    const agreeToEmailLabel = (optInEmail)
+    const { nickname, penName, emailOptIn } = profileChanges;
+    const penNameValue = penName || ''
+    const emailOptInLabel = (emailOptIn)
       ? `You have agreed to receive email.`
       : 'Check to agree to receive email from Happy Spirit Games.'
 
@@ -44,7 +46,7 @@ export default class ProfileEditPane extends Component {
         </div>
         <form>
           <div className="form-group">
-            <label for="nickname">Nickname</label>
+            <label htmlFor="nickname">Nickname</label>
             <input
               className="form-control"
               type="text"
@@ -55,12 +57,12 @@ export default class ProfileEditPane extends Component {
             <small className="form-text text-muted">What would you like to be called?</small>
           </div>
           <div className="form-group">
-            <label for="penName">Pen name</label>
+            <label htmlFor="penName">Pen name</label>
             <input
               className="form-control"
               type="text"
               id="penName"
-              value={penName}
+              value={penNameValue}
               onChange={this.handleChange}
             />
             <small className="form-text text-muted">The name that shows up on published stories as the author. (only appears when t&amp;c for authors is agreed.)</small>
@@ -70,13 +72,23 @@ export default class ProfileEditPane extends Component {
               className="form-check-input"
               type="checkbox"
               id="emailOptIn"
-              checked={optInEmail}
+              checked={emailOptIn}
               onChange={this.handleChange}
             />
-            <label className="form-check-label" for="emailOptIn">{agreeToEmailLabel}</label>
+            <label className="form-check-label" htmlFor="emailOptIn">{emailOptInLabel}</label>
           </div>
-          <button className="btn btn-primary action-button" type="button" onClick={this.handleSave}>Save Changes</button>
-          <button className="btn btn-primary action-button" type="button" onClick={this.handleCancel}>Cancel</button>
+          <button
+            className="btn btn-primary action-button"
+            onClick={this.handleSave}
+          >
+            Save Change
+          </button>
+          <button
+            className="btn btn-primary action-button"
+            onClick={this.handleCancel}
+          >
+            Cancel
+          </button>
         </form>
       </div>
     )
