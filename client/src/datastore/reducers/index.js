@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
+import account from './account'
 import library from './library'
+import player from './player'
 import reader from './reader'
 import stories from './stories'
-import account from './account'
-import player from './player'
 
 const storyTimeApp = combineReducers({
   account,
@@ -15,7 +15,7 @@ const storyTimeApp = combineReducers({
 
 export default storyTimeApp;
 
-// sample for reference
+// for reference
 export const dataShape = {
   account: {
     editMode: true,
