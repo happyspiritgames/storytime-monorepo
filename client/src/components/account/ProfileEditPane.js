@@ -1,44 +1,39 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { playerProfileShape } from '../../datastore/dataShapes'
-import { formatDate } from '../../util/formatter'
+import { profileChangeShape } from '../../datastore/dataShapes'
 
 export default class ProfileEditPane extends Component {
   static propTypes = {
-    profileUpdate: playerProfileShape,
+    profileChanges: profileChangeShape,
+    change: PropTypes.func,
     save: PropTypes.func,
     cancel: PropTypes.func
   }
 
-  constructor() {
-    super();
-    this.state = {
-      editMode: false
-    }
+  handleChange = (event) => {
+    console.log('profile change', event)
+    event.preventDefault()
+    // this.props.change(event.target.name, event.target.value)
   }
 
-  onEdit = () => {
-    this.setState({
-      editMode: true
-    })
+  handleSave = () => {
+    this.props.save()
   }
 
-  onSave = () => {
-    this.setState({
-      editMode: false
-    })
+  handleCancel = () => {
+    this.props.cancel()
   }
 
   render() {
-    const { profileUpdate } = this.props
-    if (!profileUpdate) {
+    const { profileChanges } = this.props
+    if (!profileChanges) {
       // must not be editing; bail out
       return null
     }
 
-    const { nickname, agreedToEmailOn, penName } = profileUpdate;
-    const agreeToEmailLabel = (agreedToEmailOn)
-      ? `You agreed to receive email on ${formatDate(agreedToEmailOn)}.`
+    const { nickname, optInEmail, penName } = profileChanges;
+    const agreeToEmailLabel = (optInEmail)
+      ? `You have agreed to receive email.`
       : 'Check to agree to receive email from Happy Spirit Games.'
 
     return (
@@ -49,20 +44,39 @@ export default class ProfileEditPane extends Component {
         </div>
         <form>
           <div className="form-group">
-            <label>Nickname</label>
-            <input className="form-control" type="text" value={nickname} />
+            <label for="nickname">Nickname</label>
+            <input
+              className="form-control"
+              type="text"
+              id="nickname"
+              value={nickname}
+              onChange={this.handleChange}
+            />
             <small className="form-text text-muted">What would you like to be called?</small>
           </div>
           <div className="form-group">
-            <label>Pen name</label>
-            <input className="form-control" type="text" value={penName} />
+            <label for="penName">Pen name</label>
+            <input
+              className="form-control"
+              type="text"
+              id="penName"
+              value={penName}
+              onChange={this.handleChange}
+            />
             <small className="form-text text-muted">The name that shows up on published stories as the author. (only appears when t&amp;c for authors is agreed.)</small>
           </div>
           <div className="form-check">
-            <input className="form-check-input" type="checkbox" id="formCheck-1" checked={agreedToEmailOn} />
-            <label className="form-check-label" for="formCheck-1">{agreeToEmailLabel}</label>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="emailOptIn"
+              checked={optInEmail}
+              onChange={this.handleChange}
+            />
+            <label className="form-check-label" for="emailOptIn">{agreeToEmailLabel}</label>
           </div>
-          <button className="btn btn-primary action-button" type="button" onClick={this.onSave}>Save Changes</button>
+          <button className="btn btn-primary action-button" type="button" onClick={this.handleSave}>Save Changes</button>
+          <button className="btn btn-primary action-button" type="button" onClick={this.handleCancel}>Cancel</button>
         </form>
       </div>
     )

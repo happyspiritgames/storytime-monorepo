@@ -6,17 +6,22 @@ import { formatDate } from '../../util/formatter'
 export default class PlayerProfile extends Component {
   static propTypes = {
     profile: playerProfileShape,
-    edit: PropTypes.bool
+    editMode: PropTypes.bool,
+    edit: PropTypes.func
+  }
+
+  handleEdit = () => {
+    this.props.edit(this.props.profile)
   }
 
   render() {
-    const { profile, edit } = this.props
-    const { email, nickname, agreedToEmailOn, agreedToTermsOfAuthorOn, penName } = profile
-    const agreedToEmailMessage = (agreedToEmailOn)
-      ? `Yes, agreed to email on ${formatDate(agreedToEmailOn)}`
-      : 'No, I do not want to receive email from Happy Spirit Games.';
-    const agreeToTermsOfAuthorMessage = (agreedToTermsOfAuthorOn)
-      ? `Yes, agreed to terms on ${formatDate(agreedToTermsOfAuthorOn)}`
+    const { profile, editMode } = this.props
+    const { email, nickname, emailOptInAt, authorOptInAt, penName } = profile
+    const emailOptInMessage = (emailOptInAt)
+      ? `Yes, agreed to email on ${formatDate(emailOptInAt)}`
+      : 'No, I do not want to receive email from Happy Spirit Games.'
+    const authorOptInMessage = (authorOptInAt)
+      ? `Yes, agreed to terms on ${formatDate(authorOptInAt)}`
       : 'No. Agree to terms and conditions for authors (below) to gain access.'
 
     return (
@@ -36,11 +41,11 @@ export default class PlayerProfile extends Component {
           </div>
           <div className="row profile-row">
             <div className="col-3 text-right"><span><strong>Communication:</strong></span></div>
-            <div className="col"><span>{agreedToEmailMessage}</span></div>
+            <div className="col"><span>{emailOptInMessage}</span></div>
           </div>
           <div className="row profile-row">
             <div className="col-3 text-right"><span><strong>OK to Publish:</strong></span></div>
-            <div className="col"><span>{agreeToTermsOfAuthorMessage}</span></div>
+            <div className="col"><span>{authorOptInMessage}</span></div>
           </div>
           <div className="row profile-row">
             <div className="col-3 text-right"><span><strong>Pen Name:</strong></span></div>
@@ -49,7 +54,7 @@ export default class PlayerProfile extends Component {
           <div className="row profile-row">
             <div className="col-3">&nbsp;</div>
             <div className="col">
-              <button className="btn btn-primary" type="button" onClick={this.onEdit} enabled={!edit}>
+              <button className="btn btn-primary" onClick={this.handleEdit} disabled={editMode}>
                 <i className="icon ion-edit action-icon"></i> Change Profile
               </button>
             </div>

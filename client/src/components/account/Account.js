@@ -3,15 +3,17 @@ import PropTypes from 'prop-types'
 import PlayerProfile from './PlayerProfile'
 import ProfileEditPane from './ProfileEditPane'
 import TermsOfAuthor from './TermsOfAuthor'
-import { playerProfileShape } from '../../datastore/dataShapes'
+import { playerProfileShape, profileChangeShape } from '../../datastore/dataShapes'
 import './account.css'
 
 export default class Account extends Component {
   static propTypes = {
     profile: playerProfileShape,
-    profileUpdates: playerProfileShape,
     editMode: PropTypes.bool,
+    profileChanges: profileChangeShape,
     loadProfile: PropTypes.func,
+    editProfile: PropTypes.func,
+    changeProfile: PropTypes.func,
     saveProfile: PropTypes.func
   }
 
@@ -20,12 +22,21 @@ export default class Account extends Component {
   }
 
   render() {
-    const { profile, profileUpdates, editMode, saveProfile } = this.props
+    const { profile, editMode, profileChanges, editProfile, changeProfile, saveProfile } = this.props
     return (
       <div id="account">
-        <PlayerProfile profile={profile} edit={editMode} />
-        <ProfileEditPane profileUpdates={profileUpdates} save={saveProfile} cancel={() => console.log('implement cancel')} />
-        <TermsOfAuthor agreedOn={profile.agreedToTermsOfAuthorOn} />
+        <PlayerProfile
+          profile={profile}
+          editMode={editMode}
+          edit={editProfile}
+        />
+        <ProfileEditPane
+          profileChanges={profileChanges}
+          change={changeProfile}
+          save={saveProfile}
+          cancel={() => console.log('implement cancel')}
+        />
+        <TermsOfAuthor agreedOn={profile.authorOptInAt} />
       </div>
     )
   }

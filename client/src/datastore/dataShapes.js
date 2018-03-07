@@ -27,3 +27,10 @@ export const playerProfileShape = PropTypes.shape({
   authorOptInAt: PropTypes.string,
   penName: PropTypes.string
 })
+
+export const profileChangeShape = PropTypes.shape({
+  id: PropTypes.string,
+  nickname: PropTypes.string,
+  emailOptIn: PropTypes.bool,
+  penName: PropTypes.string
+})

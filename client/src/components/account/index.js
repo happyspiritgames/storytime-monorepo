@@ -3,13 +3,10 @@ import { loadProfile, editProfile, changeProfile, saveProfile } from '../../data
 import Account from './Account'
 
 const mapStateToProps = (state) => {
-  const editMode = state.account.editMode
-  const profile = (state.player) ? state.player.profile : {}
-  const profileChanges = (state.account) ? state.account.profileChanges : undefined
   return {
-    profile,
-    profileChanges,
-    editMode
+    profile: state.player.profile,
+    editMode: state.account.editMode,
+    profileChanges: state.account.profileChanges
   }
 }
 
@@ -18,8 +15,8 @@ const mapDispatchToProps = (dispatch, state) => {
     loadProfile: () => {
       dispatch(loadProfile())
     },
-    editProfile: () => {
-      dispatch(editProfile(state.player.profile))
+    editProfile: (profile) => {
+      dispatch(editProfile(profile))
     },
     changeProfile: (update) => {
       dispatch(changeProfile(update))
