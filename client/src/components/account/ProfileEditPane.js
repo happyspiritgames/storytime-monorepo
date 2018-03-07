@@ -115,12 +115,15 @@ export default class ProfileEditPane extends Component {
             />
             <label className="form-check-label" htmlFor="emailOptIn">{emailOptInLabel}</label>
           </div>
-          <button className="btn btn-primary" onClick={this.handleSave}>
-          <i className="icon ion-checkmark"></i> Save
-          </button>
-          <button className="btn btn-warning" onClick={this.handleCancel}>
-          <i className="icon ion-close"></i> Cancel
-          </button>
+          <div className="btn-group center" role="group">
+            <button className="btn btn-primary" onClick={this.handleSave}>
+              <i className="icon ion-checkmark"></i> Save
+            </button>
+            <button className="btn btn-warning" onClick={this.handleCancel}>
+              <i className="icon ion-close"></i> Cancel
+            </button>
+          </div>
+
         </form>
       </div>
     )

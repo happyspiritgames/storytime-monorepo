@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { playerProfileShape } from '../../datastore/dataShapes'
 import { formatDate } from '../../util/formatter'
 
 export default class PlayerProfile extends Component {
   static propTypes = {
     profile: playerProfileShape,
-    editMode: PropTypes.bool,
-    edit: PropTypes.func
   }
 
   handleEdit = () => {
@@ -19,7 +16,7 @@ export default class PlayerProfile extends Component {
   }
 
   render() {
-    const { profile, editMode } = this.props
+    const { profile } = this.props
     const { email, nickname, emailOptInAt, authorOptInAt, penName } = profile
     const emailOptInMessage = (emailOptInAt)
       ? `Yes.  On ${formatDate(emailOptInAt)}, you agreed to receive email from Happy Spirit Games.`
@@ -57,19 +54,6 @@ export default class PlayerProfile extends Component {
             <div className="col"><span>{penName}</span></div>
           </div>
           }
-          <div className="row profile-row">
-            <div className="col-3">&nbsp;</div>
-            <div className="col">
-              <button className="btn btn-primary" onClick={this.handleEdit} disabled={editMode}>
-                <i className="icon ion-edit"></i> Change Profile
-              </button>
-            { !authorOptInAt &&
-              <button className="btn btn-primary" onClick={this.handleOpenAuthorTerms}>
-                <i className="icon ion-checkmark"></i> Become a StoryTime Author
-              </button>
-            }
-            </div>
-          </div>
         </div>
       </div>
     )
