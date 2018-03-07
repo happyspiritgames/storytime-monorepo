@@ -19,7 +19,7 @@ export default storyTimeApp;
 export const dataShape = {
   account: {
     editMode: true,
-    profileUpdate: {
+    profileChanges: {
       id: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
       nickname: 'bubba',
       emailOptIn: false,

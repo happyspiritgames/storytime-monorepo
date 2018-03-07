@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case EDIT_PROFILE:
       const { profileToUpdate } = action.payload
-      const profileUpdate = {
+      const profileChanges = {
         id: profileToUpdate.id,
         nickname: profileToUpdate.nickname,
         emailOptIn: !!profileToUpdate.emailOptInAt,
@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         editMode: true,
-        profileUpdate
+        profileChanges
       }
     case UPDATED_PROFILE:
       return {

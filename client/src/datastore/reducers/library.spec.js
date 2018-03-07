@@ -8,9 +8,7 @@ describe('library reducer', () => {
   ]
 
   it('provides initial state', () => {
-    expect(
-      library(undefined, {})
-    ).toEqual(initialState)
+    expect(library(undefined, {})).toEqual(initialState)
   })
 
   it('handles LIBRARY_FETCHING', () => {
