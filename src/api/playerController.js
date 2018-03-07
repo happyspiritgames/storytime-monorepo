@@ -170,10 +170,10 @@ exports.getSelfProfile = async (req, res) => {
  */
 exports.updateSelfProfile = async (req, res) => {
   const { playerId } = req.user;
-  const { nickname, emailOptIn } = req.body;
+  const { nickname, penName, emailOptIn } = req.body;
   console.log('playerController.updateSelfProfile', playerId, req.body);
   try {
-    await playerModel.updatePlayer(playerId, nickname, emailOptIn);
+    await playerModel.updatePlayer(playerId, nickname, penName, emailOptIn);
     const profile = await playerModel.getPlayer(playerId);
     res.status(202).json(profile);
   } catch (e) {

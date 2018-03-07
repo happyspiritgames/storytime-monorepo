@@ -143,18 +143,18 @@ exports.getPlayerStatusCodes = async () => {
   }
 }
 
-const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL';
-const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL';
+const UPD_PLAYER_COMMS_YES = 'UPDATE player SET agreed_to_comms_at = NOW() WHERE id = $1 and agreed_to_comms_at IS NULL'
+const UPD_PLAYER_COMMS_NO = 'UPDATE player SET agreed_to_comms_at = DEFAULT WHERE id = $1 and agreed_to_comms_at IS NOT NULL'
 
-exports.updatePlayer = async (playerId, nickname, emailOptIn) => {
-  console.log('playerModel.updatePlayer');
-  const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $1 WHERE id = $2';
-  let dbResult = await db.query(UPD_PLAYER_QUERY, [nickname, playerId]);
+exports.updatePlayer = async (playerId, nickname, penName, emailOptIn) => {
+  console.log('playerModel.updatePlayer')
+  const UPD_PLAYER_QUERY = 'UPDATE player SET nickname = $2, pen_name = $3 WHERE id = $1'
+  let dbResult = await db.query(UPD_PLAYER_QUERY, [playerId, nickname, penName])
 
   if (emailOptIn) {
-    dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId]);
+    dbResult = await db.query(UPD_PLAYER_COMMS_YES, [playerId])
   } else {
-    dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId]);
+    dbResult = await db.query(UPD_PLAYER_COMMS_NO, [playerId])
   }
 }
 

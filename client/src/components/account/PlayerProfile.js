@@ -48,7 +48,7 @@ export default class PlayerProfile extends Component {
             <div className="col-3 text-right"><span><strong>Publish Stories:</strong></span></div>
             <div className="col"><span>{authorOptInMessage}</span></div>
           </div>
-          { penName &&
+          { authorOptInAt &&
           <div className="row profile-row">
             <div className="col-3 text-right"><span><strong>Pen Name:</strong></span></div>
             <div className="col"><span>{penName}</span></div>

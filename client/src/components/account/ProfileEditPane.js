@@ -12,7 +12,13 @@ export default class ProfileEditPane extends Component {
   constructor() {
     super()
     this.state = {
-      profileChanges: {}
+      profileChanges: {
+        id: '',
+        nickname: '',
+        penName: '',
+        emailOptIn: false,
+        authorOptIn: false
+      }
     }
   }
 
@@ -22,10 +28,11 @@ export default class ProfileEditPane extends Component {
       : {
           id: profile.id,
           nickname: profile.nickname,
-          penName: profile.penName,
+          penName: profile.penName || '',
           emailOptIn: !!profile.emailOptInAt,
-          authorOptIn: false
+          authorOptIn: !!profile.authorOptInAt
         }
+    console.log('profile changes:', changes)
     return changes
   }
 
@@ -94,7 +101,7 @@ export default class ProfileEditPane extends Component {
           </div>
         { authorOptIn &&
           <div className="form-group">
-            <label htmlFor="penName">Pen name</label>
+            <label htmlFor="penName">Pen Name</label>
             <input
               className="form-control"
               type="text"
