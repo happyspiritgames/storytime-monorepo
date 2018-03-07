@@ -49,7 +49,7 @@ export const updateProfile = (profileUpdates, handleResponse, handleError) => {
 }
 
 export const getPlayerStatusCodes = (processStatusCodes) => {
-  fetch('/api/player-status-codes', { headers: getHeaders() })
+  fetch('/api/codes/player-status', { headers: getHeaders() })
     .then(res => res.json())
     .then(statusCodes => processStatusCodes(statusCodes))
     .catch(err => console.log('Failed to get player status codes', err))

@@ -26,27 +26,20 @@ class Navigation extends Component {
         </button>
         <div className="collapse navbar-collapse" id="navcol-1">
           <ul className="nav navbar-nav ml-auto">
-          {
-            (isSignedIn && hasAuthorRole) ? (
-              <li className="nav-item" role="presentation"><Link className="nav-link" to="/writingdesk">Writing Desk</Link></li>
-            ) : ''
+          {isSignedIn && hasAuthorRole &&
+            <li className="nav-item" role="presentation"><Link className="nav-link" to="/writingdesk">Writing Desk</Link></li>
           }
-          {
-            (isSignedIn) ? (
+          {isSignedIn &&
               <li className="nav-item" role="presentation"><Link className="nav-link" to="/account">Account</Link></li>
-            ) : ''
           }
-          {
-            (isSignedIn && hasAdminRole) ? (
+          {isSignedIn && hasAdminRole &&
               <li className="nav-item" role="presentation"><Link className="nav-link" to="/admin">Admin</Link></li>
-            ) : ''
           }
-          {
-            (isSignedIn) ? (
+          {isSignedIn &&
               <li className="nav-item" role="presentation"><a className="nav-link" onClick={doSignOut}>Sign Out</a></li>
-            ) : (
+          }
+          {!isSignedIn &&
               <li className="nav-item" role="presentation"><a className="nav-link" onClick={doSignIn}>Sign In</a></li>
-            )
           }
           </ul>
         </div>

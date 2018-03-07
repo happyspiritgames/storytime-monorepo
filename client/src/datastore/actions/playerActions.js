@@ -98,8 +98,11 @@ export const saveProfile = (update) => {
 export const agreeToAuthorTerms = () => {
   return (dispatch) => {
     apiAgreeToAuthorTerms(
-      result => loadProfile()(dispatch),
-      error => { console.error(error) }
+      result => {
+        loadProfile()(dispatch)
+        return result
+      },
+      error => { }
     )
   }
 }
