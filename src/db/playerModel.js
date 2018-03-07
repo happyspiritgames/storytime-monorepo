@@ -109,7 +109,7 @@ exports.agreeToBeAuthor = async (playerId) => {
     await client.query('BEGIN');
     await client.query(UPD_AGREE_TO_AUTHOR_TERMS, [playerId]);
     // will fail if player already has author role
-    await client.query(ADD_AUTHOR_ROLE, [player_id, 'author']);
+    await client.query(ADD_AUTHOR_ROLE, [playerId, 'author']);
     await client.query('COMMIT');
   } catch (e) {
     console.error('had to rollback due to error', e);

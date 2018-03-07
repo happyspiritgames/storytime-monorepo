@@ -13,7 +13,8 @@ export default class Account extends Component {
     loadProfile: PropTypes.func,
     editProfile: PropTypes.func,
     saveProfileChanges: PropTypes.func,
-    cancelEditProfile: PropTypes.func
+    cancelEditProfile: PropTypes.func,
+    agreeToAuthorTerms: PropTypes.func
   }
 
   constructor() {
@@ -29,6 +30,7 @@ export default class Account extends Component {
 
   handleAgreeToAuthorTerms = () => {
     // TODO hook up action to invoke api call to service
+    this.props.agreeToAuthorTerms()
     this.setState({ showAuthorTerms: false })
   }
 
@@ -39,12 +41,11 @@ export default class Account extends Component {
 
   componentDidMount() {
     this.props.loadProfile()
-    this.setState({ isAuthor: this.props.profile && !!this.props.profile.authorOptInAt })
   }
 
   render() {
     const { profile, editMode, editProfile, saveProfileChanges, cancelEditProfile } = this.props
-    const { isAuthor, showAuthorTerms } = this.state
+    const { showAuthorTerms } = this.state
     return (
       <div id="account">
         <PlayerProfile
@@ -54,7 +55,7 @@ export default class Account extends Component {
           <button className="btn btn-primary" type="button" onClick={editProfile} disabled={editMode}>
             <i className="icon ion-edit"></i>&nbsp;Change Profile
           </button>
-        { !isAuthor &&
+        { profile && !profile.authorOptInAt &&
           <button className="btn btn-primary" type="button" onClick={this.handleShowAuthorTerms}>
             <i className="icon ion-checkmark"></i>&nbsp;Become an Author
           </button>

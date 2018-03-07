@@ -1,5 +1,11 @@
 import { connect } from 'react-redux'
-import { loadProfile, editProfile, stopEditProfile, saveProfile } from '../../datastore/actions'
+import {
+  loadProfile,
+  editProfile,
+  stopEditProfile,
+  saveProfile,
+  agreeToAuthorTerms
+} from '../../datastore/actions'
 import Account from './Account'
 
 const mapStateToProps = (state) => {
@@ -22,6 +28,9 @@ const mapDispatchToProps = (dispatch, state) => {
     },
     cancelEditProfile: () => {
       dispatch(stopEditProfile())
+    },
+    agreeToAuthorTerms: () => {
+      dispatch(agreeToAuthorTerms())
     }
   }
 }

@@ -1,4 +1,8 @@
-import { getProfile, updateProfile as apiUpdateProfile } from '../../apis/storyTimeApi'
+import {
+  getProfile,
+  updateProfile as apiUpdateProfile,
+  agreeToAuthorTerms as apiAgreeToAuthorTerms
+} from '../../apis/storyTimeApi'
 
 export const FETCH_PROFILE = 'FETCH_PROFILE'
 export const fetchProfile = () => ({
@@ -87,6 +91,15 @@ export const saveProfile = (update) => {
     apiUpdateProfile(update,
       profile => { dispatch(updatedProfile(profile)) },
       error => { dispatch(updateProfileFailed(error)) }
+    )
+  }
+}
+
+export const agreeToAuthorTerms = () => {
+  return (dispatch) => {
+    apiAgreeToAuthorTerms(
+      result => loadProfile()(dispatch),
+      error => { console.error(error) }
     )
   }
 }

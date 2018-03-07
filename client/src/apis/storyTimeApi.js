@@ -41,7 +41,7 @@ export const updateProfile = (profileUpdates, handleResponse, handleError) => {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(profileUpdates)
-  };
+  }
   fetch('/api/self/profile', putOptions)
     .then(res => res.json())
     .then(message => handleResponse(message))
@@ -53,4 +53,14 @@ export const getPlayerStatusCodes = (processStatusCodes) => {
     .then(res => res.json())
     .then(statusCodes => processStatusCodes(statusCodes))
     .catch(err => console.log('Failed to get player status codes', err))
+}
+
+export const agreeToAuthorTerms = (handleResponse, handleError) => {
+  const putOptions = {
+    method: 'PUT',
+    headers: getHeaders()
+  }
+  fetch('/api/self/roles/agree-author', putOptions)
+    .then(res => handleResponse())
+    .then(err => handleError(err))
 }

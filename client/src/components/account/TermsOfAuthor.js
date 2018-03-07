@@ -29,7 +29,7 @@ export default class TermsOfAuthor extends Component {
         { !readOnly &&
           <div className="btn-group center" role="group">
             <button className="btn btn-primary" type="button" onClick={onAgree}>
-              <i class="icon ion-checkmark"></i>&nbsp;I Agree
+              <i className="icon ion-checkmark"></i>&nbsp;I Agree
             </button>
             <button className="btn btn-warning" type="button" onClick={onCancel}>
               <i className="icon ion-close"></i>&nbsp;No Thanks
