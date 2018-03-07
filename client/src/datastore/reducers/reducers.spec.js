@@ -1,5 +1,5 @@
 import reducers from './index'
-import { fetchedSummary, fetchedScene } from '../actions'
+import { fetchedSummary, fetchedScene, updatedProfile } from '../actions'
 import { initialState as accountInitState } from './account'
 import { initialState as libraryInitState } from './library'
 import { initialState as playerInitState } from './player'
@@ -59,5 +59,13 @@ describe('root reducer', () => {
         }
       }
     })
+  })
+
+  // try getting this to fail -- for some reason, the state is being hammered when refreshing profile
+  it('updating player profile does not clobber state', () => {
+    nextState = reducers(undefined, fetchedSummary(testSummary))
+    nextState = reducers(nextState, updatedProfile({ id: 'blargy', nickname: 'Bubba' }))
+    console.log('clobber', nextState)
+    expect(nextState.stories[testSummary.storyId]).toBeDefined()
   })
 })

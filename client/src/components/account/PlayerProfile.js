@@ -7,14 +7,6 @@ export default class PlayerProfile extends Component {
     profile: playerProfileShape,
   }
 
-  handleEdit = () => {
-    this.props.edit(this.props.profile)
-  }
-
-  handleOpenAuthorTerms = () => {
-    console.log('open author terms pop-up')
-  }
-
   render() {
     const { profile } = this.props
     const { email, nickname, emailOptInAt, authorOptInAt, penName } = profile

@@ -32,7 +32,6 @@ export default class ProfileEditPane extends Component {
           emailOptIn: !!profile.emailOptInAt,
           authorOptIn: !!profile.authorOptInAt
         }
-    console.log('profile changes:', changes)
     return changes
   }
 
@@ -48,7 +47,6 @@ export default class ProfileEditPane extends Component {
   }
 
   handleChange = (event) => {
-    console.log('profile change', event.target)
     const target = event.target
     let updateValue
     if (target.type === 'checkbox') {
@@ -75,7 +73,6 @@ export default class ProfileEditPane extends Component {
 
   render() {
     const { profileChanges } = this.state
-    console.log('profile changes:', profileChanges)
     const { nickname, penName, emailOptIn, authorOptIn } = profileChanges;
     const emailOptInLabel = (emailOptIn)
       ? `You agree to receive email.`
