@@ -3,18 +3,17 @@ import PropTypes from 'prop-types'
 import PlayerProfile from './PlayerProfile'
 import ProfileEditPane from './ProfileEditPane'
 import TermsOfAuthor from './TermsOfAuthor'
-import { playerProfileShape, profileChangeShape } from '../../datastore/dataShapes'
+import { playerProfileShape } from '../../datastore/dataShapes'
 import './account.css'
 
 export default class Account extends Component {
   static propTypes = {
     profile: playerProfileShape,
     editMode: PropTypes.bool,
-    profileChanges: profileChangeShape,
     loadProfile: PropTypes.func,
     editProfile: PropTypes.func,
-    changeProfile: PropTypes.func,
-    saveProfile: PropTypes.func
+    saveProfileChanges: PropTypes.func,
+    cancelEditProfile: PropTypes.func
   }
 
   componentDidMount() {
@@ -22,7 +21,7 @@ export default class Account extends Component {
   }
 
   render() {
-    const { profile, editMode, profileChanges, editProfile, changeProfile, saveProfile } = this.props
+    const { profile, editMode, editProfile, saveProfileChanges, cancelEditProfile } = this.props
     return (
       <div id="account">
         <PlayerProfile
@@ -30,12 +29,13 @@ export default class Account extends Component {
           editMode={editMode}
           edit={editProfile}
         />
+      { editMode &&
         <ProfileEditPane
-          profileChanges={profileChanges}
-          change={changeProfile}
-          save={saveProfile}
-          cancel={() => console.log('implement cancel')}
+          profile={profile}
+          save={saveProfileChanges}
+          cancel={cancelEditProfile}
         />
+      }
         <TermsOfAuthor agreedOn={profile.authorOptInAt} />
       </div>
     )

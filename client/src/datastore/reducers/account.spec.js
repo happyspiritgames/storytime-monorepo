@@ -2,8 +2,6 @@ import account, { initialState } from './account'
 import * as actions from '../actions'
 
 describe('account reducer', () => {
-  let nextState
-
   const testProfile = {
     id: '88888888-8888-4888-8888-888888888888',
     email: 'bubba@happyspiritgames.com',
@@ -14,55 +12,31 @@ describe('account reducer', () => {
     authorOptInAt: null,
     penName: null
   }
-  const defaultProfileChanges = {
-    id: testProfile.id,
-    nickname: testProfile.nickname,
-    emailOptIn: true,
-    penName: null
-  }
 
   it('provides initial state', () => {
     expect(account(undefined, {})).toEqual(initialState)
   })
 
   it('handles EDIT_PROFILE', () => {
-    expect(account(undefined, actions.editProfile(testProfile)))
+    expect(account(undefined, actions.editProfile()))
     .toEqual({
       ...initialState,
-      editMode: true,
-      profileChanges: {
-        id: testProfile.id,
-        nickname: testProfile.nickname,
-        emailOptIn: true,
-        penName: null
-      }
+      editMode: true
     })
   })
 
-  it('handles CHANGE_PROFILE', () => {
-    const expectedTestProfileAfterChanges = {
-      editMode: true,
-      profileChanges: {
-        ...defaultProfileChanges,
-        nickname: 'kate the great weather machine',
-        emailOptIn: false,
-        penName: 'kate the great'
-      }
-    }
-    nextState = account(undefined, actions.editProfile(testProfile))
-    nextState = account(nextState, actions.changeProfile('nickname', 'kate the great weather machine'))
-    nextState = account(nextState, actions.changeProfile('emailOptIn', false))
-    nextState = account(nextState, actions.changeProfile('penName', 'kate the great'))
-    expect(nextState)
-    .toEqual(expectedTestProfileAfterChanges)
+  it('handles STOP_EDIT_PROFILE', () => {
+    expect(account(undefined, actions.stopEditProfile()))
+    .toEqual({
+      ...initialState,
+      editMode: false
+    })
   })
 
   it('handles UPDATED_PROFILE', () => {
-    nextState = account(undefined, actions.editProfile(testProfile))
-    nextState = account(nextState, actions.updatedProfile())
-    expect(nextState).toEqual({
+    expect(account(undefined, actions.updatedProfile(testProfile)))
+    .toEqual({
       ...initialState,
-      profileChanges: defaultProfileChanges,
       editMode: false
     })
   })

@@ -1,12 +1,11 @@
 import { connect } from 'react-redux'
-import { loadProfile, editProfile, changeProfile, saveProfile } from '../../datastore/actions'
+import { loadProfile, editProfile, stopEditProfile, saveProfile } from '../../datastore/actions'
 import Account from './Account'
 
 const mapStateToProps = (state) => {
   return {
     profile: state.player.profile,
-    editMode: state.account.editMode,
-    profileChanges: state.account.profileChanges
+    editMode: state.account.editMode
   }
 }
 
@@ -15,14 +14,14 @@ const mapDispatchToProps = (dispatch, state) => {
     loadProfile: () => {
       dispatch(loadProfile())
     },
-    editProfile: (profile) => {
-      dispatch(editProfile(profile))
+    editProfile: () => {
+      dispatch(editProfile())
     },
-    changeProfile: (update) => {
-      dispatch(changeProfile(update))
+    saveProfileChanges: (update) => {
+      dispatch(saveProfile(update))
     },
-    saveProfile: () => {
-      dispatch(saveProfile())
+    cancelEditProfile: () => {
+      dispatch(stopEditProfile())
     }
   }
 }

@@ -18,13 +18,7 @@ export default storyTimeApp;
 // for reference
 export const dataShape = {
   account: {
-    editMode: true,
-    profileChanges: {
-      id: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-      nickname: 'bubba',
-      emailOptIn: false,
-      penName: null
-    }
+    editMode: true
   },
   library: {
     status: 'FETCHING',  // READY, FETCHING

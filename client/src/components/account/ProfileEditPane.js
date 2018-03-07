@@ -1,22 +1,63 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { profileChangeShape } from '../../datastore/dataShapes'
+import { playerProfileShape } from '../../datastore/dataShapes'
 
 export default class ProfileEditPane extends Component {
   static propTypes = {
-    profileChanges: profileChangeShape,
-    change: PropTypes.func,
+    profile: playerProfileShape,
     save: PropTypes.func,
     cancel: PropTypes.func
   }
 
+  constructor() {
+    super()
+    this.state = {
+      profileChanges: {}
+    }
+  }
+
+  mapProfileToChanges = () => {
+    const profile = this.props.profile
+    const changes = (!profile) ? {}
+      : {
+          id: profile.id,
+          nickname: profile.nickname,
+          penName: profile.penName,
+          emailOptIn: !!profile.emailOptInAt,
+          authorOptIn: false
+        }
+    return changes
+  }
+
+  componentDidMount() {
+    this.setState({ profileChanges: this.mapProfileToChanges() })
+  }
+
+  // reflect updates to profile in store
+  componentWillReceiveProps(nextProps) {
+    if (this.props.profile !== nextProps.profile) {
+      this.setState({ profileChanges: this.mapProfileToChanges() })
+    }
+  }
+
   handleChange = (event) => {
     console.log('profile change', event.target)
-    this.props.change(event.target.id, event.target.value)
+    const target = event.target
+    let updateValue
+    if (target.type === 'checkbox') {
+      updateValue = target.checked
+    } else {
+      updateValue = target.value
+    }
+    let nextChanges = {
+      ...this.state.profileChanges,
+      [event.target.id]: updateValue
+    }
+    this.setState({ profileChanges: nextChanges })
   }
 
   handleSave = () => {
-    this.props.save()
+    this.props.save(this.state.profileChanges)
   }
 
   handleCancel = () => {
@@ -24,18 +65,13 @@ export default class ProfileEditPane extends Component {
   }
 
   // TODO use local state for changes -- update locally, then call actions??
-  
-  render() {
-    const { profileChanges } = this.props
-    if (!profileChanges) {
-      // must not be editing; bail out
-      return null
-    }
 
-    const { nickname, penName, emailOptIn } = profileChanges;
-    const penNameValue = penName || ''
+  render() {
+    const { profileChanges } = this.state
+    console.log('profile changes:', profileChanges)
+    const { nickname, penName, emailOptIn, authorOptIn } = profileChanges;
     const emailOptInLabel = (emailOptIn)
-      ? `You have agreed to receive email.`
+      ? `You agree to receive email.`
       : 'Check to agree to receive email from Happy Spirit Games.'
 
     return (
@@ -56,17 +92,19 @@ export default class ProfileEditPane extends Component {
             />
             <small className="form-text text-muted">What would you like to be called?</small>
           </div>
+        { authorOptIn &&
           <div className="form-group">
             <label htmlFor="penName">Pen name</label>
             <input
               className="form-control"
               type="text"
               id="penName"
-              value={penNameValue}
+              value={penName}
               onChange={this.handleChange}
             />
             <small className="form-text text-muted">The name that shows up on published stories as the author. (only appears when t&amp;c for authors is agreed.)</small>
           </div>
+        }
           <div className="form-check">
             <input
               className="form-check-input"
@@ -77,17 +115,11 @@ export default class ProfileEditPane extends Component {
             />
             <label className="form-check-label" htmlFor="emailOptIn">{emailOptInLabel}</label>
           </div>
-          <button
-            className="btn btn-primary action-button"
-            onClick={this.handleSave}
-          >
-            Save Change
+          <button className="btn btn-primary" onClick={this.handleSave}>
+          <i className="icon ion-checkmark"></i> Save
           </button>
-          <button
-            className="btn btn-primary action-button"
-            onClick={this.handleCancel}
-          >
-            Cancel
+          <button className="btn btn-warning" onClick={this.handleCancel}>
+          <i className="icon ion-close"></i> Cancel
           </button>
         </form>
       </div>

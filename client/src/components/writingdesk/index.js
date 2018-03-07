@@ -12,11 +12,11 @@ export default class WritingDesk extends Component {
             <ul className="list-group">
               <li className="list-group-item">
                 <span><strong><em>Story Title Goes Here (most recently edited)</em></strong></span>
-                <Link to="/writingdesk/themission"><i className="icon ion-edit action-icon float-right"></i></Link>
+                <Link to="/writingdesk/themission"><i className="icon ion-edit float-right"></i></Link>
                 <p>2 scenes, 1 ending, last updated on February 12, 2018</p>
               </li>
               <li className="list-group-item"><span><strong><em>Another Story Title Goes Here</em></strong></span>
-                <Link to="/writingdesk/mrbubbles"><i className="icon ion-edit action-icon float-right"></i></Link>
+                <Link to="/writingdesk/mrbubbles"><i className="icon ion-edit float-right"></i></Link>
                 <p>23 scenes, 5 endings, last updated on January 30, 2018</p>
               </li>
               <li className="list-group-item">

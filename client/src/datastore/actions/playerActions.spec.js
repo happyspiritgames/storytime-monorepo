@@ -46,21 +46,14 @@ describe('player actions', () => {
   it('creates EDIT_PROFILE action', () => {
     expect(actions.editProfile(testProfile))
     .toEqual({
-      type: actions.EDIT_PROFILE,
-      payload: {
-        profileToUpdate: testProfile
-      }
+      type: actions.EDIT_PROFILE
     })
   })
 
-  it('creates CHANGE_PROFILE action', () => {
-    expect(actions.changeProfile('name', 'Bubba'))
+  it('creates STOP_EDIT_PROFILE action', () => {
+    expect(actions.stopEditProfile(testProfile))
     .toEqual({
-      type: actions.CHANGE_PROFILE,
-      payload: {
-        field: 'name',
-        value: 'Bubba'
-      }
+      type: actions.STOP_EDIT_PROFILE
     })
   })
 
@@ -70,6 +63,7 @@ describe('player actions', () => {
       type: actions.UPDATE_PROFILE
     })
   })
+
   it('creates UPDATED_PROFILE action', () => {
     expect(actions.updatedProfile(testProfile))
     .toEqual({
@@ -79,6 +73,7 @@ describe('player actions', () => {
       }
     })
   })
+
   it('creates UPDATE_PROFILE_FAILED action', () => {
     expect(actions.updateProfileFailed(testError))
     .toEqual({

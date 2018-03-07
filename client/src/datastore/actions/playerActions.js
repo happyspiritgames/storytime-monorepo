@@ -21,21 +21,13 @@ export const fetchProfileFailed = (error) => ({
 })
 
 export const EDIT_PROFILE = 'EDIT_PROFILE'
-export const editProfile = (profileToUpdate) => ({
-  type: EDIT_PROFILE,
-  payload: {
-    profileToUpdate
-  }
+export const editProfile = () => ({
+  type: EDIT_PROFILE
 })
 
-// capture local changes to profileUpdate in data store
-export const CHANGE_PROFILE = 'CHANGE_PROFILE'
-export const changeProfile = (field, value) => ({
-  type: CHANGE_PROFILE,
-  payload: {
-    field,
-    value
-  }
+export const STOP_EDIT_PROFILE = 'STOP_EDIT_PROFILE'
+export const stopEditProfile = () => ({
+  type: STOP_EDIT_PROFILE
 })
 
 export const UPDATE_PROFILE = 'UPDATE_PROFILE'
@@ -89,17 +81,10 @@ export const loadProfile = () => {
 }
 
 // send whatever is found in profileUpdate to remote service
-export const saveProfile = () => {
+export const saveProfile = (update) => {
   return (dispatch, state) => {
-    const profileUpdate = state.player.profileUpdate
-    if (!profileUpdate) {
-      return
-    } else if (profileUpdate === state.player.profile) {
-      dispatch(updatedProfile(state.player.profileUpdate))
-      return
-    }
     dispatch(updateProfile())
-    apiUpdateProfile(
+    apiUpdateProfile(update,
       profile => { dispatch(updatedProfile(profile)) },
       error => { dispatch(updateProfileFailed(error)) }
     )
