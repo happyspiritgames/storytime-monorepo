@@ -4,6 +4,11 @@ export default class Contact extends Component {
   render() {
     return (
       <div id="contact">
+        <div style={{color: 'purple', textAlign: 'center'}}>
+          <h1>Thanks for playing StoryTime.</h1>
+          <h3><i>This feedback form is not hooked up yet.</i></h3>
+          <h3>You can <a href="mailto:welcome@happyspiritgames.com?Subject=Contact%20Feedback">send email if you like.</a></h3>
+        </div>
         <form method="post">
           <h2 className="text-center">Contact us</h2>
           <div className="alert alert-warning" role="alert">
