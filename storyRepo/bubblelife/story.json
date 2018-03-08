@@ -12,7 +12,8 @@
     "1": {
       "sceneId": "1",
       "title": "Life is Quick",
-      "prose": "You are a happy little bubble, floating in the tub.  Oops, someone pulled the drain.  You float towards it.  Wheee!!!  As you are squeezed down the drain you pop."
+      "prose": "You are a happy little bubble, floating in the tub.  Oops, someone pulled the drain.  You float towards it.  Wheee!!!  As you are squeezed down the drain you pop.",
+      "endPrompt": "Yup, that's it.  Life is short for a bubble."
     }
   }
 }

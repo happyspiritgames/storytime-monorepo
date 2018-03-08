@@ -24,6 +24,17 @@
           "teaser": "Ring your friend, and get his take on what happened."
         }
       ]
+    },
+    "2": {
+      "sceneId": "2",
+      "title": "R.I.P.",
+      "prose": "You decide to go back to sleep. Little did you realize that it would be the last time."
+    },
+    "3": {
+      "sceneId": "3",
+      "title": "Ring, Ring",
+      "prose": "You grope for your phone at the side of your bed. A couple of taps leter, the phone is ringing.\nIt's still ringing.\nThat's odd. Your friend always picks up. You had better get out of bed and figure out what's going on.",
+      "endPrompt": "While this seems like just the beginning, it's actually the end."
     }
   }
 }
