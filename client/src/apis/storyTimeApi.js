@@ -22,35 +22,45 @@ export const getScene = (storyKey, sceneKey, processResponse) => {
 }
 
 export const getRoles = (processResponse) => {
-  fetch('/api/players/self/roles', { headers: getHeaders() })
+  fetch('/api/self/roles', { headers: getHeaders() })
     .then(res => res.json())
     .then(roles => processResponse(roles))
     .catch(err => console.log('Failed to get player\'s roles', err))
 }
 
-export const getProfile = (processResponse) => {
-  fetch('/api/players/self/profile', { headers: getHeaders() })
+export const getProfile = (handleResponse, handleError) => {
+  fetch('/api/self/profile', { headers: getHeaders() })
     .then(res => res.json())
-    .then(profile => processResponse(profile))
-    .catch(err => console.log('Failed to get player\'s own profile', err))
+    .then(profile => handleResponse(profile))
+    .catch(err => handleError(err))
 }
 
-export const updateProfile = (profileUpdates, processResponse) => {
+export const updateProfile = (profileUpdates, handleResponse, handleError) => {
   console.log('updateProfile: sending updates', profileUpdates)
   const putOptions = {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(profileUpdates)
-  };
-  fetch('/api/players/self/profile', putOptions)
+  }
+  fetch('/api/self/profile', putOptions)
     .then(res => res.json())
-    .then(message => processResponse(message))
-    .catch(err => console.log('Failed to update player profile', err))
+    .then(message => handleResponse(message))
+    .catch(err => handleError(err))
 }
 
 export const getPlayerStatusCodes = (processStatusCodes) => {
-  fetch('/api/player-status-codes', { headers: getHeaders() })
+  fetch('/api/codes/player-status', { headers: getHeaders() })
     .then(res => res.json())
     .then(statusCodes => processStatusCodes(statusCodes))
     .catch(err => console.log('Failed to get player status codes', err))
+}
+
+export const agreeToAuthorTerms = (handleResponse, handleError) => {
+  const putOptions = {
+    method: 'PUT',
+    headers: getHeaders()
+  }
+  fetch('/api/self/roles/agree-author', putOptions)
+    .then(res => handleResponse())
+    .then(err => handleError(err))
 }

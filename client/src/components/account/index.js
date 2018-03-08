@@ -1,24 +1,43 @@
-import React, { Component } from 'react'
-import PlayerProfile from './PlayerProfile'
-import TermsOfAuthor from './TermsOfAuthor'
-import './account.css'
+import { connect } from 'react-redux'
+import {
+  loadProfile,
+  editProfile,
+  stopEditProfile,
+  saveProfile,
+  agreeToAuthorTerms
+} from '../../datastore/actions'
+import Account from './Account'
 
-const sampleProfile = {
-  playerId: 'uuid',
-  email: 'bubba@happyspiritgames.com',
-  nickname: 'Bubba',
-  agreedToEmailOn: new Date().toISOString(),
-  agreedToTermsOfAuthorOn: new Date().toISOString(),
-  penName: 'Bubba Gump'
-}
-
-export default class Account extends Component {
-  render() {
-    return (
-      <div id="account">
-        <PlayerProfile profile={sampleProfile} edit={false} />
-        <TermsOfAuthor agreedOn={sampleProfile.agreedToTermsOfAuthorOn} />
-      </div>
-    )
+const mapStateToProps = (state) => {
+  return {
+    profile: state.player.profile,
+    editMode: state.account.editMode
   }
 }
+
+const mapDispatchToProps = (dispatch, state) => {
+  return {
+    loadProfile: () => {
+      dispatch(loadProfile())
+    },
+    editProfile: () => {
+      dispatch(editProfile())
+    },
+    saveProfileChanges: (update) => {
+      dispatch(saveProfile(update))
+    },
+    cancelEditProfile: () => {
+      dispatch(stopEditProfile())
+    },
+    agreeToAuthorTerms: () => {
+      dispatch(agreeToAuthorTerms())
+    }
+  }
+}
+
+const AccountPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Account)
+
+export default AccountPage

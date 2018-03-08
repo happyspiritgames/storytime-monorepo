@@ -57,15 +57,15 @@ export default class EditStory extends Component {
             <ul className="list-group">
               <li className="list-group-item">
                 <span>Scene A Title</span>
-                <Link to="/writingdesk/themission/A"><i className="icon ion-edit float-right action-icon"></i></Link>
+                <Link to="/writingdesk/themission/A"><i className="icon ion-edit float-right"></i></Link>
               </li>
               <li className="list-group-item">
                 <span>Scene B Title</span>
-                <Link to="/writingdesk/themission/B"><i className="icon ion-edit float-right action-icon"></i></Link>
+                <Link to="/writingdesk/themission/B"><i className="icon ion-edit float-right"></i></Link>
               </li>
               <li className="list-group-item">
                 <span>Scene C Title</span>
-                <Link to="/writingdesk/themission/C"><i className="icon ion-edit float-right action-icon"></i></Link>
+                <Link to="/writingdesk/themission/C"><i className="icon ion-edit float-right"></i></Link>
               </li>
             </ul>
           </div>

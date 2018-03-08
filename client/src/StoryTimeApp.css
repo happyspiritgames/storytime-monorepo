@@ -25,10 +25,10 @@ form {
   margin-bottom:2rem;
 }
 
-.action-icon {
-  font-size: 24px;
-}
-
 .main-content {
   margin: 1rem;
+}
+
+button {
+  margin-right: 1rem;
 }

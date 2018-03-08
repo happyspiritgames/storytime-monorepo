@@ -1,9 +1,13 @@
 import reducers from './index'
-import { fetchedSummary, fetchedScene } from '../actions'
+import { fetchedSummary, fetchedScene, updatedProfile } from '../actions'
+import { initialState as accountInitState } from './account'
 import { initialState as libraryInitState } from './library'
+import { initialState as playerInitState } from './player'
 import { initialState as readerInitState } from './reader'
+import { initialState as storiesInitState } from './stories'
 
 describe('root reducer', () => {
+  const initialState = reducers(undefined, {})
   const testSummary = {
     storyId: 'wumpus',
     title: 'The Wumpus'
@@ -14,13 +18,22 @@ describe('root reducer', () => {
   }
   let nextState
 
-  it('stores summary, scene sequence correctly', () => {
+  it('produces initial state by default', () => {
+    const combinedInitialState = {
+      account: accountInitState,
+      library: libraryInitState,
+      player: playerInitState,
+      reader: readerInitState,
+      stories: storiesInitState
+    }
+    expect(initialState).toEqual(combinedInitialState)
+  })
 
+  it('stores summary, scene sequence correctly', () => {
     nextState = reducers(undefined, fetchedSummary(testSummary))
     nextState = reducers(nextState, fetchedScene(testSummary.storyId, testScene))
     expect(nextState).toEqual({
-      library: libraryInitState,
-      reader: readerInitState,
+      ...initialState,
       stories: {
         'wumpus': {
           summary: testSummary,
@@ -36,8 +49,7 @@ describe('root reducer', () => {
     nextState = reducers(undefined, fetchedScene(testSummary.storyId, testScene))
     nextState = reducers(nextState, fetchedSummary(testSummary))
     expect(nextState).toEqual({
-      library: libraryInitState,
-      reader: readerInitState,
+      ...initialState,
       stories: {
         'wumpus': {
           summary: testSummary,
@@ -47,5 +59,13 @@ describe('root reducer', () => {
         }
       }
     })
+  })
+
+  // try getting this to fail -- for some reason, the state is being hammered when refreshing profile
+  it('updating player profile does not clobber state', () => {
+    nextState = reducers(undefined, fetchedSummary(testSummary))
+    nextState = reducers(nextState, updatedProfile({ id: 'blargy', nickname: 'Bubba' }))
+    console.log('clobber', nextState)
+    expect(nextState.stories[testSummary.storyId]).toBeDefined()
   })
 })

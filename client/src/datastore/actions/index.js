@@ -1,3 +1,5 @@
+export * from './playerActions'
+
 // story actions
 
 export const FETCH_CATALOG = 'FETCH_CATALOG'

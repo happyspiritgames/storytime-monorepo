@@ -1,72 +1,80 @@
 import React, { Component } from 'react'
-import PlayerInfoCard from './PlayerInfoCard'
-import { isLoggedIn } from '../../util/authentication'
-import { getProfile, updateProfile } from '../../apis/storyTimeApi'
+import PropTypes from 'prop-types'
+import PlayerProfile from './PlayerProfile'
+import ProfileEditPane from './ProfileEditPane'
+import TermsOfAuthor from './TermsOfAuthor'
+import { playerProfileShape } from '../../datastore/dataShapes'
+import './account.css'
 
 export default class Account extends Component {
-  constructor(props) {
-    super(props)
+  static propTypes = {
+    profile: playerProfileShape,
+    editMode: PropTypes.bool,
+    loadProfile: PropTypes.func,
+    editProfile: PropTypes.func,
+    saveProfileChanges: PropTypes.func,
+    cancelEditProfile: PropTypes.func,
+    agreeToAuthorTerms: PropTypes.func
+  }
+
+  constructor() {
+    super()
     this.state = {
-      playerProfile: {
-        email: '',
-        nickname: '',
-        membersOnlyComms: false,
-        authorOptIn: '',
-        penName: ''
-      },
-      playerProfileUpdate: {
-        nickname: '',
-        membersOnlyComms: false,
-        authorOptIn: false,
-        penName: ''
-      }
+      showAuthorTerms: false
     }
-    // TODO make updates to parallel profile object
   }
 
-  loadProfile = (profile) => {
-    const update = {
-      nickname: profile.nickname,
-      membersOnlyComms: profile.membersOnlyComms,
-      authorOptIn: profile.authorOptIn
-    }
-    this.setState({ playerProfile: profile, playerProfileUpdate: update })
+  handleShowAuthorTerms = () => {
+    this.setState({ showAuthorTerms: true })
   }
 
-  handleChange = (event) => {
-    const { target } = event
-    const { name, type } = target
-    const value = type === 'checkbox' ? target.checked : target.value
-    const updatedProfile = Object.assign({}, this.state.playerProfileUpdate, { [name]: value })
-    this.setState({
-      playerProfileUpdate: updatedProfile
-    })
+  handleAgreeToAuthorTerms = () => {
+    // TODO hook up action to invoke api call to service
+    this.props.agreeToAuthorTerms()
+    this.setState({ showAuthorTerms: false })
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-    updateProfile(this.state.playerProfileUpdate, this.loadProfile)
+  handleCancelFromAuthorTerms = () => {
+    // TODO hook up action to invoke api call to service
+    this.setState({ showAuthorTerms: false })
   }
 
   componentDidMount() {
-    if (isLoggedIn()) {
-      getProfile(this.loadProfile)
-    }
+    this.props.loadProfile()
   }
 
   render() {
-    return (isLoggedIn()) ? (
-      <div id="account" heading="Player Profile">
-        <PlayerInfoCard
-          profile={this.state.playerProfile}
-          profileUpdate={this.state.playerProfileUpdate}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
+    const { profile, editMode, editProfile, saveProfileChanges, cancelEditProfile } = this.props
+    const { showAuthorTerms } = this.state
+    return (
+      <div id="account">
+        <PlayerProfile
+          profile={profile}
         />
-      </div>
-    ) : (
-      <div id="account" heading="Who Are You?">
-        <h3>Please sign in to see this information.</h3>
+        <div className="btn-group center" role="group">
+          <button className="btn btn-primary" type="button" onClick={editProfile} disabled={editMode}>
+            <i className="icon ion-edit"></i>&nbsp;Change Profile
+          </button>
+        { profile && !profile.authorOptInAt &&
+          <button className="btn btn-primary" type="button" onClick={this.handleShowAuthorTerms}>
+            <i className="icon ion-checkmark"></i>&nbsp;Become an Author
+          </button>
+        }
+        </div>
+      { editMode &&
+        <ProfileEditPane
+          profile={profile}
+          save={saveProfileChanges}
+          cancel={cancelEditProfile}
+        />
+      }
+      { showAuthorTerms &&
+        <TermsOfAuthor
+          onAgree={this.handleAgreeToAuthorTerms}
+          onCancel={this.handleCancelFromAuthorTerms}
+          readOnly={!!profile.authorOptInAt}
+        />
+      }
       </div>
     )
   }

@@ -23,8 +23,8 @@ export default class Library extends Component {
     const content = (!featured || catalog.length === 0)
       ? <h3>Loading...</h3>
       : [
-        <FeaturedStory storySummary={featured} onPlay={onPlay} />,
-        <Catalog summaries={catalog} onPlay={onPlay} />
+        <FeaturedStory key='featured' storySummary={featured} onPlay={onPlay} />,
+        <Catalog key='catalog' summaries={catalog} onPlay={onPlay} />
       ]
 
     return (

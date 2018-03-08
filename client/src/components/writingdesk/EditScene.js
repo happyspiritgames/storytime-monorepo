@@ -77,7 +77,7 @@ export default class EditScene extends Component {
                       <input className="form-control" type="text" value="Go to the left." />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a action-icon"></i> Remove
+                          <i className="icon ion-trash-a"></i> Remove
                         </button>
                       </div>
                     </div>
@@ -91,7 +91,7 @@ export default class EditScene extends Component {
                       <input className="form-control" type="text" value="Go to the right." />
                       <div className="input-group-append">
                         <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a action-icon"></i> Remove
+                          <i className="icon ion-trash-a"></i> Remove
                         </button>
                       </div>
                     </div>
