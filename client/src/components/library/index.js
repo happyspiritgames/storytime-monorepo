@@ -4,7 +4,7 @@ import { refreshCatalog } from '../../datastore/actions'
 import Library from './Library'
 
 const mapStateToProps = (state) => {
-  const catalog = state.library.catalog.map(storyId => state.stories[storyId].summary)
+  const catalog = state.library.catalog.map(storyId => state.stories[storyId].summary).splice(1)
   const featured = (catalog.length > 0) ? state.stories[state.library.catalog[0]].summary : undefined
   return {
     catalog,

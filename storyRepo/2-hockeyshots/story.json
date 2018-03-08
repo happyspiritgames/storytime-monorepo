@@ -1,6 +1,6 @@
 {
   "summary": {
-    "storyId": "hockeyshots",
+    "storyId": "2-hockeyshots",
     "title": "Hockey Shots",
     "penName": "Stix McClellan",
     "tagLine": "He shoots, he scores, he's the greatest!!!",
@@ -28,6 +28,21 @@
           "teaser": "Skip breakfast.  Practice your shot in the backyard."
         }
       ]
+    },
+    "2": {
+      "sceneId": "2",
+      "title": "Urp!",
+      "prose": "That was tasty. Pancakes and waffles.  Bacon and sausages.  Three slices of toast with marmalade.  Two cups of hot chocolate.  Time for a morning nap."
+    },
+    "3": {
+      "sceneId": "3",
+      "title": "That hit the spot",
+      "prose": "A hard boiled egg and a cup of yogurt, just enough to get you through to the big game."
+    },
+    "4": {
+      "sceneId": "4",
+      "title": "Feed Your Mind",
+      "prose": "Who could eat on a day like this? Sure, you're going to need to grab an energy bar before the game. Right now, it's time to fire up the fast twitch muscles and visual your moves."
     }
   }
 }
