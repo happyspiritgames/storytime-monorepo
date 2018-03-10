@@ -1,7 +1,8 @@
 import {
   getProfile,
   updateProfile as apiUpdateProfile,
-  agreeToAuthorTerms as apiAgreeToAuthorTerms
+  agreeToAuthorTerms as apiAgreeToAuthorTerms,
+  getRoles
 } from '../../apis/storyTimeApi'
 
 export const FETCH_PROFILE = 'FETCH_PROFILE'
@@ -108,5 +109,13 @@ export const agreeToAuthorTerms = () => {
 }
 
 export const loadRoles = () => {
-
+  return(dispatch) => {
+    dispatch(fetchRoles())
+    getRoles(
+      roles => { dispatch(fetchedRoles(roles)) },
+      error => { dispatch(fetchRolesFailed(error)) }
+    )
+  }
 }
+
+// TODO need an action to clear roles?

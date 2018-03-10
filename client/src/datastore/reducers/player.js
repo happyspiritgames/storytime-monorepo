@@ -1,7 +1,8 @@
-import { FETCHED_PROFILE, UPDATED_PROFILE } from '../actions'
+import { FETCHED_PROFILE, UPDATED_PROFILE, FETCHED_ROLES } from '../actions'
 
 export const initialState = {
-  profile: {}
+  profile: {},
+  roles: []
 }
 
 export default (state = initialState, action) => {
@@ -11,6 +12,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profile: action.payload.profile
+      }
+    case FETCHED_ROLES:
+      return {
+        ...state,
+        roles: action.payload.roles
       }
     default:
       return state
