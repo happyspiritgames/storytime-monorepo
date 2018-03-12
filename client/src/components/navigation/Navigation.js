@@ -6,12 +6,13 @@ import './navigation.css'
 
 class Navigation extends Component {
   static propTypes = {
-    roles: PropTypes.array,
-    reloadRoles: PropTypes.func
+    isAdmin: PropTypes.bool,
+    isAuthor: PropTypes.bool,
+    loadRoles: PropTypes.func,
   }
 
   state = {
-    roles: []
+    isLoggedIn: false
   }
 
   handleLogin = () => {
@@ -22,31 +23,11 @@ class Navigation extends Component {
     logout(() => this.props.history.push('/'))
   }
 
-  hasRole = (roleInQuestion) => {
-    return this.state.roles.includes(roleInQuestion)
-  }
-
   componentDidMount() {
-    if (this.props.roles && this.props.roles.length) {
+    this.props.loadRoles()
+    if (isLoggedIn()) {
       this.setState({
-        roles: this.props.roles
-      })
-    } else {
-      if (this.props.reloadRoles) {
-        this.props.reloadRoles()
-        console.log('roles are missing; try reloading')
-      }
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.roles && nextProps.roles !== this.state.roles) {
-      // note when roles go away -- might be legit, might be Redux state refresh
-      if (!nextProps.roles.length && isLoggedIn()) {
-        console.warn('Still logged in, but player roles disappeared. Used to be', this.state.roles)
-      }
-      this.setState({
-        roles: nextProps.roles
+        isLoggedIn: true
       })
     }
   }
@@ -57,14 +38,11 @@ class Navigation extends Component {
     console.error(error)
   }
 
-  shouldComponentUpdate() {
-    return true
-  }
-
   render() {
-    const isSignedIn = isLoggedIn();
-    const hasAdminRole = this.hasRole('admin');
-    const hasAuthorRole = this.hasRole('author');
+    const isSignedIn = this.state.isLoggedIn;
+    const isAdmin = this.props.isAdmin
+    const isAuthor = this.props.isAuthor
+
     return (
       <nav className="navbar navbar-light navbar-expand-md navigation-clean">
         <Link className="navbar-brand" to="/">StoryTime</Link>
@@ -74,13 +52,13 @@ class Navigation extends Component {
         </button>
         <div className="collapse navbar-collapse" id="navcol-1">
           <ul className="nav navbar-nav ml-auto">
-          {isSignedIn && hasAuthorRole &&
+          {isSignedIn && isAuthor &&
             <li className="nav-item" role="presentation"><Link className="nav-link" to="/writingdesk">Writing Desk</Link></li>
           }
           {isSignedIn &&
               <li className="nav-item" role="presentation"><Link className="nav-link" to="/account">Account</Link></li>
           }
-          {isSignedIn && hasAdminRole &&
+          {isSignedIn && isAdmin &&
               <li className="nav-item" role="presentation"><Link className="nav-link" to="/admin">Admin</Link></li>
           }
           {isSignedIn &&

@@ -4,13 +4,14 @@ import Navigation from './Navigation'
 
 const mapStateToProps = (state) => {
   return {
-    roles: state.player.roles
+    isAdmin: state.account.isAdmin,
+    isAuthor: state.account.isAuthor
   }
 }
 
 const mapDispatchToProp = (dispatch) => {
   return {
-    reloadRoles: () => dispatch(loadRoles)
+    loadRoles: () => dispatch(loadRoles())
   }
 }
 

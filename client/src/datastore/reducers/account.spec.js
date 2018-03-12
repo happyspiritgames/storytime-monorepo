@@ -40,4 +40,16 @@ describe('account reducer', () => {
       editMode: false
     })
   })
+
+  it('handles FETCHED_ROLES for roles like author and admin', () => {
+    const testRoles = ['admin', 'author', 'player', 'peanutGallery']
+    expect(account(undefined, actions.fetchedRoles(testRoles)))
+    .toEqual({
+      ...initialState,
+      isAdmin: true,
+      isAuthor: true,
+      isPlayer: true,
+      isPeanutGallery: true
+    })
+  })
 })
