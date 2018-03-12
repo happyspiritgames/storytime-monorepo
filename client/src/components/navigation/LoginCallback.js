@@ -1,17 +1,22 @@
 import { Component } from 'react'
-import { setIdToken, setAccessToken, setRoles } from '../../util/authentication'
-import { getRoles } from '../../apis/storyTimeApi'
+import { withRouter } from 'react-router-dom'
+import { setIdToken, setAccessToken } from '../../util/authentication'
 
-export default class Callback extends Component {
+class Callback extends Component {
 
   componentDidMount() {
     setAccessToken()
     setIdToken()
-    getRoles(setRoles)
-    window.location.href = '/'
+    // TODO get redirect location from props
+    this.props.history.push('/')
   }
 
   render() {
     return null
   }
 }
+
+// make component route-aware
+const CallbackWithRouter = withRouter(Callback)
+
+export default CallbackWithRouter

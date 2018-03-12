@@ -20,6 +20,7 @@ describe('player reducer', () => {
   it('handles FETCHED_PROFILE', () => {
     expect(player(undefined, actions.fetchedProfile(testProfile)))
     .toEqual({
+      ...initialState,
       profile: testProfile
     })
   })
@@ -27,7 +28,17 @@ describe('player reducer', () => {
   it('handles UPDATED_PROFILE', () => {
     expect(player(undefined, actions.updatedProfile(testProfile)))
     .toEqual({
+      ...initialState,
       profile: testProfile
+    })
+  })
+
+  it('handles FETCHED_ROLES', () => {
+    const testRoles = ['admin', 'player']
+    expect(player(undefined, actions.fetchedRoles(testRoles)))
+    .toEqual({
+      ...initialState,
+      roles: testRoles
     })
   })
 })

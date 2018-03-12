@@ -43,16 +43,6 @@ export function getAccessToken() {
 }
 
 /**
- * Serializes an array of role names to local storage.
- *
- * @param {*} roles
- */
-export function setRoles(roles) {
-  const serializedRoles = roles.join()
-  localStorage.setItem(PLAYER_ROLES_KEY, serializedRoles)
-}
-
-/**
  * Checks whether given role name is found as a role in local storage.
  *
  * @param {*} roleToMatch
@@ -73,10 +63,6 @@ function clearIdToken() {
 
 function clearAccessToken() {
   localStorage.removeItem(ACCESS_TOKEN_KEY)
-}
-
-function clearRoles() {
-  localStorage.removeItem(PLAYER_ROLES_KEY)
 }
 
 function getTokenExpirationDate(encodedToken) {
@@ -120,7 +106,6 @@ export function login() {
 export function logout(redirect) {
   clearIdToken()
   clearAccessToken()
-  clearRoles()
   if (redirect) {
     redirect()
   }

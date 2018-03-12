@@ -1,8 +1,39 @@
 import {
   getProfile,
   updateProfile as apiUpdateProfile,
-  agreeToAuthorTerms as apiAgreeToAuthorTerms
+  agreeToAuthorTerms as apiAgreeToAuthorTerms,
+  getRoles
 } from '../../apis/storyTimeApi'
+
+export const LOGIN = 'LOGIN'
+export const login = () => ({
+  type: LOGIN
+})
+
+export const LOGOUT = 'LOGOUT'
+export const logout = () => ({
+  type: LOGOUT
+})
+
+export const FETCH_ROLES = 'FETCH_ROLES'
+export const fetchRoles = () => ({
+  type: FETCH_ROLES
+})
+
+export const FETCHED_ROLES = 'FETCHED_ROLES'
+export const fetchedRoles = (roles) => ({
+  type: FETCHED_ROLES,
+  payload: {
+    roles
+  }
+})
+
+export const FETCH_ROLES_FAILED = 'FETCH_ROLES_FAILED'
+export const fetchRolesFailed = (error) => ({
+  type: FETCH_ROLES_FAILED,
+  payload: error,
+  error: true
+})
 
 export const FETCH_PROFILE = 'FETCH_PROFILE'
 export const fetchProfile = () => ({
@@ -54,26 +85,6 @@ export const updateProfileFailed = (error) => ({
   error: true
 })
 
-export const FETCH_ROLES = 'FETCH_ROLES'
-export const fetchRoles = () => ({
-  type: FETCH_ROLES,
-})
-
-export const FETCHED_ROLES = 'FETCHED_ROLES'
-export const fetchedRoles = (roles) => ({
-  type: FETCHED_ROLES,
-  payload: {
-    roles
-  }
-})
-
-export const FETCH_ROLES_FAILED = 'FETCH_ROLES_FAILED'
-export const fetchRolesFailed = (error) => ({
-  type: FETCH_ROLES_FAILED,
-  payload: error,
-  error: true
-})
-
 export const loadProfile = () => {
   return (dispatch) => {
     dispatch(fetchProfile())
@@ -108,5 +119,13 @@ export const agreeToAuthorTerms = () => {
 }
 
 export const loadRoles = () => {
-
+  return(dispatch) => {
+    dispatch(fetchRoles())
+    getRoles(
+      roles => { dispatch(fetchedRoles(roles)) },
+      error => { dispatch(fetchRolesFailed(error)) }
+    )
+  }
 }
+
+// TODO need an action to clear roles?
