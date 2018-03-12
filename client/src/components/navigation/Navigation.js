@@ -6,13 +6,12 @@ import './navigation.css'
 
 class Navigation extends Component {
   static propTypes = {
+    isLoggedIn: PropTypes.bool,
     isAdmin: PropTypes.bool,
     isAuthor: PropTypes.bool,
-    loadRoles: PropTypes.func,
-  }
-
-  state = {
-    isLoggedIn: false
+    doLogin: PropTypes.func,
+    doLogout: PropTypes.func,
+    doLoadRoles: PropTypes.func,
   }
 
   handleLogin = () => {
@@ -20,15 +19,16 @@ class Navigation extends Component {
   }
 
   handleLogout = () => {
+    this.props.doLogout()
     logout(() => this.props.history.push('/'))
   }
 
   componentDidMount() {
-    this.props.loadRoles()
     if (isLoggedIn()) {
-      this.setState({
-        isLoggedIn: true
-      })
+      this.props.doLogin()
+      this.props.doLoadRoles()
+    } else {
+      this.props.doLogout()
     }
   }
 
@@ -39,7 +39,7 @@ class Navigation extends Component {
   }
 
   render() {
-    const isSignedIn = this.state.isLoggedIn;
+    const isSignedIn = this.props.isLoggedIn;
     const isAdmin = this.props.isAdmin
     const isAuthor = this.props.isAuthor
 

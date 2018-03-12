@@ -1,9 +1,10 @@
 import { connect } from 'react-redux'
-import { loadRoles } from '../../datastore/actions'
+import { login, logout, loadRoles } from '../../datastore/actions'
 import Navigation from './Navigation'
 
 const mapStateToProps = (state) => {
   return {
+    isLoggedIn: state.account.isLoggedIn,
     isAdmin: state.account.isAdmin,
     isAuthor: state.account.isAuthor
   }
@@ -11,7 +12,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProp = (dispatch) => {
   return {
-    loadRoles: () => dispatch(loadRoles())
+    doLogin: () => dispatch(login()),
+    doLogout: () => dispatch(logout()),
+    doLoadRoles: () => dispatch(loadRoles())
   }
 }
 

@@ -2,6 +2,8 @@ import account, { initialState } from './account'
 import * as actions from '../actions'
 
 describe('account reducer', () => {
+  let nextState
+
   const testProfile = {
     id: '88888888-8888-4888-8888-888888888888',
     email: 'bubba@happyspiritgames.com',
@@ -15,6 +17,23 @@ describe('account reducer', () => {
 
   it('provides initial state', () => {
     expect(account(undefined, {})).toEqual(initialState)
+  })
+
+  it('handles LOGIN', () => {
+    expect(account(undefined, actions.login()))
+    .toEqual({
+      ...initialState,
+      isLoggedIn: true
+    })
+  })
+
+  it('handles LOGOUT', () => {
+    nextState = account(undefined, actions.login())
+    expect(account(nextState, actions.logout()))
+    .toEqual({
+      ...initialState,
+      isLoggedIn: false
+    })
   })
 
   it('handles EDIT_PROFILE', () => {
