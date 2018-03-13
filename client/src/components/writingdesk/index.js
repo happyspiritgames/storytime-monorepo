@@ -3,15 +3,19 @@ import WritingDesk from './WritingDesk'
 import { retrieveDraftProjects } from '../../datastore/actions'
 
 const mapStateToProps = state => {
-  const draftProjects = state.writingDesk.draftProjects.map(storyId => state.drafts[storyId])
+  const desk = state.writingDesk
+  const draftProjects = desk.draftProjects.map(storyId => state.drafts[storyId])
+  const activeDraft = desk.activeDraft
   return {
-    draftProjects
+    draftProjects,
+    activeDraft
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadDrafts: () => dispatch(retrieveDraftProjects())
+    loadDrafts: () => dispatch(retrieveDraftProjects()),
+    // TODO loadDraft: (storyId) => dispatch(retrieveDraft(storyId))
   }
 }
 
