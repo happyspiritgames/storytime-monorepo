@@ -1,32 +1,58 @@
 import { combineReducers } from 'redux'
 import account from './account'
+import drafts from './drafts'
 import library from './library'
 import player from './player'
 import reader from './reader'
 import stories from './stories'
+import writingDesk from './writingDesk'
 
 const storyTimeApp = combineReducers({
   account,
+  drafts,
   library,
   player,
   reader,
-  stories
+  stories,
+  writingDesk
 })
 
 export default storyTimeApp;
 
 // for reference
 export const dataShape = {
-  account: {
-    editMode: true
-  },
-  library: {
-    status: 'FETCHING',  // READY, FETCHING
-    catalog: ['abc', 'abd', 'abe', 'abf', 'abg', 'abh'],
-    featured: {
+  app: {
+    account: {
+      editMode: true
+    },
+    library: {
+      status: 'FETCHING',  // READY, FETCHING
+      catalog: ['abc', 'abd', 'abe', 'abf', 'abg', 'abh'],
+      featured: {
+        storyId: 'abc',
+        specialMessage: 'On sale this month'
+      }
+    },
+    reader: {
+      status: 'READY',  // READY, FETCHING
       storyId: 'abc',
-      specialMessage: 'On sale this month'
+      sceneId: '42',
+      history: ['37', '42'],
+      errors: [],
+      showErrors: false  // hides error messages from player
+    },
+    writingDesk: {
+      status: 'FETCHING',  // READY, FETCHING
+      activeDraft: {
+        summary: {},
+        scenes: {}
+      },
+      draftProjects: ['abc', 'blargy'],
     }
+  },
+  drafts: {
+    'abc': {},
+    'blargy': {}
   },
   player: {
     profile: {
@@ -41,14 +67,6 @@ export const dataShape = {
     },
     roles: ['player', 'author', 'admin', 'slacker'],
     sessionKey: 'blargy-random-blargy-123'
-  },
-  reader: {
-    status: 'READY',  // READY, FETCHING
-    storyId: 'abc',
-    sceneId: '42',
-    history: ['37', '42'],
-    errors: [],
-    showErrors: false  // hides error messages from player
   },
   stories: {
     'abc': {
@@ -66,10 +84,4 @@ export const dataShape = {
     'abg': {},
     'abh': {}
   },
-  writingdesk: {
-    draft: {
-      summary: {},
-      scenes: {}
-    }
-  }
 }

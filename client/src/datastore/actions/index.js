@@ -1,4 +1,5 @@
 export * from './playerActions'
+export * from './writingDeskActions'
 
 // story actions
 
