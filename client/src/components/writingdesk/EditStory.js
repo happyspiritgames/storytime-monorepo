@@ -1,25 +1,36 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 
+export const newDraftId = '--newDraft--'
+
 export default class EditStory extends Component {
   static propTypes = {
-    activeDraftId: PropTypes.string,
     draft: draftShape
   }
 
   state = {
+    isNew: false,
     summary: {},
     scenes: {}
+  }
+
+  // TODO think through state machine for this page
+
+  save() {
   }
 
   reflectPropsInState(props) {
     const { draft } = props
     if (draft) {
       this.setState({
+        isNew: false,
         summary: draft.summary,
         scenes: draft.scenes
+      })
+    } else {
+      this.setState({
+        isNew: true
       })
     }
   }

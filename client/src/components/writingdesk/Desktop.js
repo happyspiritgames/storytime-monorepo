@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { newDraftId } from './EditStory'
 
 export default class WritingDesk extends Component {
   static propTypes = {
@@ -35,7 +36,7 @@ export default class WritingDesk extends Component {
             <ul className="list-group">
               {draftProjectList}
               <li className="list-group-item">
-                <button className="btn btn-primary" type="button">Start a new story</button>
+                <Link className="btn btn-primary" to={`/writingdesk/${newDraftId}`}>Start a new story</Link>
                 <span className="text-muted help-text">Stories are created in draft mode. Nothing is shared until you publish.</span>
               </li>
             </ul>
