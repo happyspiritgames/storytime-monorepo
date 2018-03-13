@@ -1,8 +1,31 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 export default class WritingDesk extends Component {
+  static propTypes = {
+    draftProjects: PropTypes.array,
+    loadDrafts: PropTypes.func
+  }
+
+  componentDidMount() {
+    this.props.loadDrafts()
+  }
+
+  renderDraftProjectList(projects) {
+    return projects.map(draft => (
+      <li key={draft.storyId} className="list-group-item">
+        <span><strong><em>{draft.title}</em></strong></span>
+        <Link to={`/writingdesk/${draft.storyId}`}><i className="icon ion-edit float-right"></i></Link>
+        <p>2 scenes, 1 ending, last updated on February 12, 2018</p>
+      </li>
+    ))
+  }
+
   render() {
+    const { draftProjects } = this.props
+    const draftProjectList = this.renderDraftProjectList(draftProjects)
+
     return (
       <div id="writing-desk">
         <h3 className="text-center">StoryTime Writing Desk</h3><img className="img-fluid" alt="wooden texture of a writing desk" />
@@ -10,15 +33,7 @@ export default class WritingDesk extends Component {
           <div className="col">
             <h4 className="text-center">Projects (In Progress)</h4>
             <ul className="list-group">
-              <li className="list-group-item">
-                <span><strong><em>Story Title Goes Here (most recently edited)</em></strong></span>
-                <Link to="/writingdesk/themission"><i className="icon ion-edit float-right"></i></Link>
-                <p>2 scenes, 1 ending, last updated on February 12, 2018</p>
-              </li>
-              <li className="list-group-item"><span><strong><em>Another Story Title Goes Here</em></strong></span>
-                <Link to="/writingdesk/mrbubbles"><i className="icon ion-edit float-right"></i></Link>
-                <p>23 scenes, 5 endings, last updated on January 30, 2018</p>
-              </li>
+              {draftProjectList}
               <li className="list-group-item">
                 <button className="btn btn-primary" type="button">Start a new story</button>
                 <span className="text-muted help-text">Stories are created in draft mode. Nothing is shared until you publish.</span>
