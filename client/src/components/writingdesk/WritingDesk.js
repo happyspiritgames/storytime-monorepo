@@ -10,12 +10,15 @@ export default class WritingDesk extends Component {
   static propTypes = {
     draftProjects: PropTypes.array,
     activeDraft: draftShape,
-    activeDraftScene: sceneShape,
-    loadDrafts: PropTypes.func
+    loadDrafts: PropTypes.func,
+    loadDraftForEdit: PropTypes.func,
+    saveDraft: PropTypes.func
   }
 
   render() {
-    const { draftProjects, activeDraft, loadDrafts, activeDraftScene } = this.props
+    const {
+      draftProjects, activeDraft, loadDrafts,loadDraftForEdit, saveDraft
+    } = this.props
     return (
       <Switch>
         <Route exact path="/writingdesk"
@@ -30,6 +33,8 @@ export default class WritingDesk extends Component {
           render={
             (props) => <EditStory
               draft={activeDraft}
+              loadDraft={loadDraftForEdit}
+              saveDraft={saveDraft}
               {...props}
             />
           }
@@ -37,7 +42,7 @@ export default class WritingDesk extends Component {
         <Route path="/writingdesk/:draftId/:sceneId"
           render={
             (props) => <EditScene
-              draftScene={activeDraftScene}
+              draft={activeDraft}
               {...props}
             />
           }

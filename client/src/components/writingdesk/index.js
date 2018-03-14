@@ -19,8 +19,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     loadDrafts: () => dispatch(retrieveDraftProjects()),
+    loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId)),
     saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
-    loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId))
   }
 }
 

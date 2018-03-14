@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 
@@ -6,50 +7,64 @@ export const newDraftId = '--newDraft--'
 
 export default class EditStory extends Component {
   static propTypes = {
-    draft: draftShape
+    draft: draftShape,
+    loadDraft: PropTypes.func,
+    saveDraft: PropTypes.func
   }
 
   state = {
-    isNew: false,
+    isLoading: false,
+    isNew: true,
     summary: {},
-    scenes: {}
+    scenes: {},
+    newScene: {
+      title: ''
+    }
   }
 
-  // TODO think through state machine for this page
-
-  save() {
+  handleChangeSummary = (event) => {
+    console.log('implement handleChangeSummary', event.target)
   }
 
-  reflectPropsInState(props) {
-    const { draft } = props
+  handleChangeNewScene = (event) => {
+    console.log('implement handleChangeNewScene', event.target)
+  }
+
+  handleAddScene = () => {
+    console.log('implement handleAddScene')
+  }
+
+  handleSave = () => {
+    this.props.saveDraft(this.state.summary)
+  }
+
+  componentDidMount() {
+    const { draftId } = this.props.match.params
+    const { draft, loadDraft } = this.props
+
     if (draft) {
       this.setState({
+        isLoading: false,
         isNew: false,
         summary: draft.summary,
         scenes: draft.scenes
       })
     } else {
-      this.setState({
-        isNew: true
-      })
+      if (draftId !== newDraftId) {
+        this.setState({
+          isLoading: true
+        })
+        loadDraft(draftId)
+      }
     }
   }
 
-  componentDidMount() {
-    console.log('EditStory props', this.props)
-    const { draftId } = this.props.match.params
-    console.log('implement loadDraft to fetch', draftId)
-    // TODO loadDraft(draftId)
-
-    this.reflectPropsInState(this.props)
-  }
-
   componentWillReceiveProps(props, nextProps) {
-    this.reflectPropsInState(nextProps)
+    console.log('will receive props', nextProps)
   }
 
   render() {
-    const { summary, scenes } = this.state
+    const { summary, scenes, newScene } = this.state
     console.log('draft summary', summary)
     console.log('draft scenes', scenes)
     return (
@@ -67,19 +82,19 @@ export default class EditStory extends Component {
                 <legend className="text-info">Make changes if you like…</legend>
                 <div className="form-group">
                   <label>Story Title</label>
-                  <input className="form-control" type="text" name="title" value={summary.title} />
+                  <input className="form-control" type="text" name="title" value={summary.title} onChange={this.handleChangeSummary} />
                 </div>
                 <div className="form-group">
                   <label>Tag Line</label>
-                  <input className="form-control" type="text" name="tagLine" value={summary.tagLine} />
+                  <input className="form-control" type="text" name="tagLine" value={summary.tagLine} onChange={this.handleChangeSummary} />
                   <small className="form-text text-muted">A catchy phrase or sentence to attract readers to your story.</small>
                 </div>
                 <div className="form-group">
                   <label>About</label>
-                  <textarea className="form-control" name="about" value={summary.about}></textarea>
+                  <textarea className="form-control" name="about" value={summary.about} onChange={this.handleChangeSummary}></textarea>
                   <small className="form-text text-muted">A paragraph or two that explains what your story is about.</small>
                 </div>
-                <button className="btn btn-primary" type="button">Save Story Information</button>
+                <button className="btn btn-primary" type="button" onClick={this.handleSave}>Save Story Information</button>
               </fieldset>
             </form>
           </div>
@@ -94,9 +109,9 @@ export default class EditStory extends Component {
                   <div className="input-group-prepend">
                     <span className="input-group-text">Title</span>
                   </div>
-                  <input className="form-control" type="text" name="sceneTitle" />
+                  <input className="form-control" type="text" name="sceneTitle" value={newScene.title} onChange={this.handleChangeNewScene} />
                   <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
+                    <button className="btn btn-primary" type="button" onClick={this.handleAddScene}>
                       <i className="icon ion-plus float-right"></i>
                     </button>
                   </div>
