@@ -1,8 +1,17 @@
-import { FETCH_DRAFTS, FETCHED_DRAFTS, FETCH_DRAFTS_FAILED } from '../actions'
+import {
+  FETCH_DRAFTS,
+  FETCHED_DRAFTS,
+  FETCH_DRAFTS_FAILED,
+  SAVE_DRAFT,
+  SAVED_DRAFT,
+  SAVE_DRAFT_FAILED
+} from '../actions'
+import activeDraft from './activeDraft'
 
 export const writingDeskStates = {
   READY: 'READY',
-  FETCHING: 'FETCHING'
+  FETCHING: 'FETCHING',
+  SAVING: 'SAVING'
 }
 
 export const initialState = {
@@ -25,6 +34,21 @@ export default (state = initialState, action) => {
         status: writingDeskStates.READY
       }
     case FETCH_DRAFTS_FAILED:
+      return {
+        ...state,
+        status: writingDeskStates.READY
+      }
+    case SAVE_DRAFT:
+      return {
+        ...state,
+        status: writingDeskStates.SAVING
+      }
+    case SAVED_DRAFT:
+      return {
+        ...state,
+        activeDraft: activeDraft(state.activeDraft, action)
+      }
+    case SAVE_DRAFT_FAILED:
       return {
         ...state,
         status: writingDeskStates.READY

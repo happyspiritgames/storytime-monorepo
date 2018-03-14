@@ -31,4 +31,38 @@ describe('writing desk actions', () => {
       error: true
     })
   })
+
+  it('creates SAVE_DRAFT action', () => {
+    expect(actions.saveDraft())
+    .toEqual({
+      type: actions.SAVE_DRAFT
+    })
+  })
+
+  it('creates SAVED_DRAFT action', () => {
+    expect(actions.savedDraft({
+      storyId: 'blargy',
+      title: 'Hello World'
+    }))
+    .toEqual({
+      type: actions.SAVED_DRAFT,
+      payload: {
+        nextDraft: {
+          storyId: 'blargy',
+          title: 'Hello World'
+        }
+      }
+    })
+  })
+
+  it('creates SAVE_DRAFT_FAILED action', () => {
+    expect(actions.saveDraftFailed(testError))
+    .toEqual({
+      type: actions.SAVE_DRAFT_FAILED,
+      payload: {
+        error: testError
+      },
+      error: true
+    })
+  })
 })

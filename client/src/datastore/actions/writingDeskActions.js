@@ -31,3 +31,42 @@ export const retrieveDraftProjects = () => {
     )
   }
 }
+
+export const SAVE_DRAFT = 'SAVE_DRAFT'
+export const saveDraft = () => ({
+  type: SAVE_DRAFT
+})
+
+export const SAVED_DRAFT = 'SAVED_DRAFT'
+export const savedDraft = nextDraft => ({
+  type: SAVED_DRAFT,
+  payload: {
+    nextDraft
+  }
+})
+
+export const SAVE_DRAFT_FAILED = 'SAVE_DRAFT_FAILED'
+export const saveDraftFailed = error => ({
+  type: SAVE_DRAFT_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
+export const saveDraftSummary = (draftSummary) => {
+  return (dispatch) => {
+    dispatch(saveDraft())
+    const saveAPI = (draftSummary.storyId) ? authorApi.updateDraft : authorApi.createDraft
+    saveAPI(draftSummary,
+      nextSummary => dispatch(savedDraft(nextSummary)),
+      error => dispatch(saveDraftFailed(error))
+    )
+  }
+}
+
+export const retrieveDraft = (storyId) => {
+  return (dispatch) => {
+    console.log('implement me')
+  }
+}

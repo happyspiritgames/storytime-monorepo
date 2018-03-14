@@ -1,6 +1,10 @@
 import { connect } from 'react-redux'
 import WritingDesk from './WritingDesk'
-import { retrieveDraftProjects } from '../../datastore/actions'
+import {
+  retrieveDraftProjects,
+  saveDraftSummary,
+  retrieveDraft
+} from '../../datastore/actions'
 
 const mapStateToProps = state => {
   const desk = state.writingDesk
@@ -15,7 +19,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     loadDrafts: () => dispatch(retrieveDraftProjects()),
-    // TODO loadDraft: (storyId) => dispatch(retrieveDraft(storyId))
+    saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
+    loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId))
   }
 }
 

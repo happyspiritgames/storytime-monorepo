@@ -35,9 +35,26 @@ export const profileChangeShape = PropTypes.shape({
   penName: PropTypes.string
 })
 
+export const draftSummaryShape = PropTypes.shape({
+  storyId: PropTypes.string,
+  title: PropTypes.string,
+  tagLine: PropTypes.string,
+  about: PropTypes.string,
+  firstSceneId: PropTypes.string,
+  createdAt: PropTypes.string,
+  lastUpdatedAt: PropTypes.string
+})
+
+export const draftSceneShape = PropTypes.shape({
+  sceneId: PropTypes.string,
+  title: PropTypes.string,
+  prose: PropTypes.string,
+  signpost: PropTypes.array
+})
+
 export const draftShape = PropTypes.shape({
-  summary: storySummaryShape,
-  scenes: PropTypes.arrayOf(sceneShape)
+  summary: draftSummaryShape,
+  scenes: PropTypes.arrayOf(draftSceneShape)
 })
 
 

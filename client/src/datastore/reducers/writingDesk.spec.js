@@ -34,4 +34,33 @@ describe('writing desk reducer', () => {
     })
   })
 
+  it('handles SAVE_DRAFT', () => {
+    expect(writingDesk(undefined, actions.saveDraft()))
+    .toEqual({
+      ...initialState,
+      status: writingDeskStates.SAVING
+    })
+  })
+
+  it('handles SAVED_DRAFT', () => {
+    nextState = writingDesk(undefined, actions.savedDraft(testDraftSummaries[1]))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY,
+      activeDraft: {
+        summary: testDraftSummaries[1],
+        scenes: {}
+      }
+    })
+  })
+
+  it('handles SAVE_DRAFT_FAILED', () => {
+    nextState = writingDesk(undefined, actions.saveDraft())
+    nextState = writingDesk(nextState, actions.saveDraftFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
 })
