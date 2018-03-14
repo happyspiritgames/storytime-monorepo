@@ -1,5 +1,6 @@
 import activeDraft, { initialState } from './activeDraft'
 import * as actions from '../actions'
+import { testFullDraft } from '../testData'
 
 describe('drafts reducer', () => {
   let nextState
@@ -18,6 +19,16 @@ describe('drafts reducer', () => {
     expect(nextState).toEqual({
       ...initialState,
       summary: testSummary
+    })
+  })
+
+  it('handles LOADED_DRAFT', () => {
+    nextState = activeDraft(undefined, actions.loadedDraft(testFullDraft))
+    expect(nextState).toEqual({
+      summary: testFullDraft.summary,
+      scenes: {
+        [testFullDraft.scenes[0].sceneId]: testFullDraft.scenes[0]
+      }
     })
   })
 })

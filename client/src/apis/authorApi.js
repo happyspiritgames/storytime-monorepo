@@ -1,11 +1,21 @@
 import { getHeaders } from '../util/authentication'
 
-export const getDraftStories = (handleDraftStories, handleErrors) => {
+const draftStoriesBaseURI = '/api/draft-stories'
+
+export const fetchDraftStories = (handleDraftStories, handleError) => {
   console.log('called getDraftStories')
-  fetch('/api/draft-stories', { headers: getHeaders() })
+  fetch(draftStoriesBaseURI, { headers: getHeaders() })
     .then(res => res.json())
     .then(stories => handleDraftStories(stories))
-    .catch(err => handleErrors(err))
+    .catch(error => handleError(error))
+}
+
+export const fetchFullDraft = (storyId, handleDraft, handleError) => {
+  console.log('fetchFullDraft', storyId)
+  fetch(`${draftStoriesBaseURI}/${storyId}/full`, { headers: getHeaders() })
+    .then(res => res.json())
+    .then(draft => handleDraft(draft))
+    .catch(error => handleError(error))
 }
 
 export const createDraft = (draftSummary, handleResponse, handleError) => {
@@ -15,10 +25,10 @@ export const createDraft = (draftSummary, handleResponse, handleError) => {
     headers: getHeaders(),
     body: JSON.stringify(draftSummary)
   }
-  fetch('/api/draft-stories', postOptions)
+  fetch(draftStoriesBaseURI, postOptions)
     .then(res => res.json())
     .then(summaryResponse => handleResponse(summaryResponse))
-    .catch(err => handleError(err))
+    .catch(error => handleError(error))
 }
 
 export const updateDraft = (draftSummary, handleResponse, handleError) => {
@@ -28,8 +38,8 @@ export const updateDraft = (draftSummary, handleResponse, handleError) => {
     headers: getHeaders(),
     body: JSON.stringify(draftSummary)
   }
-  fetch(`/api/draft-stories/${draftSummary.storyId}`, putOptions)
+  fetch(`${draftStoriesBaseURI}/${draftSummary.storyId}`, putOptions)
     .then(res => res.json())
     .then(summaryResponse => handleResponse(summaryResponse))
-    .catch(err => handleError(err))
+    .catch(error => handleError(error))
 }

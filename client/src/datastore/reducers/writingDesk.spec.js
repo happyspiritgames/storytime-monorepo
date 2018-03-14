@@ -1,6 +1,6 @@
 import writingDesk, { initialState, writingDeskStates } from './writingDesk'
 import * as actions from '../actions'
-import { testDraftSummaries } from '../testData'
+import { testDraftSummaries, testFullDraft } from '../testData'
 
 describe('writing desk reducer', () => {
   let nextState
@@ -29,6 +29,34 @@ describe('writing desk reducer', () => {
 
   it('handles FETCH_DRAFTS_FAILED', () => {
     nextState = writingDesk(undefined, actions.fetchDraftsFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState
+    })
+  })
+
+  it('handles LOAD_DRAFT', () => {
+    nextState = writingDesk(undefined, actions.loadDraft())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.FETCHING
+    })
+  })
+
+  it('handles LOADED_DRAFT', () => {
+    nextState = writingDesk(undefined, actions.loadedDraft(testFullDraft))
+    expect(nextState).toEqual({
+      ...initialState,
+      activeDraft: {
+        summary: testFullDraft.summary,
+        scenes: {
+          'twjj3gx3': testFullDraft.scenes[0]
+        }
+      }
+    })
+  })
+
+  it('handles LOAD_DRAFT_FAILED', () => {
+    nextState = writingDesk(undefined, actions.loadDraftFailed(testError))
     expect(nextState).toEqual({
       ...initialState
     })

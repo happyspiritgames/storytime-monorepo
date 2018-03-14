@@ -23,4 +23,15 @@ describe('scenes reducer', () => {
         [scene1.sceneId]: scene1
       })
   })
+
+  it('handles LOADED_DRAFT', () => {
+    expect(scenesReducer(undefined, actions.loadedDraft({
+      summary: {},
+      scenes: [scene1, scene2]
+    })))
+    .toEqual({
+      [scene1.sceneId]: scene1,
+      [scene2.sceneId]: scene2
+    })
+  })
 })

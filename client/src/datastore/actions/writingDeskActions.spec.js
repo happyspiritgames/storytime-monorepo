@@ -65,4 +65,38 @@ describe('writing desk actions', () => {
       error: true
     })
   })
+
+  it('creates LOAD_DRAFT action', () => {
+    expect(actions.loadDraft())
+    .toEqual({
+      type: actions.LOAD_DRAFT
+    })
+  })
+
+  it('creates LOADED_DRAFT action', () => {
+    expect(actions.loadedDraft({
+      storyId: 'blargy',
+      title: 'Hello World'
+    }))
+    .toEqual({
+      type: actions.LOADED_DRAFT,
+      payload: {
+        draft: {
+          storyId: 'blargy',
+          title: 'Hello World'
+        }
+      }
+    })
+  })
+
+  it('creates LOAD_DRAFT_FAILED action', () => {
+    expect(actions.loadDraftFailed(testError))
+    .toEqual({
+      type: actions.LOAD_DRAFT_FAILED,
+      payload: {
+        error: testError
+      },
+      error: true
+    })
+  })
 })

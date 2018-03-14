@@ -48,18 +48,24 @@ export default class EditStory extends Component {
     this.props.saveDraft(this.state.draftSummary)
   }
 
+  setDraftAndStopLoading = (draft) => {
+    this.setState({
+      isLoading: false,
+      draftSummary: draft.summary,
+      draftScenes: draft.scenes
+    })
+  }
+
   componentDidMount() {
     const { draftId } = this.props.match.params
     const { draft, loadDraft } = this.props
 
     if (draft) {
-      this.setState({
-        isLoading: false,
-        summary: draft.summary,
-        scenes: draft.scenes
-      })
+      console.log('already have draft')
+      this.setDraftAndStopLoading(draft)
     } else {
       if (draftId !== newDraftId) {
+        console.log('start loading draft')
         this.setState({
           isLoading: true
         })
@@ -73,7 +79,14 @@ export default class EditStory extends Component {
 
     // redirect page if isNew and draft is set
     if (nextProps.match.params.draftId === newDraftId && nextProps.draft) {
+      console.log('just created draft')
       this.props.history.replace(`/writingdesk/${nextProps.draft.summary.storyId}`)
+    }
+
+    // end loading once draft has been located
+    if (this.state.isLoading && nextProps.draft) {
+      console.log('stop loading draft')
+      this.setDraftAndStopLoading(nextProps.draft)
     }
   }
 

@@ -1,4 +1,4 @@
-import { FETCHED_SCENE } from '../actions'
+import { FETCHED_SCENE, LOADED_DRAFT } from '../actions'
 
 export const initialState = {}
 
@@ -10,6 +10,15 @@ export default (state = initialState, action) => {
         ...state,
         [scene.sceneId]: scene
       }
+
+    case LOADED_DRAFT:
+      let nextScenes = {}
+      if (action.payload.draft.scenes) {
+        action.payload.draft.scenes.forEach(scene => {
+          nextScenes[scene.sceneId] = scene
+        })
+      }
+      return nextScenes
     default:
       return state
   }

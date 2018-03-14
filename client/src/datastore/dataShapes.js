@@ -86,8 +86,7 @@ export const reduxStoreDataShape = {
       activeDraft: {
         summary: {},
         scenes: {}
-      },
-      isDraftDirty: false
+      }
     }
   },
   drafts: {

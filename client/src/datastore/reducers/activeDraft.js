@@ -1,4 +1,5 @@
-import { SAVED_DRAFT } from '../actions'
+import { SAVED_DRAFT, LOADED_DRAFT } from '../actions'
+import scenes from './scenes'
 
 export const initialState = {
   summary: {},
@@ -11,6 +12,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         summary: action.payload.nextDraft
+      }
+    case LOADED_DRAFT:
+      console.log('loadedDraft payload', action.payload)
+      return {
+        summary: action.payload.draft.summary,
+        scenes: scenes(state.scenes, action)
       }
     default:
       return state

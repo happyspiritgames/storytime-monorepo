@@ -25,7 +25,7 @@ export const fetchDraftsFailed = (error) => ({
 export const retrieveDraftProjects = () => {
   return (dispatch) => {
     dispatch(fetchDrafts())
-    authorApi.getDraftStories(
+    authorApi.fetchDraftStories(
       stories => dispatch(fetchedDrafts(stories)),
       error => dispatch(fetchDraftsFailed(error))
     )
@@ -65,8 +65,34 @@ export const saveDraftSummary = (draftSummary) => {
   }
 }
 
+export const LOAD_DRAFT = 'LOAD_DRAFT'
+export const loadDraft = () => ({
+  type: LOAD_DRAFT
+})
+
+export const LOADED_DRAFT = 'LOADED_DRAFT'
+export const loadedDraft = (draft) => ({
+  type: LOADED_DRAFT,
+  payload: {
+    draft
+  }
+})
+
+export const LOAD_DRAFT_FAILED = 'LOAD_DRAFT_FAILED'
+export const loadDraftFailed = (error) => ({
+  type: LOAD_DRAFT_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
 export const retrieveDraft = (storyId) => {
   return (dispatch) => {
-    console.log('implement writingDeskActions.retrieveDraft')
+    dispatch(loadDraft())
+    authorApi.fetchFullDraft(storyId,
+      draft => dispatch(loadedDraft(draft)),
+      error => dispatch(loadDraftFailed(error))
+    )
   }
 }

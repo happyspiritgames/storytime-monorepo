@@ -21,3 +21,26 @@ export const testDraftSummaries = [
   }
 ]
 
+export const testFullDraft = {
+    summary: {
+        storyId: "oajdg7qc",
+        authorId: "8a095fb3-8cd3-475b-a3c2-a842bac9ee39",
+        title: "Let's Get Serious",
+        tagLine: "This is for reals.",
+        about: "Wowie zowie.",
+        firstSceneId: "twjj3gx3",
+        createdAt: "2018-03-14T16:49:41.338Z",
+        updatedAt: "2018-03-14T16:49:41.342Z"
+    },
+    scenes: [
+        {
+            sceneId: "twjj3gx3",
+            title: "Start Here",
+            prose: "Tell your story",
+            endPrompt: "Now what?",
+            createdAt: "2018-03-14T16:49:41.341Z",
+            updatedAt: "2018-03-14T16:49:41.341Z"
+        }
+    ]
+  }
+
