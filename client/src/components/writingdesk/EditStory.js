@@ -8,6 +8,7 @@ export const newDraftId = '--newDraft--'
 export default class EditStory extends Component {
   static propTypes = {
     draft: draftShape,
+    startDraft: PropTypes.func,
     loadDraft: PropTypes.func,
     saveDraft: PropTypes.func
   }
@@ -57,19 +58,32 @@ export default class EditStory extends Component {
 
   componentDidMount() {
     const { draftId } = this.props.match.params
-    const { draft, loadDraft } = this.props
+    const { draft, loadDraft, startDraft } = this.props
 
-    if (draft) {
-      console.log('already have draft')
-      this.setDraftAndStopLoading(draft)
+    if (draftId === newDraftId) {
+      console.log('clear for new draft')
+      startDraft()
+      this.setState({
+        draftSummary: {
+          title: '',
+          tagLine: '',
+          about: ''
+        },
+        draftScenes: {},
+      })
+      return
+    } else if (!draft || (draftId !== draft.summary.storyId)) {
+      console.log('start loading draft')
+      this.setState({
+        isLoading: true,
+        draftSummary: undefined,
+        draftScenes: undefined
+      })
+      loadDraft(draftId)
+      return
     } else {
-      if (draftId !== newDraftId) {
-        console.log('start loading draft')
-        this.setState({
-          isLoading: true
-        })
-        loadDraft(draftId)
-      }
+      console.log('already have the right draft')
+      this.setDraftAndStopLoading(draft)
     }
   }
 
@@ -103,7 +117,7 @@ export default class EditStory extends Component {
   }
 
   renderSceneList() {
-    if (!this.state.draftSummary  || !this.state.draftScenes) {
+    if (!(this.state.draftSummary && this.state.draftScenes)) {
       return null
     }
     const storyId = this.state.draftSummary.storyId
@@ -118,7 +132,7 @@ export default class EditStory extends Component {
   }
 
   render() {
-    const { isLoading, draftSummary, draftScenes, newScene } = this.state
+    const { isLoading, draftSummary, newScene } = this.state
     if (isLoading) {
       return this.renderLoading()
     }

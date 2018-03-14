@@ -14,7 +14,6 @@ export default (state = initialState, action) => {
         summary: action.payload.nextDraft
       }
     case LOADED_DRAFT:
-      console.log('loadedDraft payload', action.payload)
       return {
         summary: action.payload.draft.summary,
         scenes: scenes(state.scenes, action)

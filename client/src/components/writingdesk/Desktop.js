@@ -29,7 +29,7 @@ export default class WritingDesk extends Component {
 
     return (
       <div id="writing-desk">
-        <h3 className="text-center">StoryTime Writing Desk</h3><img className="img-fluid" alt="wooden texture of a writing desk" />
+        <h3 className="text-center">StoryTime Writing Desk</h3>
         <div className="row section">
           <div className="col">
             <h4 className="text-center">Projects (In Progress)</h4>

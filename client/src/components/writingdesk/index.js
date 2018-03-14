@@ -3,7 +3,8 @@ import WritingDesk from './WritingDesk'
 import {
   retrieveDraftProjects,
   saveDraftSummary,
-  retrieveDraft
+  retrieveDraft,
+  startNewDraft
 } from '../../datastore/actions'
 
 const mapStateToProps = state => {
@@ -21,6 +22,7 @@ const mapDispatchToProps = dispatch => {
     loadDrafts: () => dispatch(retrieveDraftProjects()),
     loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId)),
     saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
+    startNewDraft: () => dispatch(startNewDraft())
   }
 }
 

@@ -65,6 +65,11 @@ export const saveDraftSummary = (draftSummary) => {
   }
 }
 
+export const START_NEW_DRAFT = 'START_NEW_DRAFT'
+export const startNewDraft = () => ({
+  type: START_NEW_DRAFT
+})
+
 export const LOAD_DRAFT = 'LOAD_DRAFT'
 export const loadDraft = () => ({
   type: LOAD_DRAFT

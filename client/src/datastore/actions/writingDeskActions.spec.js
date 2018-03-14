@@ -99,4 +99,11 @@ describe('writing desk actions', () => {
       error: true
     })
   })
+
+  it('creates START_NEW_DRAFT action', () => {
+    expect(actions.startNewDraft())
+    .toEqual({
+      type: actions.START_NEW_DRAFT
+    })
+  })
 })

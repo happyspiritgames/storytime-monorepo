@@ -7,7 +7,8 @@ import {
   LOAD_DRAFT_FAILED,
   SAVE_DRAFT,
   SAVED_DRAFT,
-  SAVE_DRAFT_FAILED
+  SAVE_DRAFT_FAILED,
+  START_NEW_DRAFT
 } from '../actions'
 import activeDraft from './activeDraft'
 
@@ -60,6 +61,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         status: writingDeskStates.READY
+      }
+    case START_NEW_DRAFT:
+      const nextState = {...state}
+      delete nextState.activeDraft
+      return {
+        ...nextState
       }
     default:
       return state

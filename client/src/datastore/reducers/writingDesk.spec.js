@@ -91,4 +91,11 @@ describe('writing desk reducer', () => {
     })
   })
 
+  it('handles START_NEW_DRAFT', () => {
+    nextState = writingDesk(undefined, actions.loadedDraft(testFullDraft))
+    nextState = writingDesk(nextState, actions.startNewDraft())
+    expect(nextState).toEqual({
+      ...initialState,
+    })
+  })
 })
