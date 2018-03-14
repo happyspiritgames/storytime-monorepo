@@ -26,7 +26,6 @@ export default class EditStory extends Component {
   }
 
   handleChangeSummary = (event) => {
-    console.log('implement handleChangeSummary', event.target)
     const target = event.target
     let updateValue = target.value
     let nextSummary = {
@@ -103,21 +102,34 @@ export default class EditStory extends Component {
     )
   }
 
+  renderSceneList() {
+    if (!this.state.draftSummary  || !this.state.draftScenes) {
+      return null
+    }
+    const storyId = this.state.draftSummary.storyId
+    const sceneIds = Object.keys(this.state.draftScenes)
+    const sceneList = sceneIds.map(sceneId => (
+      <li key={sceneId} className="list-group-item">
+        <span>{this.state.draftScenes[sceneId].title} [id: {this.state.draftScenes[sceneId].sceneId}]</span>
+        <Link to={`/writingdesk/${storyId}/${sceneId}`}><i className="icon ion-edit float-right"></i></Link>
+      </li>
+    ))
+    return sceneList
+  }
+
   render() {
     const { isLoading, draftSummary, draftScenes, newScene } = this.state
-    console.log('active draft summary', draftSummary)
     if (isLoading) {
       return this.renderLoading()
     }
-    console.log('draft summary', draftSummary)
-    console.log('draft scenes', draftScenes)
     return (
       <div id="edit-story">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
-          <li className="breadcrumb-item">The Mission</li>
+          <li className="breadcrumb-item">{draftSummary.title}</li>
         </ol>
+        <h4 className="text-center">{draftSummary.title}</h4>
         <div className="row section">
           <div className="col">
             <h3>Story Information</h3>
@@ -163,18 +175,7 @@ export default class EditStory extends Component {
               </fieldset>
             </form>
             <ul className="list-group">
-              <li className="list-group-item">
-                <span>Scene A Title</span>
-                <Link to="/writingdesk/themission/A"><i className="icon ion-edit float-right"></i></Link>
-              </li>
-              <li className="list-group-item">
-                <span>Scene B Title</span>
-                <Link to="/writingdesk/themission/B"><i className="icon ion-edit float-right"></i></Link>
-              </li>
-              <li className="list-group-item">
-                <span>Scene C Title</span>
-                <Link to="/writingdesk/themission/C"><i className="icon ion-edit float-right"></i></Link>
-              </li>
+              {this.renderSceneList()}
             </ul>
           </div>
         </div>
