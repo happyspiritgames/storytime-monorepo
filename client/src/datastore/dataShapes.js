@@ -54,7 +54,7 @@ export const draftSceneShape = PropTypes.shape({
 
 export const draftShape = PropTypes.shape({
   summary: draftSummaryShape,
-  scenes: PropTypes.arrayOf(draftSceneShape)
+  scenes: PropTypes.object
 })
 
 

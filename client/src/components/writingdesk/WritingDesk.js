@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { draftShape, sceneShape } from '../../datastore/dataShapes'
+import { draftShape } from '../../datastore/dataShapes'
 import Desktop from './Desktop'
 import EditStory from './EditStory'
 import EditScene from './EditScene'

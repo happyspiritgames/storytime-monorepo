@@ -14,9 +14,12 @@ export default class EditStory extends Component {
 
   state = {
     isLoading: false,
-    isNew: true,
-    summary: {},
-    scenes: {},
+    draftSummary: {
+      title: '',
+      tagLine: '',
+      about: ''
+    },
+    draftScenes: {},
     newScene: {
       title: ''
     }
@@ -24,6 +27,13 @@ export default class EditStory extends Component {
 
   handleChangeSummary = (event) => {
     console.log('implement handleChangeSummary', event.target)
+    const target = event.target
+    let updateValue = target.value
+    let nextSummary = {
+      ...this.state.draftSummary,
+      [target.id]: updateValue
+    }
+    this.setState({ draftSummary: nextSummary })
   }
 
   handleChangeNewScene = (event) => {
@@ -35,7 +45,7 @@ export default class EditStory extends Component {
   }
 
   handleSave = () => {
-    this.props.saveDraft(this.state.summary)
+    this.props.saveDraft(this.state.draftSummary)
   }
 
   componentDidMount() {
@@ -45,7 +55,6 @@ export default class EditStory extends Component {
     if (draft) {
       this.setState({
         isLoading: false,
-        isNew: false,
         summary: draft.summary,
         scenes: draft.scenes
       })
@@ -59,14 +68,36 @@ export default class EditStory extends Component {
     }
   }
 
-  componentWillReceiveProps(props, nextProps) {
-    console.log('will receive props', nextProps)
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps', nextProps)
+
+    // redirect page if isNew and draft is set
+    if (nextProps.match.params.draftId === newDraftId && nextProps.draft) {
+      this.props.history.replace(`/writingdesk/${nextProps.draft.summary.storyId}`)
+    }
+  }
+
+  renderLoading() {
+    return (
+      <div id="edit-story">
+        <h3 className="text-center">StoryTime Writing Desk</h3>
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
+          <li className="breadcrumb-item">Loading...</li>
+        </ol>
+        <h3>Loading...</h3>
+      </div>
+    )
   }
 
   render() {
-    const { summary, scenes, newScene } = this.state
-    console.log('draft summary', summary)
-    console.log('draft scenes', scenes)
+    const { isLoading, draftSummary, draftScenes, newScene } = this.state
+    console.log('active draft summary', draftSummary)
+    if (isLoading) {
+      return this.renderLoading()
+    }
+    console.log('draft summary', draftSummary)
+    console.log('draft scenes', draftScenes)
     return (
       <div id="edit-story">
         <h3 className="text-center">StoryTime Writing Desk</h3>
@@ -82,16 +113,16 @@ export default class EditStory extends Component {
                 <legend className="text-info">Make changes if you like…</legend>
                 <div className="form-group">
                   <label>Story Title</label>
-                  <input className="form-control" type="text" name="title" value={summary.title} onChange={this.handleChangeSummary} />
+                  <input className="form-control" type="text" id="title" value={draftSummary.title} onChange={this.handleChangeSummary} />
                 </div>
                 <div className="form-group">
                   <label>Tag Line</label>
-                  <input className="form-control" type="text" name="tagLine" value={summary.tagLine} onChange={this.handleChangeSummary} />
+                  <input className="form-control" type="text" id="tagLine" value={draftSummary.tagLine} onChange={this.handleChangeSummary} />
                   <small className="form-text text-muted">A catchy phrase or sentence to attract readers to your story.</small>
                 </div>
                 <div className="form-group">
                   <label>About</label>
-                  <textarea className="form-control" name="about" value={summary.about} onChange={this.handleChangeSummary}></textarea>
+                  <textarea className="form-control" id="about" value={draftSummary.about} onChange={this.handleChangeSummary}></textarea>
                   <small className="form-text text-muted">A paragraph or two that explains what your story is about.</small>
                 </div>
                 <button className="btn btn-primary" type="button" onClick={this.handleSave}>Save Story Information</button>
@@ -109,7 +140,7 @@ export default class EditStory extends Component {
                   <div className="input-group-prepend">
                     <span className="input-group-text">Title</span>
                   </div>
-                  <input className="form-control" type="text" name="sceneTitle" value={newScene.title} onChange={this.handleChangeNewScene} />
+                  <input className="form-control" type="text" id="newSceneTitle" value={newScene.title} onChange={this.handleChangeNewScene} />
                   <div className="input-group-append">
                     <button className="btn btn-primary" type="button" onClick={this.handleAddScene}>
                       <i className="icon ion-plus float-right"></i>

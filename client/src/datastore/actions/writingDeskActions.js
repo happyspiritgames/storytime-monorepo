@@ -67,6 +67,6 @@ export const saveDraftSummary = (draftSummary) => {
 
 export const retrieveDraft = (storyId) => {
   return (dispatch) => {
-    console.log('implement me')
+    console.log('implement writingDeskActions.retrieveDraft')
   }
 }
