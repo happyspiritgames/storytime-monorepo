@@ -85,7 +85,22 @@ export const reduxStoreDataShape = {
       draftProjects: ['abc', 'blargy'],
       activeDraft: {
         summary: {},
-        scenes: {}
+        scenes: {
+          '1': {
+            sceneId: '1',
+            title: 'First Scene',
+            prose: 'Stuff happens',
+            endPrompt: 'Now what?',
+            signpost: [
+              {
+                destinationId: '42',
+                teaser: 'Do this',
+                order: 1
+              }
+            ]
+          },
+          '42': {}
+        }
       }
     }
   },

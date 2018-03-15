@@ -1,21 +1,21 @@
 import * as authorApi from '../../apis/authorApi'
 
-export const FETCH_DRAFTS = 'FETCH_DRAFTS'
+export const LOAD_DRAFTS = 'LOAD_DRAFTS'
 export const fetchDrafts = () => ({
-  type: FETCH_DRAFTS
+  type: LOAD_DRAFTS
 })
 
-export const FETCHED_DRAFTS = 'FETCHED_DRAFTS'
+export const LOADED_DRAFTS = 'LOADED_DRAFTS'
 export const fetchedDrafts = (draftSummaries) => ({
-  type: FETCHED_DRAFTS,
+  type: LOADED_DRAFTS,
   payload: {
     drafts: draftSummaries
   }
 })
 
-export const FETCH_DRAFTS_FAILED = 'FETCH_DRAFTS_FAILED'
+export const LOAD_DRAFTS_FAILED = 'LOAD_DRAFTS_FAILED'
 export const fetchDraftsFailed = (error) => ({
-  type: FETCH_DRAFTS_FAILED,
+  type: LOAD_DRAFTS_FAILED,
   payload: {
     error
   },
@@ -108,11 +108,11 @@ export const saveDraftScene = () => ({
 })
 
 export const SAVED_DRAFT_SCENE = 'SAVED_DRAFT_SCENE'
-export const savedDraftScene = (storyId, nextScene) => ({
+export const savedDraftScene = (storyId, scene) => ({
   type: SAVED_DRAFT_SCENE,
   payload: {
     storyId,
-    nextScene
+    scene
   }
 })
 

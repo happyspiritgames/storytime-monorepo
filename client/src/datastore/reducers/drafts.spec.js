@@ -9,7 +9,7 @@ describe('drafts reducer', () => {
     expect(drafts(undefined, {})).toEqual(initialState)
   })
 
-  it('handles FETCHED_DRAFTS', () => {
+  it('handles LOADED_DRAFTS', () => {
     nextState = drafts(undefined, actions.fetchedDrafts(testDraftSummaries))
     expect(nextState).toEqual({
       [testDraftSummaries[0].storyId]: testDraftSummaries[0],

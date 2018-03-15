@@ -10,15 +10,15 @@ describe('writing desk reducer', () => {
     expect(writingDesk(undefined, {})).toEqual(initialState)
   })
 
-  it('handles FETCH_DRAFTS', () => {
+  it('handles LOAD_DRAFTS', () => {
     expect(writingDesk(undefined, actions.fetchDrafts()))
     .toEqual({
       ...initialState,
-      status: writingDeskStates.FETCHING
+      status: writingDeskStates.LOADING
     })
   })
 
-  it('handles FETCHED_DRAFTS', () => {
+  it('handles LOADED_DRAFTS', () => {
     const storyIds = testDraftSummaries.map(story => story.storyId)
     nextState = writingDesk(undefined, actions.fetchedDrafts(testDraftSummaries))
     expect(nextState).toEqual({
@@ -27,7 +27,7 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles FETCH_DRAFTS_FAILED', () => {
+  it('handles LOAD_DRAFTS_FAILED', () => {
     nextState = writingDesk(undefined, actions.fetchDraftsFailed(testError))
     expect(nextState).toEqual({
       ...initialState
@@ -38,7 +38,7 @@ describe('writing desk reducer', () => {
     nextState = writingDesk(undefined, actions.loadDraft())
     expect(nextState).toEqual({
       ...initialState,
-      status: writingDeskStates.FETCHING
+      status: writingDeskStates.LOADING
     })
   })
 

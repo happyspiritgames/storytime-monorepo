@@ -1,4 +1,9 @@
-import { SAVED_DRAFT, LOADED_DRAFT } from '../actions'
+import {
+  SAVED_DRAFT,
+  LOADED_DRAFT,
+  SAVED_DRAFT_SCENE,
+  LOADED_DRAFT_SCENE
+} from '../actions'
 import scenes from './scenes'
 
 export const initialState = {

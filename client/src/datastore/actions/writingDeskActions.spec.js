@@ -9,27 +9,27 @@ import {
 describe('writing desk actions', () => {
   const testError = new Error('bah')
 
-  it('creates FETCH_DRAFTS action', () => {
+  it('creates LOAD_DRAFTS action', () => {
     expect(actions.fetchDrafts())
     .toEqual({
-      type: actions.FETCH_DRAFTS
+      type: actions.LOAD_DRAFTS
     })
   })
 
-  it('creates FETCHED_DRAFTS action', () => {
+  it('creates LOADED_DRAFTS action', () => {
     expect(actions.fetchedDrafts(testDraftSummaries))
     .toEqual({
-      type: actions.FETCHED_DRAFTS,
+      type: actions.LOADED_DRAFTS,
       payload: {
         drafts: testDraftSummaries
       }
     })
   })
 
-  it('creates FETCH_DRAFTS_FAILED action', () => {
+  it('creates LOAD_DRAFTS_FAILED action', () => {
     expect(actions.fetchDraftsFailed(testError))
     .toEqual({
-      type: actions.FETCH_DRAFTS_FAILED,
+      type: actions.LOAD_DRAFTS_FAILED,
       payload: {
         error: testError
       },
@@ -113,7 +113,7 @@ describe('writing desk actions', () => {
       type: actions.SAVED_DRAFT_SCENE,
       payload: {
         storyId: 'wumpus',
-        nextScene: testDraftScene
+        scene: testDraftScene
       }
     })
   })

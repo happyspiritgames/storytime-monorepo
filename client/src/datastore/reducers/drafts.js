@@ -1,10 +1,10 @@
-import { FETCHED_DRAFTS } from '../actions'
+import { LOADED_DRAFTS } from '../actions'
 
 export const initialState = {}
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCHED_DRAFTS:
+    case LOADED_DRAFTS:
       let drafts = {}
       action.payload.drafts.forEach(draft => {
         drafts[draft.storyId] = draft
