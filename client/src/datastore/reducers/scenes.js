@@ -2,7 +2,8 @@ import {
   FETCHED_SCENE,
   LOADED_DRAFT,
   SAVED_DRAFT_SCENE,
-  LOADED_DRAFT_SCENE
+  LOADED_DRAFT_SCENE,
+  LOADED_DRAFT_SIGNPOST
 } from '../actions'
 
 export const initialState = {}
@@ -26,6 +27,20 @@ export default (state = initialState, action) => {
         })
       }
       return nextScenes
+    case LOADED_DRAFT_SIGNPOST:
+      const { sceneId, signpost } = action.payload
+      const sceneToChange = state[sceneId]
+      if (!sceneToChange) {
+        return state
+      }
+      const nextScene = {
+        ...sceneToChange,
+        signpost
+      }
+      return {
+        ...state,
+        [nextScene.sceneId]: nextScene
+      }
     default:
       return state
   }

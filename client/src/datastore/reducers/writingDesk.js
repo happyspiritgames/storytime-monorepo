@@ -54,6 +54,10 @@ export default (state = initialState, action) => {
       }
     case LOADED_DRAFT:
     case SAVED_DRAFT:
+    case LOADED_DRAFT_SCENE:
+    case SAVED_DRAFT_SCENE:
+    case LOADED_DRAFT_SIGNPOST:
+    case SAVED_DRAFT_SIGNPOST:
       return {
         ...state,
         activeDraft: activeDraft(state.activeDraft, action),
@@ -69,6 +73,10 @@ export default (state = initialState, action) => {
     case LOAD_DRAFTS_FAILED:
     case LOAD_DRAFT_FAILED:
     case SAVE_DRAFT_FAILED:
+    case SAVE_DRAFT_SCENE_FAILED:
+    case LOAD_DRAFT_SCENE_FAILED:
+    case LOAD_DRAFT_SIGNPOST_FAILED:
+    case SAVE_DRAFT_SIGNPOST_FAILED:
       return {
         ...state,
         status: writingDeskStates.READY

@@ -11,7 +11,7 @@ describe('writing desk reducer', () => {
   })
 
   it('handles LOAD_DRAFTS', () => {
-    expect(writingDesk(undefined, actions.fetchDrafts()))
+    expect(writingDesk(undefined, actions.loadDrafts()))
     .toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
@@ -20,7 +20,7 @@ describe('writing desk reducer', () => {
 
   it('handles LOADED_DRAFTS', () => {
     const storyIds = testDraftSummaries.map(story => story.storyId)
-    nextState = writingDesk(undefined, actions.fetchedDrafts(testDraftSummaries))
+    nextState = writingDesk(undefined, actions.loadedDrafts(testDraftSummaries))
     expect(nextState).toEqual({
       ...initialState,
       draftProjects: storyIds
@@ -28,7 +28,8 @@ describe('writing desk reducer', () => {
   })
 
   it('handles LOAD_DRAFTS_FAILED', () => {
-    nextState = writingDesk(undefined, actions.fetchDraftsFailed(testError))
+    nextState = writingDesk(undefined, actions.loadDrafts())
+    nextState = writingDesk(nextState, actions.loadDraftsFailed(testError))
     expect(nextState).toEqual({
       ...initialState
     })
@@ -56,14 +57,16 @@ describe('writing desk reducer', () => {
   })
 
   it('handles LOAD_DRAFT_FAILED', () => {
-    nextState = writingDesk(undefined, actions.loadDraftFailed(testError))
+    nextState = writingDesk(undefined, actions.loadDraft())
+    nextState = writingDesk(nextState, actions.loadDraftFailed(testError))
     expect(nextState).toEqual({
       ...initialState
     })
   })
 
   it('handles SAVE_DRAFT', () => {
-    expect(writingDesk(undefined, actions.saveDraft()))
+    nextState = writingDesk(undefined, actions.saveDraft())
+    expect(nextState)
     .toEqual({
       ...initialState,
       status: writingDeskStates.SAVING
@@ -107,6 +110,47 @@ describe('writing desk reducer', () => {
     })
   })
 
+  xit('handles LOADED_DRAFT_SCENE', () => {
+    nextState = writingDesk(undefined, actions.loadedDraftScene())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles LOAD_DRAFT_SCENE_FAILED', () => {
+    nextState = writingDesk(undefined, actions.loadDraftScene())
+    nextState = writingDesk(nextState, actions.loadDraftSceneFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles SAVE_DRAFT_SCENE', () => {
+    nextState = writingDesk(undefined, actions.saveDraftScene())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.SAVING
+    })
+  })
+
+  xit('handles SAVED_DRAFT_SCENE', () => {
+    nextState = writingDesk(undefined, actions.savedDraftScene())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles SAVE_DRAFT_SCENE_FAILED', () => {
+    nextState = writingDesk(undefined, actions.saveDraftSceneFailed())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
   it('handles LOAD_DRAFT_SIGNPOST', () => {
     nextState = writingDesk(undefined, actions.loadDraftSignpost())
     expect(nextState).toEqual({
@@ -115,11 +159,45 @@ describe('writing desk reducer', () => {
     })
   })
 
+  xit('handles LOADED_DRAFT_SCENE', () => {
+    nextState = writingDesk(undefined, actions.loadedDraftSignpost())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles LOAD_DRAFT_SIGNPOST_FAILED', () => {
+    nextState = writingDesk(undefined, actions.loadDraftSignpost())
+    nextState = writingDesk(nextState, actions.loadDraftSignpostFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
   it('handles SAVE_DRAFT_SIGNPOST', () => {
     nextState = writingDesk(undefined, actions.saveDraftSignpost())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.SAVING
+    })
+  })
+
+  xit('handles SAVED_DRAFT_SIGNPOST', () => {
+    nextState = writingDesk(undefined, actions.savedDraftSignpost())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles SAVE_DRAFT_SIGNPOST_FAILED', () => {
+    nextState = writingDesk(undefined, actions.saveDraftSignpost())
+    nextState = writingDesk(nextState, actions.saveDraftSignpostFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
     })
   })
 

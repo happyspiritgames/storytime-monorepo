@@ -23,6 +23,12 @@ export default (state = initialState, action) => {
         summary: action.payload.draft.summary,
         scenes: scenes(state.scenes, action)
       }
+    case LOADED_DRAFT_SCENE:
+      console.log('activeDraft payload', action.payload)
+      return {
+        ...state,
+        scenes: scenes(state.scenes, action)
+      }
     default:
       return state
   }

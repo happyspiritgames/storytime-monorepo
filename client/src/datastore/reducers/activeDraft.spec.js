@@ -1,8 +1,8 @@
 import activeDraft, { initialState } from './activeDraft'
 import * as actions from '../actions'
-import { testFullDraft } from '../testData'
+import { testFullDraft, testDraftScene } from '../testData'
 
-describe('drafts reducer', () => {
+describe('activeDraft reducer', () => {
   let nextState
 
   it('should provide initial state', () => {
@@ -31,4 +31,15 @@ describe('drafts reducer', () => {
       }
     })
   })
+
+  xit('handles LOADED_DRAFT_SCENE', () => {
+    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    expect(nextState).toEqual({
+      ...initialState
+    })
+  })
+
+  xit('handles SAVED_DRAFT_SCENE')
+  xit('handles LOADED_DRAFT_SIGNPOST')
+  xit('handles SAVED_DRAFT_SIGNPOST')
 })

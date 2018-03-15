@@ -10,14 +10,14 @@ describe('writing desk actions', () => {
   const testError = new Error('bah')
 
   it('creates LOAD_DRAFTS action', () => {
-    expect(actions.fetchDrafts())
+    expect(actions.loadDrafts())
     .toEqual({
       type: actions.LOAD_DRAFTS
     })
   })
 
   it('creates LOADED_DRAFTS action', () => {
-    expect(actions.fetchedDrafts(testDraftSummaries))
+    expect(actions.loadedDrafts(testDraftSummaries))
     .toEqual({
       type: actions.LOADED_DRAFTS,
       payload: {
@@ -27,7 +27,7 @@ describe('writing desk actions', () => {
   })
 
   it('creates LOAD_DRAFTS_FAILED action', () => {
-    expect(actions.fetchDraftsFailed(testError))
+    expect(actions.loadDraftsFailed(testError))
     .toEqual({
       type: actions.LOAD_DRAFTS_FAILED,
       payload: {

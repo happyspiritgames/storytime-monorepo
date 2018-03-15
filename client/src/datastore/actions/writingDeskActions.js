@@ -1,12 +1,12 @@
 import * as authorApi from '../../apis/authorApi'
 
 export const LOAD_DRAFTS = 'LOAD_DRAFTS'
-export const fetchDrafts = () => ({
+export const loadDrafts = () => ({
   type: LOAD_DRAFTS
 })
 
 export const LOADED_DRAFTS = 'LOADED_DRAFTS'
-export const fetchedDrafts = (draftSummaries) => ({
+export const loadedDrafts = (draftSummaries) => ({
   type: LOADED_DRAFTS,
   payload: {
     drafts: draftSummaries
@@ -14,7 +14,7 @@ export const fetchedDrafts = (draftSummaries) => ({
 })
 
 export const LOAD_DRAFTS_FAILED = 'LOAD_DRAFTS_FAILED'
-export const fetchDraftsFailed = (error) => ({
+export const loadDraftsFailed = (error) => ({
   type: LOAD_DRAFTS_FAILED,
   payload: {
     error
@@ -24,10 +24,10 @@ export const fetchDraftsFailed = (error) => ({
 
 export const retrieveDraftProjects = () => {
   return (dispatch) => {
-    dispatch(fetchDrafts())
+    dispatch(loadDrafts())
     authorApi.fetchDraftStories(
-      stories => dispatch(fetchedDrafts(stories)),
-      error => dispatch(fetchDraftsFailed(error))
+      stories => dispatch(loadedDrafts(stories)),
+      error => dispatch(loadDraftsFailed(error))
     )
   }
 }

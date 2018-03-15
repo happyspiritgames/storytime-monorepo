@@ -1,10 +1,13 @@
 import scenesReducer, { initialState } from './scenes'
 import * as actions from '../actions'
+import { testDraftScene, testSignpost } from '../testData'
 
 const scene1 = { sceneId: '1', title: 'Big Things' }
 const scene2 = { sceneId: '2', title: 'Little Things' }
 
 describe('scenes reducer', () => {
+  let nextState
+
   it('should provide initial state', () => {
     expect(scenesReducer(undefined, {})).toEqual(initialState)
   })
@@ -33,5 +36,38 @@ describe('scenes reducer', () => {
       [scene1.sceneId]: scene1,
       [scene2.sceneId]: scene2
     })
+  })
+
+  it('handles LOADED_DRAFT_SCENE', () => {
+    nextState = scenesReducer(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    expect(nextState).toEqual({
+      ...initialState,
+      [testDraftScene.sceneId]: testDraftScene
+    })
+  })
+
+  it('handles SAVED_DRAFT_SCENE', () => {
+    nextState = scenesReducer(undefined, actions.savedDraftScene('myStory', testDraftScene))
+    expect(nextState).toEqual({
+      ...initialState,
+      [testDraftScene.sceneId]: testDraftScene
+    })
+  })
+
+  it('handles LOADED_DRAFT_SIGNPOST', () => {
+    nextState = scenesReducer(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = scenesReducer(nextState,
+      actions.loadedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+    expect(nextState).toEqual({
+      ...initialState,
+      [testDraftScene.sceneId]: {
+        ...testDraftScene,
+        signpost: testSignpost
+      }
+    })
+  })
+
+  xit('handles SAVED_DRAFT_SIGNPOST', () => {
+
   })
 })
