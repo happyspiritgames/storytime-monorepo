@@ -18,9 +18,9 @@ import {
   LOAD_DRAFT_SIGNPOST,
   LOADED_DRAFT_SIGNPOST,
   LOAD_DRAFT_SIGNPOST_FAILED,
-  UPDATE_DRAFT_SIGNPOST,
-  UPDATED_DRAFT_SIGNPOST,
-  UPDATE_DRAFT_SIGNPOST_FAILED
+  SAVE_DRAFT_SIGNPOST,
+  SAVED_DRAFT_SIGNPOST,
+  SAVE_DRAFT_SIGNPOST_FAILED
 } from '../actions'
 import activeDraft from './activeDraft'
 
@@ -61,12 +61,13 @@ export default (state = initialState, action) => {
       }
     case SAVE_DRAFT:
     case SAVE_DRAFT_SCENE:
+    case SAVE_DRAFT_SIGNPOST:
       return {
         ...state,
         status: writingDeskStates.SAVING
       }
-    case LOAD_DRAFT_FAILED:
     case LOAD_DRAFTS_FAILED:
+    case LOAD_DRAFT_FAILED:
     case SAVE_DRAFT_FAILED:
       return {
         ...state,
@@ -75,9 +76,7 @@ export default (state = initialState, action) => {
     case START_NEW_DRAFT:
       const nextState = {...state}
       delete nextState.activeDraft
-      return {
-        ...nextState
-      }
+      return nextState
     default:
       return state
   }

@@ -188,17 +188,17 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('creates UPDATE_DRAFT_SIGNPOST action', () => {
-    expect(actions.updateDraftSignpost())
+  it('creates SAVE_DRAFT_SIGNPOST action', () => {
+    expect(actions.saveDraftSignpost())
     .toEqual({
-      type: actions.UPDATE_DRAFT_SIGNPOST
+      type: actions.SAVE_DRAFT_SIGNPOST
     })
   })
 
-  it('creates UPDATED_DRAFT_SIGNPOST action', () => {
-    expect(actions.updatedDraftSignpost('wumpus', '1', testSignpost))
+  it('creates SAVED_DRAFT_SIGNPOST action', () => {
+    expect(actions.savedDraftSignpost('wumpus', '1', testSignpost))
     .toEqual({
-      type: actions.UPDATED_DRAFT_SIGNPOST,
+      type: actions.SAVED_DRAFT_SIGNPOST,
       payload: {
         storyId: 'wumpus',
         sceneId: '1',
@@ -207,10 +207,10 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('creates UPDATE_DRAFT_SIGNPOST_FAILED action', () => {
-    expect(actions.updateDraftSignpostFailed(testError))
+  it('creates SAVE_DRAFT_SIGNPOST_FAILED action', () => {
+    expect(actions.saveDraftSignpostFailed(testError))
     .toEqual({
-      type: actions.UPDATE_DRAFT_SIGNPOST_FAILED,
+      type: actions.SAVE_DRAFT_SIGNPOST_FAILED,
       payload: {
         error: testError
       },

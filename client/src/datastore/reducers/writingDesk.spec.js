@@ -98,4 +98,30 @@ describe('writing desk reducer', () => {
       ...initialState,
     })
   })
+
+  it('handles LOAD_DRAFT_SCENE', () => {
+    nextState = writingDesk(undefined, actions.loadDraftScene())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.LOADING
+    })
+  })
+
+  it('handles LOAD_DRAFT_SIGNPOST', () => {
+    nextState = writingDesk(undefined, actions.loadDraftSignpost())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.LOADING
+    })
+  })
+
+  it('handles SAVE_DRAFT_SIGNPOST', () => {
+    nextState = writingDesk(undefined, actions.saveDraftSignpost())
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.SAVING
+    })
+  })
+
+
 })
