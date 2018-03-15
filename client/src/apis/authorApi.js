@@ -2,21 +2,21 @@ import { getHeaders } from '../util/authentication'
 
 const draftStoriesBaseURI = '/api/draft-stories'
 
-export const fetchDraftStories = (handleDraftStories, handleError) => {
+export const fetchDraftStories = (handleResponse, handleError) => {
   console.log('called getDraftStories')
   const fetchOptions = { headers: getHeaders() }
   fetch(draftStoriesBaseURI, fetchOptions)
     .then(res => res.json())
-    .then(stories => handleDraftStories(stories))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const fetchFullDraft = (storyId, handleDraft, handleError) => {
+export const fetchFullDraft = (storyId, handleResponse, handleError) => {
   console.log('fetchFullDraft', storyId)
   const fetchOptions = { headers: getHeaders() }
   fetch(`${draftStoriesBaseURI}/${storyId}/full`, fetchOptions)
     .then(res => res.json())
-    .then(draft => handleDraft(draft))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
@@ -29,7 +29,7 @@ export const createDraft = (draftSummary, handleResponse, handleError) => {
   }
   fetch(draftStoriesBaseURI, fetchOptions)
     .then(res => res.json())
-    .then(summaryResponse => handleResponse(summaryResponse))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
@@ -42,21 +42,21 @@ export const updateDraft = (draftSummary, handleResponse, handleError) => {
   }
   fetch(`${draftStoriesBaseURI}/${draftSummary.storyId}`, fetchOptions)
     .then(res => res.json())
-    .then(summaryResponse => handleResponse(summaryResponse))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const fetchScene = (storyId, sceneId, handleDraft, handleError) => {
-  console.log('fetchScene', storyId, sceneId)
+export const fetchDraftScene = (storyId, sceneId, handleResponse, handleError) => {
+  console.log('fetchDraftScene', storyId, sceneId)
   const fetchOptions = { headers: getHeaders() }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${sceneId}`, fetchOptions)
     .then(res => res.json())
-    .then(draft => handleDraft(draft))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const createScene = (storyId, draftScene, handleResponse, handleError) => {
-  console.log('createScene: summary', draftScene)
+export const createDraftScene = (storyId, draftScene, handleResponse, handleError) => {
+  console.log('createDraftScene: summary', draftScene)
   const fetchOptions = {
     method: 'POST',
     headers: getHeaders(),
@@ -64,12 +64,12 @@ export const createScene = (storyId, draftScene, handleResponse, handleError) =>
   }
   fetch(`draftStoriesBaseURI/${storyId}/scenes`, fetchOptions)
     .then(res => res.json())
-    .then(summaryResponse => handleResponse(summaryResponse))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const updateScene = (storyId, draftScene, handleResponse, handleError) => {
-  console.log('updateScene: summary', draftScene)
+export const updateDraftScene = (storyId, draftScene, handleResponse, handleError) => {
+  console.log('updateDraftScene: summary', draftScene)
   const fetchOptions = {
     method: 'PUT',
     headers: getHeaders(),
@@ -77,21 +77,21 @@ export const updateScene = (storyId, draftScene, handleResponse, handleError) =>
   }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${draftScene.sceneId}`, fetchOptions)
     .then(res => res.json())
-    .then(summaryResponse => handleResponse(summaryResponse))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const fetchSignpost = (storyId, sceneId, handleDraft, handleError) => {
-  console.log('fetchSignpost', storyId, sceneId)
+export const fetchDraftSignpost = (storyId, sceneId, handleResponse, handleError) => {
+  console.log('fetchDraftSignpost', storyId, sceneId)
   const fetchOptions = { headers: getHeaders() }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${sceneId}/signpost`, fetchOptions)
     .then(res => res.json())
-    .then(draft => handleDraft(draft))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const updateSignpost = (storyId, sceneId, signpost, handleResponse, handleError) => {
-  console.log('updateSignpost: summary', storyId, sceneId, signpost)
+export const updateDraftSignpost = (storyId, sceneId, signpost, handleResponse, handleError) => {
+  console.log('updateDraftSignpost: summary', storyId, sceneId, signpost)
   const fetchOptions = {
     method: 'PUT',
     headers: getHeaders(),
@@ -99,7 +99,7 @@ export const updateSignpost = (storyId, sceneId, signpost, handleResponse, handl
   }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${sceneId}/signpost`, fetchOptions)
     .then(res => res.json())
-    .then(summaryResponse => handleResponse(summaryResponse))
+    .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 

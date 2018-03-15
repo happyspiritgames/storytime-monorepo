@@ -32,6 +32,11 @@ export const retrieveDraftProjects = () => {
   }
 }
 
+export const START_NEW_DRAFT = 'START_NEW_DRAFT'
+export const startNewDraft = () => ({
+  type: START_NEW_DRAFT
+})
+
 export const SAVE_DRAFT = 'SAVE_DRAFT'
 export const saveDraft = () => ({
   type: SAVE_DRAFT
@@ -65,11 +70,6 @@ export const saveDraftSummary = (draftSummary) => {
   }
 }
 
-export const START_NEW_DRAFT = 'START_NEW_DRAFT'
-export const startNewDraft = () => ({
-  type: START_NEW_DRAFT
-})
-
 export const LOAD_DRAFT = 'LOAD_DRAFT'
 export const loadDraft = () => ({
   type: LOAD_DRAFT
@@ -98,6 +98,141 @@ export const retrieveDraft = (storyId) => {
     authorApi.fetchFullDraft(storyId,
       draft => dispatch(loadedDraft(draft)),
       error => dispatch(loadDraftFailed(error))
+    )
+  }
+}
+
+export const SAVE_DRAFT_SCENE = 'SAVE_DRAFT_SCENE'
+export const saveDraftScene = () => ({
+  type: SAVE_DRAFT_SCENE
+})
+
+export const SAVED_DRAFT_SCENE = 'SAVED_DRAFT_SCENE'
+export const savedDraftScene = (storyId, nextScene) => ({
+  type: SAVED_DRAFT_SCENE,
+  payload: {
+    storyId,
+    nextScene
+  }
+})
+
+export const SAVE_DRAFT_SCENE_FAILED = 'SAVE_DRAFT_SCENE_FAILED'
+export const saveDraftSceneFailed = error => ({
+  type: SAVE_DRAFT_SCENE_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
+export const saveDraftSceneSummary = (storyId, draftScene) => {
+  return (dispatch) => {
+    dispatch(saveDraftScene())
+    const saveAPI = (draftScene.sceneId) ? authorApi.updateDraftScene : authorApi.createDraftScene
+    saveAPI(storyId, draftScene,
+      nextScene => dispatch(savedDraftScene(storyId, nextScene)),
+      error => dispatch(saveDraftSceneFailed(error))
+    )
+  }
+}
+
+export const LOAD_DRAFT_SCENE = 'LOAD_DRAFT_SCENE'
+export const loadDraftScene = () => ({
+  type: LOAD_DRAFT_SCENE
+})
+
+export const LOADED_DRAFT_SCENE = 'LOADED_DRAFT_SCENE'
+export const loadedDraftScene = (storyId, scene) => ({
+  type: LOADED_DRAFT_SCENE,
+  payload: {
+    storyId,
+    scene
+  }
+})
+
+export const LOAD_DRAFT_SCENE_FAILED = 'LOAD_DRAFT_SCENE_FAILED'
+export const loadDraftSceneFailed = (error) => ({
+  type: LOAD_DRAFT_SCENE_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
+export const retrieveDraftScene = (storyId, sceneId) => {
+  return (dispatch) => {
+    dispatch(loadDraftScene())
+    authorApi.fetchDraftScene(storyId, sceneId,
+      scene => dispatch(loadedDraftScene(storyId, scene)),
+      error => dispatch(loadDraftSceneFailed(error))
+    )
+  }
+}
+
+export const LOAD_DRAFT_SIGNPOST = 'LOAD_DRAFT_SIGNPOST'
+export const loadDraftSignpost = () => ({
+  type: LOAD_DRAFT_SIGNPOST
+})
+
+export const LOADED_DRAFT_SIGNPOST = 'LOADED_DRAFT_SIGNPOST'
+export const loadedDraftSignpost = (storyId, sceneId, signpost) => ({
+  type: LOADED_DRAFT_SIGNPOST,
+  payload: {
+    storyId,
+    sceneId,
+    signpost
+  }
+})
+
+export const LOAD_DRAFT_SIGNPOST_FAILED = 'LOAD_DRAFT_SIGNPOST_FAILED'
+export const loadDraftSignpostFailed = (error) => ({
+  type: LOAD_DRAFT_SIGNPOST_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
+export const retrieveDraftSignpost = (storyId, sceneId) => {
+  return (dispatch) => {
+    dispatch(loadDraftSignpost())
+    authorApi.fetchDraftSignpost(storyId, sceneId,
+      signpost => dispatch(loadedDraftSignpost(storyId, sceneId, signpost)),
+      error => dispatch(loadDraftSignpostFailed(error))
+    )
+  }
+}
+
+export const UPDATE_DRAFT_SIGNPOST = 'UPDATE_DRAFT_SIGNPOST'
+export const updateDraftSignpost = () => ({
+  type: UPDATE_DRAFT_SIGNPOST
+})
+
+export const UPDATED_DRAFT_SIGNPOST = 'UPDATED_DRAFT_SIGNPOST'
+export const updatedDraftSignpost = (storyId, sceneId, signpost) => ({
+  type: UPDATED_DRAFT_SIGNPOST,
+  payload: {
+    storyId,
+    sceneId,
+    signpost
+  }
+})
+
+export const UPDATE_DRAFT_SIGNPOST_FAILED = 'UPDATE_DRAFT_SIGNPOST_FAILED'
+export const updateDraftSignpostFailed = (error) => ({
+  type: UPDATE_DRAFT_SIGNPOST_FAILED,
+  payload: {
+    error
+  },
+  error: true
+})
+
+export const saveDraftSignpost = (storyId, sceneId) => {
+  return (dispatch) => {
+    dispatch(updateDraftSignpost())
+    authorApi.updateDraftSignpost(storyId, sceneId,
+      signpost => dispatch(updatedDraftSignpost(storyId, sceneId, signpost)),
+      error => dispatch(updateDraftSignpostFailed(error))
     )
   }
 }
