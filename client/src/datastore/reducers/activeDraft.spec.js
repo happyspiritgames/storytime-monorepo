@@ -1,6 +1,6 @@
 import activeDraft, { initialState } from './activeDraft'
 import * as actions from '../actions'
-import { testFullDraft, testDraftScene } from '../testData'
+import { testFullDraft, testDraftScene, testSignpost } from '../testData'
 
 describe('activeDraft reducer', () => {
   let nextState
@@ -32,14 +32,53 @@ describe('activeDraft reducer', () => {
     })
   })
 
-  xit('handles LOADED_DRAFT_SCENE', () => {
+  it('handles LOADED_DRAFT_SCENE', () => {
     nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
     expect(nextState).toEqual({
-      ...initialState
+      ...initialState,
+      scenes: {
+        [testDraftScene.sceneId]: testDraftScene
+      }
     })
   })
 
-  xit('handles SAVED_DRAFT_SCENE')
-  xit('handles LOADED_DRAFT_SIGNPOST')
-  xit('handles SAVED_DRAFT_SIGNPOST')
+  it('handles SAVED_DRAFT_SCENE', () => {
+    nextState = activeDraft(undefined, actions.savedDraftScene('myStory', testDraftScene))
+    expect(nextState).toEqual({
+      ...initialState,
+      scenes: {
+        [testDraftScene.sceneId]: testDraftScene
+      }
+    })
+  })
+
+  it('handles LOADED_DRAFT_SIGNPOST', () => {
+    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(nextState,
+      actions.loadedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+    expect(nextState).toEqual({
+      ...initialState,
+      scenes: {
+        [testDraftScene.sceneId]: {
+          ...testDraftScene,
+          signpost: testSignpost
+        }
+      }
+    })
+  })
+
+  it('handles SAVED_DRAFT_SIGNPOST', () => {
+    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(nextState,
+      actions.savedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+    expect(nextState).toEqual({
+      ...initialState,
+      scenes: {
+        [testDraftScene.sceneId]: {
+          ...testDraftScene,
+          signpost: testSignpost
+        }
+      }
+    })
+  })
 })

@@ -67,7 +67,16 @@ describe('scenes reducer', () => {
     })
   })
 
-  xit('handles SAVED_DRAFT_SIGNPOST', () => {
-
+  it('handles SAVED_DRAFT_SIGNPOST', () => {
+    nextState = scenesReducer(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = scenesReducer(nextState,
+      actions.savedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+    expect(nextState).toEqual({
+      ...initialState,
+      [testDraftScene.sceneId]: {
+        ...testDraftScene,
+        signpost: testSignpost
+      }
+    })
   })
 })

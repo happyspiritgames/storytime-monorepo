@@ -3,7 +3,8 @@ import {
   LOADED_DRAFT,
   SAVED_DRAFT_SCENE,
   LOADED_DRAFT_SCENE,
-  LOADED_DRAFT_SIGNPOST
+  LOADED_DRAFT_SIGNPOST,
+  SAVED_DRAFT_SIGNPOST
 } from '../actions'
 
 export const initialState = {}
@@ -28,6 +29,7 @@ export default (state = initialState, action) => {
       }
       return nextScenes
     case LOADED_DRAFT_SIGNPOST:
+    case SAVED_DRAFT_SIGNPOST:
       const { sceneId, signpost } = action.payload
       const sceneToChange = state[sceneId]
       if (!sceneToChange) {
