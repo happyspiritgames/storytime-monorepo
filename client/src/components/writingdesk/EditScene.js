@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { draftSceneShape } from '../../datastore/dataShapes'
+import { draftShape } from '../../datastore/dataShapes'
 
 export default class EditScene extends Component {
   static propTypes = {
-    draftScene: draftSceneShape,
+    draft: draftShape,
     loadDraft: PropTypes.func,
     loadScene: PropTypes.func,
     saveScene: PropTypes.func
   }
 
   state = {
+    draftSummary: {},
     draftScene: {
       title: '',
       prose: '',
@@ -24,7 +25,7 @@ export default class EditScene extends Component {
     },
     newSign: {
       teaser: '',
-      destinationScene: ''
+      destinationId: ''
     }
   }
 
@@ -35,12 +36,17 @@ export default class EditScene extends Component {
     })
   }
 
-  handleDeleteSign = () => {
-    console.log('implement deleteSign')
-  }
-
-  handleAddOrUpdateSign = (destinationId, teaser) => {
-    console.log('implement addOrUpdateSign')
+  establishInitialDraftState = (draft, sceneId) => {
+    const draftSummary = draft.summary
+    const draftScene = draft.scenes[sceneId]
+    this.setState({
+      draftSummary,
+      draftScene,
+      isSignpostDirty: false,
+      signpostChange: {},
+      isLoading: false
+    })
+    this.clearSignpostChanges()
   }
 
   handleChangeScene = (event) => {
@@ -54,16 +60,15 @@ export default class EditScene extends Component {
   }
 
   handleSaveScene = () => {
-    console.log('implement handleSaveScene')
-    this.props.saveScene(this.props.draft.summary.storyId, this.state.draftScene)
+    this.props.saveScene(this.state.draftSummary.storyId, this.state.draftScene)
   }
 
-  setDraftSceneAndStopLoading = (draftScene) => {
-    this.setState({
-      draftScene,
-      isLoading: false
-    })
-    this.clearSignpostChanges()
+  handleAddOrUpdateSign = (destinationId, teaser) => {
+    console.log('implement addOrUpdateSign')
+  }
+
+  handleDeleteSign = () => {
+    console.log('implement deleteSign')
   }
 
   componentDidMount() {
@@ -72,7 +77,9 @@ export default class EditScene extends Component {
       throw new Error('Routing issue: got to EditScene without a draft ID or scene ID')
     }
 
-    if (!this.props.draft) {
+    const { draft } = this.props
+
+    if (!draft) {
       console.log('draft is missing')
       this.setState({
         isLoading: true,
@@ -82,8 +89,8 @@ export default class EditScene extends Component {
       return
     }
 
-    if (this.props.draft.scenes[sceneId]) {
-      this.setDraftSceneAndStopLoading(this.props.draft.scenes[sceneId])
+    if (draft.scenes[sceneId]) {
+      this.establishInitialDraftState(draft, sceneId)
       return
     } else {
       console.error('No scene?!?')
@@ -94,13 +101,14 @@ export default class EditScene extends Component {
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps', nextProps)
     const nextSceneId = nextProps.match.params.sceneId
+    const { draft } = nextProps
 
     // end loading once draft has been located
     if (this.state.isLoading
-        && nextProps.draft
-        && this.state.draftScene !== nextProps.draft.scenes[nextSceneId]) {
+        && draft
+        && this.state.draftScene !== draft.scenes[nextSceneId]) {
       console.log('stop loading draft')
-      this.setDraftSceneAndStopLoading(nextProps.draft.scenes[nextSceneId])
+      this.establishInitialDraftState(draft, nextSceneId)
     }
   }
 
@@ -118,9 +126,9 @@ export default class EditScene extends Component {
   }
 
   render() {
-    const { draftScene } = this.state
+    const { isLoading, draftSummary, draftScene } = this.state
 
-    if (!draftScene) {
+    if (isLoading) {
       return this.renderLoading()
     }
 
@@ -128,9 +136,9 @@ export default class EditScene extends Component {
       <div id="edit-scene">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
-          <li className="breadcrumb-item"><a><span>Projects</span></a></li>
-          <li className="breadcrumb-item"><a><span>The Mission</span></a></li>
-          <li className="breadcrumb-item"><a><span>Scene 1</span></a></li>
+          <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
+          <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
+          <li className="breadcrumb-item">{draftScene.title}</li>
         </ol>
         <div className="row section">
           <div className="col">
