@@ -13,12 +13,14 @@ export default class WritingDesk extends Component {
     loadDrafts: PropTypes.func,
     startNewDraft: PropTypes.func,
     loadDraftForEdit: PropTypes.func,
-    saveDraft: PropTypes.func
+    saveDraft: PropTypes.func,
+    startNewDraftScene: PropTypes.func
   }
 
   render() {
     const {
-      draftProjects, activeDraft, loadDrafts, startNewDraft, loadDraftForEdit, saveDraft
+      draftProjects, activeDraft, loadDrafts, startNewDraft,
+      loadDraftForEdit, saveDraft, startNewDraftScene
     } = this.props
     return (
       <Switch>
@@ -37,6 +39,7 @@ export default class WritingDesk extends Component {
               startDraft={startNewDraft}
               loadDraft={loadDraftForEdit}
               saveDraft={saveDraft}
+              addScene={startNewDraftScene}
               {...props}
             />
           }

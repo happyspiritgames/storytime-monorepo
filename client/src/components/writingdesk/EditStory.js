@@ -10,7 +10,8 @@ export default class EditStory extends Component {
     draft: draftShape,
     startDraft: PropTypes.func,
     loadDraft: PropTypes.func,
-    saveDraft: PropTypes.func
+    saveDraft: PropTypes.func,
+    addScene: PropTypes.func
   }
 
   state = {

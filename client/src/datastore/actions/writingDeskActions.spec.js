@@ -108,11 +108,10 @@ describe('writing desk actions', () => {
   })
 
   it('creates SAVED_DRAFT_SCENE action', () => {
-    expect(actions.savedDraftScene('wumpus', testDraftScene))
+    expect(actions.savedDraftScene(testDraftScene))
     .toEqual({
       type: actions.SAVED_DRAFT_SCENE,
       payload: {
-        storyId: 'wumpus',
         scene: testDraftScene
       }
     })
@@ -137,11 +136,10 @@ describe('writing desk actions', () => {
   })
 
   it('creates LOADED_DRAFT_SCENE action', () => {
-    expect(actions.loadedDraftScene('wumpus', testDraftScene))
+    expect(actions.loadedDraftScene(testDraftScene))
     .toEqual({
       type: actions.LOADED_DRAFT_SCENE,
       payload: {
-        storyId: 'wumpus',
         scene: testDraftScene
       }
     })
@@ -166,11 +164,10 @@ describe('writing desk actions', () => {
   })
 
   it('creates LOADED_DRAFT_SIGNPOST action', () => {
-    expect(actions.loadedDraftSignpost('wumpus', '1', testSignpost))
+    expect(actions.loadedDraftSignpost('1', testSignpost))
     .toEqual({
       type: actions.LOADED_DRAFT_SIGNPOST,
       payload: {
-        storyId: 'wumpus',
         sceneId: '1',
         signpost: testSignpost
       }
@@ -196,11 +193,10 @@ describe('writing desk actions', () => {
   })
 
   it('creates SAVED_DRAFT_SIGNPOST action', () => {
-    expect(actions.savedDraftSignpost('wumpus', '1', testSignpost))
+    expect(actions.savedDraftSignpost('1', testSignpost))
     .toEqual({
       type: actions.SAVED_DRAFT_SIGNPOST,
       payload: {
-        storyId: 'wumpus',
         sceneId: '1',
         signpost: testSignpost
       }

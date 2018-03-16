@@ -108,16 +108,15 @@ export const saveDraftScene = () => ({
 })
 
 export const SAVED_DRAFT_SCENE = 'SAVED_DRAFT_SCENE'
-export const savedDraftScene = (storyId, scene) => ({
+export const savedDraftScene = (scene) => ({
   type: SAVED_DRAFT_SCENE,
   payload: {
-    storyId,
     scene
   }
 })
 
 export const SAVE_DRAFT_SCENE_FAILED = 'SAVE_DRAFT_SCENE_FAILED'
-export const saveDraftSceneFailed = error => ({
+export const saveDraftSceneFailed = (error) => ({
   type: SAVE_DRAFT_SCENE_FAILED,
   payload: {
     error
@@ -125,12 +124,12 @@ export const saveDraftSceneFailed = error => ({
   error: true
 })
 
-export const saveDraftSceneSummary = (storyId, draftScene) => {
+export const createDraftScene = (storyId, draftScene) => {
   return (dispatch) => {
     dispatch(saveDraftScene())
     const saveAPI = (draftScene.sceneId) ? authorApi.updateDraftScene : authorApi.createDraftScene
     saveAPI(storyId, draftScene,
-      nextScene => dispatch(savedDraftScene(storyId, nextScene)),
+      nextScene => dispatch(savedDraftScene(nextScene)),
       error => dispatch(saveDraftSceneFailed(error))
     )
   }
@@ -142,10 +141,9 @@ export const loadDraftScene = () => ({
 })
 
 export const LOADED_DRAFT_SCENE = 'LOADED_DRAFT_SCENE'
-export const loadedDraftScene = (storyId, scene) => ({
+export const loadedDraftScene = (scene) => ({
   type: LOADED_DRAFT_SCENE,
   payload: {
-    storyId,
     scene
   }
 })
@@ -175,10 +173,9 @@ export const loadDraftSignpost = () => ({
 })
 
 export const LOADED_DRAFT_SIGNPOST = 'LOADED_DRAFT_SIGNPOST'
-export const loadedDraftSignpost = (storyId, sceneId, signpost) => ({
+export const loadedDraftSignpost = (sceneId, signpost) => ({
   type: LOADED_DRAFT_SIGNPOST,
   payload: {
-    storyId,
     sceneId,
     signpost
   }
@@ -197,7 +194,7 @@ export const retrieveDraftSignpost = (storyId, sceneId) => {
   return (dispatch) => {
     dispatch(loadDraftSignpost())
     authorApi.fetchDraftSignpost(storyId, sceneId,
-      signpost => dispatch(loadedDraftSignpost(storyId, sceneId, signpost)),
+      signpost => dispatch(loadedDraftSignpost(sceneId, signpost)),
       error => dispatch(loadDraftSignpostFailed(error))
     )
   }
@@ -209,10 +206,9 @@ export const saveDraftSignpost = () => ({
 })
 
 export const SAVED_DRAFT_SIGNPOST = 'SAVED_DRAFT_SIGNPOST'
-export const savedDraftSignpost = (storyId, sceneId, signpost) => ({
+export const savedDraftSignpost = (sceneId, signpost) => ({
   type: SAVED_DRAFT_SIGNPOST,
   payload: {
-    storyId,
     sceneId,
     signpost
   }
@@ -231,7 +227,7 @@ export const updateDraftSignpost = (storyId, sceneId, signpost) => {
   return (dispatch) => {
     dispatch(saveDraftSignpost())
     authorApi.updateDraftSignpost(storyId, sceneId,
-      signpost => dispatch(savedDraftSignpost(storyId, sceneId, signpost)),
+      signpost => dispatch(savedDraftSignpost(sceneId, signpost)),
       error => dispatch(saveDraftSignpostFailed(error))
     )
   }

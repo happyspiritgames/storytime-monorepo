@@ -33,7 +33,7 @@ describe('activeDraft reducer', () => {
   })
 
   it('handles LOADED_DRAFT_SCENE', () => {
-    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(undefined, actions.loadedDraftScene(testDraftScene))
     expect(nextState).toEqual({
       ...initialState,
       scenes: {
@@ -43,7 +43,7 @@ describe('activeDraft reducer', () => {
   })
 
   it('handles SAVED_DRAFT_SCENE', () => {
-    nextState = activeDraft(undefined, actions.savedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(undefined, actions.savedDraftScene(testDraftScene))
     expect(nextState).toEqual({
       ...initialState,
       scenes: {
@@ -53,9 +53,9 @@ describe('activeDraft reducer', () => {
   })
 
   it('handles LOADED_DRAFT_SIGNPOST', () => {
-    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(undefined, actions.loadedDraftScene(testDraftScene))
     nextState = activeDraft(nextState,
-      actions.loadedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+      actions.loadedDraftSignpost(testDraftScene.sceneId, testSignpost))
     expect(nextState).toEqual({
       ...initialState,
       scenes: {
@@ -68,9 +68,9 @@ describe('activeDraft reducer', () => {
   })
 
   it('handles SAVED_DRAFT_SIGNPOST', () => {
-    nextState = activeDraft(undefined, actions.loadedDraftScene('myStory', testDraftScene))
+    nextState = activeDraft(undefined, actions.loadedDraftScene(testDraftScene))
     nextState = activeDraft(nextState,
-      actions.savedDraftSignpost('myStory', testDraftScene.sceneId, testSignpost))
+      actions.savedDraftSignpost(testDraftScene.sceneId, testSignpost))
     expect(nextState).toEqual({
       ...initialState,
       scenes: {

@@ -111,7 +111,7 @@ describe('writing desk reducer', () => {
   })
 
   it('handles LOADED_DRAFT_SCENE', () => {
-    nextState = writingDesk(undefined, actions.loadedDraftScene('blargy', testDraftScene))
+    nextState = writingDesk(undefined, actions.loadedDraftScene(testDraftScene))
     expect(nextState).toEqual({
       ...initialState,
       activeDraft: {
@@ -142,7 +142,7 @@ describe('writing desk reducer', () => {
   })
 
   it('handles SAVED_DRAFT_SCENE', () => {
-    nextState = writingDesk(undefined, actions.savedDraftScene('blargy', testDraftScene))
+    nextState = writingDesk(undefined, actions.savedDraftScene(testDraftScene))
     expect(nextState).toEqual({
       ...initialState,
       activeDraft: {
@@ -171,10 +171,10 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles LOADED_DRAFT_SCENE', () => {
-    nextState = writingDesk(undefined, actions.loadedDraftScene('blargy', testDraftScene))
+  it('handles LOADED_DRAFT_SIGNPOST', () => {
+    nextState = writingDesk(undefined, actions.loadedDraftScene(testDraftScene))
     nextState = writingDesk(nextState,
-      actions.loadedDraftSignpost('blargy', testDraftScene.sceneId, testSignpost))
+      actions.loadedDraftSignpost(testDraftScene.sceneId, testSignpost))
     expect(nextState).toEqual({
       ...initialState,
       activeDraft: {
@@ -208,9 +208,9 @@ describe('writing desk reducer', () => {
   })
 
   it('handles SAVED_DRAFT_SIGNPOST', () => {
-    nextState = writingDesk(undefined, actions.loadedDraftScene('blargy', testDraftScene))
+    nextState = writingDesk(undefined, actions.loadedDraftScene(testDraftScene))
     nextState = writingDesk(nextState,
-      actions.savedDraftSignpost('blargy', testDraftScene.sceneId, testSignpost))
+      actions.savedDraftSignpost(testDraftScene.sceneId, testSignpost))
     expect(nextState).toEqual({
       ...initialState,
       activeDraft: {
