@@ -5,7 +5,10 @@ import {
   saveDraftSummary,
   retrieveDraft,
   startNewDraft,
-  createDraftScene
+  retrieveDraftScene,
+  updateDraftScene,
+  retrieveDraftSignpost,
+  updateDraftSignpost
 } from '../../datastore/actions'
 
 const mapStateToProps = state => {
@@ -21,10 +24,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     loadDrafts: () => dispatch(retrieveDraftProjects()),
+    startNewDraft: () => dispatch(startNewDraft()),
     loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId)),
     saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
-    startNewDraft: () => dispatch(startNewDraft()),
-    startNewDraftScene: (storyId, scene) => dispatch(createDraftScene(storyId, scene))
+    loadDraftScene: (storyId, sceneId) => dispatch(retrieveDraftScene(storyId, sceneId)),
+    saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
+    loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
+    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, signpostUpdates))
   }
 }
 

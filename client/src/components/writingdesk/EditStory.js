@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 
-export const newDraftId = '--newDraft--'
+export const NEW_DRAFT_ID = '--newDraft--'
 
 export default class EditStory extends Component {
   static propTypes = {
@@ -68,7 +68,7 @@ export default class EditStory extends Component {
     const { draftId } = this.props.match.params
     const { draft, loadDraft, startDraft } = this.props
 
-    if (draftId === newDraftId) {
+    if (draftId === NEW_DRAFT_ID) {
       console.log('clear for new draft')
       startDraft()
       this.setState({
@@ -99,7 +99,7 @@ export default class EditStory extends Component {
     console.log('componentWillReceiveProps', nextProps)
 
     // redirect page if isNew and draft is set
-    if (nextProps.match.params.draftId === newDraftId && nextProps.draft) {
+    if (nextProps.match.params.draftId === NEW_DRAFT_ID && nextProps.draft) {
       console.log('just created draft')
       this.props.history.replace(`/writingdesk/${nextProps.draft.summary.storyId}`)
     }

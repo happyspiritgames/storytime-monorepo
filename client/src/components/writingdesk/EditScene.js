@@ -1,7 +1,129 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import { draftSceneShape } from '../../datastore/dataShapes'
 
 export default class EditScene extends Component {
+  static propTypes = {
+    draftScene: draftSceneShape,
+    loadDraft: PropTypes.func,
+    loadScene: PropTypes.func,
+    saveScene: PropTypes.func
+  }
+
+  state = {
+    draftScene: {
+      title: '',
+      prose: '',
+      endPrompt: '',
+      signpost: []
+    },
+    isLoading: false,
+    isSignpostDirty: false,
+    signpostChanges: {
+    },
+    newSign: {
+      teaser: '',
+      destinationScene: ''
+    }
+  }
+
+  clearSignpostChanges = () => {
+    this.setState({
+      isSignpostDirty: false,
+      signpostChange: {}
+    })
+  }
+
+  handleDeleteSign = () => {
+    console.log('implement deleteSign')
+  }
+
+  handleAddOrUpdateSign = (destinationId, teaser) => {
+    console.log('implement addOrUpdateSign')
+  }
+
+  handleChangeScene = (event) => {
+    const target = event.target
+    let updateValue = target.value
+    let draftScene = {
+      ...this.state.draftScene,
+      [target.id]: updateValue
+    }
+    this.setState({ draftScene })
+  }
+
+  handleSaveScene = () => {
+    console.log('implement handleSaveScene')
+    this.props.saveScene(this.props.draft.summary.storyId, this.state.draftScene)
+  }
+
+  setDraftSceneAndStopLoading = (draftScene) => {
+    this.setState({
+      draftScene,
+      isLoading: false
+    })
+    this.clearSignpostChanges()
+  }
+
+  componentDidMount() {
+    const { draftId, sceneId } = this.props.match.params
+    if (!draftId || !sceneId) {
+      throw new Error('Routing issue: got to EditScene without a draft ID or scene ID')
+    }
+
+    if (!this.props.draft) {
+      console.log('draft is missing')
+      this.setState({
+        isLoading: true,
+        draftScene: undefined
+      })
+      this.props.loadDraft(draftId)
+      return
+    }
+
+    if (this.props.draft.scenes[sceneId]) {
+      this.setDraftSceneAndStopLoading(this.props.draft.scenes[sceneId])
+      return
+    } else {
+      console.error('No scene?!?')
+      throw new Error('No scene; should already be part of draft in store')
+    }
+}
+
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps', nextProps)
+    const nextSceneId = nextProps.match.params.sceneId
+
+    // end loading once draft has been located
+    if (this.state.isLoading
+        && nextProps.draft
+        && this.state.draftScene !== nextProps.draft.scenes[nextSceneId]) {
+      console.log('stop loading draft')
+      this.setDraftSceneAndStopLoading(nextProps.draft.scenes[nextSceneId])
+    }
+  }
+
+  renderLoading() {
+    return (
+      <div id="edit-story">
+        <h3 className="text-center">StoryTime Writing Desk</h3>
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
+          <li className="breadcrumb-item">Loading...</li>
+        </ol>
+        <h3>Loading...</h3>
+      </div>
+    )
+  }
+
   render() {
+    const { draftScene } = this.state
+
+    if (!draftScene) {
+      return this.renderLoading()
+    }
+
     return (
       <div id="edit-scene">
         <h3 className="text-center">StoryTime Writing Desk</h3>
@@ -18,19 +140,39 @@ export default class EditScene extends Component {
                 <legend className="text-info">Write to your heart's content…</legend>
                 <div className="form-group">
                   <label>Scene Title</label>
-                  <input className="form-control" type="text" name="title" />
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="title"
+                    value={draftScene.title}
+                    onChange={this.handleChangeScene}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Prose</label>
                   <small className="form-text text-muted">This is what people will read when they visit the scene.</small>
-                  <textarea className="form-control" name="about"></textarea>
+                  <textarea
+                    className="form-control"
+                    id="prose"
+                    value={draftScene.prose}
+                    onChange={this.handleChangeScene}
+                  ></textarea>
                 </div>
                 <div className="form-group">
                   <label>Next Scene Prompt</label>
-                  <input className="form-control" type="text" name="tagLine" />
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="endPrompt"
+                    value={draftScene.endPrompt}
+                    onChange={this.handleChangeScene}
+                  />
                   <small className="form-text text-muted">Optional text to display before the signpost of next scene options.</small>
                 </div>
-                <button className="btn btn-primary" type="button">Save Scene</button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={this.handleSaveScene}>Save Scene</button>
               </fieldset>
             </form>
           </div>
@@ -53,7 +195,7 @@ export default class EditScene extends Component {
                   </div>
                   <select className="form-control" name="destinationScene">
                     <option value="new">Create new scene...</option>
-                    <option value="sceneA" selected="">Scene A</option>
+                    <option value="sceneA">Scene A</option>
                     <option value="sceneB">Scene B</option>
                     <option value="sceneC">Scene C</option>
                   </select>

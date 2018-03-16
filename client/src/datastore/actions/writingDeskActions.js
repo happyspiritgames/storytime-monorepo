@@ -124,7 +124,7 @@ export const saveDraftSceneFailed = (error) => ({
   error: true
 })
 
-export const createDraftScene = (storyId, draftScene) => {
+export const updateDraftScene = (storyId, draftScene) => {
   return (dispatch) => {
     dispatch(saveDraftScene())
     const saveAPI = (draftScene.sceneId) ? authorApi.updateDraftScene : authorApi.createDraftScene
