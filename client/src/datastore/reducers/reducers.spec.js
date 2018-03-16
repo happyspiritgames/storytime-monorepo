@@ -1,10 +1,12 @@
 import reducers from './index'
 import { fetchedSummary, fetchedScene, updatedProfile } from '../actions'
 import { initialState as accountInitState } from './account'
+import { initialState as draftsInitState } from './drafts'
 import { initialState as libraryInitState } from './library'
 import { initialState as playerInitState } from './player'
 import { initialState as readerInitState } from './reader'
 import { initialState as storiesInitState } from './stories'
+import { initialState as writingDeskInitState } from './writingDesk'
 
 describe('root reducer', () => {
   const initialState = reducers(undefined, {})
@@ -21,10 +23,12 @@ describe('root reducer', () => {
   it('produces initial state by default', () => {
     const combinedInitialState = {
       account: accountInitState,
+      drafts: draftsInitState,
       library: libraryInitState,
       player: playerInitState,
       reader: readerInitState,
-      stories: storiesInitState
+      stories: storiesInitState,
+      writingDesk: writingDeskInitState
     }
     expect(initialState).toEqual(combinedInitialState)
   })
@@ -65,7 +69,6 @@ describe('root reducer', () => {
   it('updating player profile does not clobber state', () => {
     nextState = reducers(undefined, fetchedSummary(testSummary))
     nextState = reducers(nextState, updatedProfile({ id: 'blargy', nickname: 'Bubba' }))
-    console.log('clobber', nextState)
     expect(nextState.stories[testSummary.storyId]).toBeDefined()
   })
 })

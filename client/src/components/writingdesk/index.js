@@ -1,18 +1,42 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import WritingDesk from './WritingDesk'
+import {
+  retrieveDraftProjects,
+  saveDraftSummary,
+  retrieveDraft,
+  startNewDraft,
+  retrieveDraftScene,
+  updateDraftScene,
+  retrieveDraftSignpost,
+  updateDraftSignpost
+} from '../../datastore/actions'
 
-export default class WritingDeskPage extends Component {
-  render() {
-    return (
-      <div id="writing-desk-page">
-        <div style={{color: 'purple', textAlign: 'center'}}>
-          <h1>Thanks for becoming an author.</h1>
-          <h3><i>This is a preview of things to come in the next release.</i></h3>
-        </div>
-        <hr />
-        <WritingDesk />
-      </div>
-    )
+const mapStateToProps = state => {
+  const desk = state.writingDesk
+  const draftProjects = desk.draftProjects.map(storyId => state.drafts[storyId])
+  const activeDraft = desk.activeDraft
+  return {
+    draftProjects,
+    activeDraft
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadDrafts: () => dispatch(retrieveDraftProjects()),
+    startNewDraft: () => dispatch(startNewDraft()),
+    loadDraftForEdit: (storyId) => dispatch(retrieveDraft(storyId)),
+    saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
+    loadDraftScene: (storyId, sceneId) => dispatch(retrieveDraftScene(storyId, sceneId)),
+    saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
+    loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
+    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, signpostUpdates))
+  }
+}
+
+const WritingDeskPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WritingDesk)
+
+export default WritingDeskPage

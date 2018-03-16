@@ -14,8 +14,7 @@ import Contact from './components/contact'
 import Footer from './components/footer'
 import Navigation from './components/navigation'
 import WritingDesk from './components/writingdesk'
-import EditStory from './components/writingdesk/EditStory'
-import EditScene from './components/writingdesk/EditScene'
+// import EditStory from './components/writingdesk/EditStory'
 import './StoryTimeApp.css'
 
 export default class StoryTimeApp extends Component {
@@ -25,9 +24,9 @@ export default class StoryTimeApp extends Component {
       <Provider store={store}>
         <ErrorBoundaryContainer>
           <ConnectedRouter history={history}>
-            <div className="container-fluid">
+            <div className="container-fluid desktop page">
               <Navigation />
-              <div className="main-content">
+              <main className="main-content">
                 <Switch>
                   <Route exact path="/" component={LibraryPage} />
                   <Route path="/about" component={About} />
@@ -36,11 +35,10 @@ export default class StoryTimeApp extends Component {
                   <Route path="/callback" component={LoginCallback} />
                   <Route path="/contact" component={Contact} />
                   <Route path="/reader/:storyId" component={ReaderPage} />
-                  <Route exact path="/writingdesk" component={WritingDesk} />
-                  <Route exact path="/writingdesk/:draftId" component={EditStory} />
-                  <Route path="/writingdesk/:draftId/:sceneId" component={EditScene} />
+                  <Route path="/writingdesk" component={WritingDesk} />
+                  {/* <Route exact path="/writingdesk/:draftId" component={EditStory} /> */}
                 </Switch>
-              </div>
+              </main>
               <Footer />
             </div>
           </ConnectedRouter>

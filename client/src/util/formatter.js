@@ -50,5 +50,5 @@ export const formatDate = (date) => {
 
 export const formatDateTime = (date) => {
   const value = (typeof date === 'string') ? new Date(Date.parse(date)) : date
-  return `${formatDate(value)} ${value.getHours()}:${("0" + value.getMinutes()).slice(-2)}`
+  return `${formatDate(value)} at ${value.getHours()}:${("0" + value.getMinutes()).slice(-2)}`
 }

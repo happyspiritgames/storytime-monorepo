@@ -29,7 +29,7 @@ module.exports = {
     try {
       const dbResult = await pool.query(queryText, params);
       const duration = Date.now() - start;
-      console.log('executed query', { queryText, duration, rows: dbResult.rowCount });
+      // console.log('executed query', { queryText, duration, rows: dbResult.rowCount });
       return dbResult;
     } catch (e) {
       console.error('Database access error', e);
