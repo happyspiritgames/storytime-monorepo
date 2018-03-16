@@ -62,7 +62,7 @@ export const createDraftScene = (storyId, draftScene, handleResponse, handleErro
     headers: getHeaders(),
     body: JSON.stringify(draftScene)
   }
-  fetch(`draftStoriesBaseURI/${storyId}/scenes`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/scenes`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))

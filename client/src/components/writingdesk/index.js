@@ -25,7 +25,6 @@ const mapDispatchToProps = dispatch => {
     saveDraft: (summary) => dispatch(saveDraftSummary(summary)),
     startNewDraft: () => dispatch(startNewDraft()),
     startNewDraftScene: (storyId, scene) => dispatch(createDraftScene(storyId, scene))
-
   }
 }
 

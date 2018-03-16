@@ -38,11 +38,18 @@ export default class EditStory extends Component {
   }
 
   handleChangeNewScene = (event) => {
-    console.log('implement handleChangeNewScene', event.target)
+    const nextNewScene = {
+      title: event.target.value
+    }
+    this.setState({ newScene: nextNewScene })
   }
 
   handleAddScene = () => {
-    console.log('implement handleAddScene')
+    if (!this.state.draftSummary.storyId) {
+      console.log('We need to establish a draft before adding a scene.')
+      return
+    }
+    this.props.addScene(this.state.draftSummary.storyId, this.state.newScene)
   }
 
   handleSave = () => {
@@ -101,6 +108,12 @@ export default class EditStory extends Component {
     if (this.state.isLoading && nextProps.draft) {
       console.log('stop loading draft')
       this.setDraftAndStopLoading(nextProps.draft)
+    }
+
+    if (nextProps.draft && this.state.draftScenes !== nextProps.draft.scenes) {
+      this.setState({
+        draftScenes: nextProps.draft.scenes
+      })
     }
   }
 
