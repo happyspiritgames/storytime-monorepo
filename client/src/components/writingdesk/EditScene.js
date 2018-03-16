@@ -19,6 +19,7 @@ export default class EditScene extends Component {
       endPrompt: '',
       signpost: []
     },
+    draftScenes: [],
     isLoading: false,
     isSignpostDirty: false,
     signpostChanges: {
@@ -29,24 +30,18 @@ export default class EditScene extends Component {
     }
   }
 
-  clearSignpostChanges = () => {
-    this.setState({
-      isSignpostDirty: false,
-      signpostChange: {}
-    })
-  }
-
   establishInitialDraftState = (draft, sceneId) => {
     const draftSummary = draft.summary
+    const draftScenesList = Object.keys(draft.scenes).map(sceneId => draft.scenes[sceneId])
     const draftScene = draft.scenes[sceneId]
     this.setState({
       draftSummary,
       draftScene,
+      draftScenesList,
       isSignpostDirty: false,
       signpostChange: {},
       isLoading: false
     })
-    this.clearSignpostChanges()
   }
 
   handleChangeScene = (event) => {
