@@ -7,7 +7,7 @@ export default class About extends Component {
     return (
       <div id="about">
         <div className="message">
-          <p>Greetings! <img className="float-right headshot" src="/img/DaveMount.png" width="150" alt="The Happy Spirit" /></p>
+          <p>Greetings! <img className="float-right headshot" src="/img/HappySpirit.png" width="150" alt="The Happy Spirit" /></p>
           <p>You have found StoryTime, the first game produced by Happy Spirit Games. If you are new to
             StoryTime, give <Link to="/reader/1-themission"><em>The Mission</em></Link> a try.  Go
             through a few times, making different choices each time. That will keep you entertained
