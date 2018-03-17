@@ -18,26 +18,15 @@ export default class EditScene extends Component {
       endPrompt: '',
       signpost: []
     },
-    isLoading: false,
-    isSignpostDirty: false,
-    signpostChanges: {
-    },
-    newSign: {
-      teaser: '',
-      destinationId: ''
-    }
+    isLoading: false
   }
 
   establishInitialDraftState = (draft, sceneId) => {
     const draftSummary = draft.summary
-    const draftScenesList = Object.keys(draft.scenes).map(sceneId => draft.scenes[sceneId])
     const activeScene = draft.scenes[sceneId]
     this.setState({
       draftSummary,
       activeScene,
-      draftScenesList,
-      isSignpostDirty: false,
-      signpostChange: {},
       isLoading: false
     })
   }
@@ -56,12 +45,10 @@ export default class EditScene extends Component {
     this.props.saveScene(this.state.draftSummary.storyId, this.state.activeScene)
   }
 
-  handleAddOrUpdateSign = (destinationId, teaser) => {
-    console.log('implement addOrUpdateSign')
-  }
-
-  handleDeleteSign = () => {
-    console.log('implement deleteSign')
+  handleGoToEditSignpost = () => {
+    const { draftSummary, activeScene } = this.state
+    const signpostPage = `/writingdesk/${draftSummary.storyId}/${activeScene.sceneId}/signpost`
+    this.props.history.push(signpostPage)
   }
 
   componentDidMount() {
@@ -118,12 +105,26 @@ export default class EditScene extends Component {
     )
   }
 
+  renderSigns(signpost) {
+    let signsOut = null
+    if (signpost && signpost.length) {
+      signsOut = signpost.map((sign, index) => (
+        <li key={`${sign.destinationId}|${index}`} className="list-group-item">
+          <span>Teaser 1 ==&gt; Scene title [abk39skj0]</span>
+        </li>
+      ))
+    }
+    return signsOut
+  }
+
   render() {
     const { isLoading, draftSummary, activeScene } = this.state
 
     if (isLoading) {
       return this.renderLoading()
     }
+
+    const signs = this.renderSigns(activeScene.signpost)
 
     return (
       <div id="edit-scene">
@@ -181,73 +182,12 @@ export default class EditScene extends Component {
         <div className="row section">
           <div className="col">
             <h3>Signpost</h3>
-            <form>
-              <fieldset>
-                <legend className="text-info">Add a sign (where to go next)</legend>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Teaser</span>
-                  </div>
-                  <input className="form-control" type="text" name="teaser" placeholder="Explains the option to the player." />
-                </div>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Goes to</span>
-                  </div>
-                  <select className="form-control" name="destinationScene">
-                    <option value="new">Create new scene...</option>
-                    <option value="sceneA">Scene A</option>
-                    <option value="sceneB">Scene B</option>
-                    <option value="sceneC">Scene C</option>
-                  </select>
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
-                      <i className="icon ion-plus"></i> Add
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-            <form>
-              <fieldset>
-                <legend className="text-info">Signs. Change whatever you like…</legend>
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the left." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a"></i> Remove
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext" type="text" value="Goes to Scene: You Went Left (ID)" readonly="" />
-                  </li>
-                  <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the right." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a"></i> Remove
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext" type="text" value="Goes to Scene: You Went Right (ID)" readonly="" />
-                  </li>
-                  <li className="list-group-item">
-                    <button className="btn btn-primary" type="button">
-                      Save Changes to Signs
-                    </button>
-                  </li>
-                </ul>
-              </fieldset>
-            </form>
+            <ul className="list-group">
+              {signs}
+              <li className="list-group-item">
+                <button className="btn btn-primary" type="button" onClick={this.handleGoToEditSignpost}>Change Signpost</button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
