@@ -7,19 +7,17 @@ export default class EditScene extends Component {
   static propTypes = {
     draft: draftShape,
     loadDraft: PropTypes.func,
-    loadScene: PropTypes.func,
     saveScene: PropTypes.func
   }
 
   state = {
     draftSummary: {},
-    draftScene: {
+    activeScene: {
       title: '',
       prose: '',
       endPrompt: '',
       signpost: []
     },
-    draftScenes: [],
     isLoading: false,
     isSignpostDirty: false,
     signpostChanges: {
@@ -33,10 +31,10 @@ export default class EditScene extends Component {
   establishInitialDraftState = (draft, sceneId) => {
     const draftSummary = draft.summary
     const draftScenesList = Object.keys(draft.scenes).map(sceneId => draft.scenes[sceneId])
-    const draftScene = draft.scenes[sceneId]
+    const activeScene = draft.scenes[sceneId]
     this.setState({
       draftSummary,
-      draftScene,
+      activeScene,
       draftScenesList,
       isSignpostDirty: false,
       signpostChange: {},
@@ -47,15 +45,15 @@ export default class EditScene extends Component {
   handleChangeScene = (event) => {
     const target = event.target
     let updateValue = target.value
-    let draftScene = {
-      ...this.state.draftScene,
+    let activeScene = {
+      ...this.state.activeScene,
       [target.id]: updateValue
     }
-    this.setState({ draftScene })
+    this.setState({ activeScene })
   }
 
   handleSaveScene = () => {
-    this.props.saveScene(this.state.draftSummary.storyId, this.state.draftScene)
+    this.props.saveScene(this.state.draftSummary.storyId, this.state.activeScene)
   }
 
   handleAddOrUpdateSign = (destinationId, teaser) => {
@@ -78,7 +76,7 @@ export default class EditScene extends Component {
       console.log('draft is missing')
       this.setState({
         isLoading: true,
-        draftScene: undefined
+        activeScene: undefined
       })
       this.props.loadDraft(draftId)
       return
@@ -101,7 +99,7 @@ export default class EditScene extends Component {
     // end loading once draft has been located
     if (this.state.isLoading
         && draft
-        && this.state.draftScene !== draft.scenes[nextSceneId]) {
+        && this.state.activeScene !== draft.scenes[nextSceneId]) {
       console.log('stop loading draft')
       this.establishInitialDraftState(draft, nextSceneId)
     }
@@ -121,7 +119,7 @@ export default class EditScene extends Component {
   }
 
   render() {
-    const { isLoading, draftSummary, draftScene } = this.state
+    const { isLoading, draftSummary, activeScene } = this.state
 
     if (isLoading) {
       return this.renderLoading()
@@ -133,7 +131,7 @@ export default class EditScene extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
-          <li className="breadcrumb-item">{draftScene.title}</li>
+          <li className="breadcrumb-item">{activeScene.title}</li>
         </ol>
         <div className="row section">
           <div className="col">
@@ -147,7 +145,7 @@ export default class EditScene extends Component {
                     className="form-control"
                     type="text"
                     id="title"
-                    value={draftScene.title}
+                    value={activeScene.title}
                     onChange={this.handleChangeScene}
                   />
                 </div>
@@ -157,7 +155,7 @@ export default class EditScene extends Component {
                   <textarea
                     className="form-control"
                     id="prose"
-                    value={draftScene.prose}
+                    value={activeScene.prose}
                     onChange={this.handleChangeScene}
                   ></textarea>
                 </div>
@@ -167,7 +165,7 @@ export default class EditScene extends Component {
                     className="form-control"
                     type="text"
                     id="endPrompt"
-                    value={draftScene.endPrompt}
+                    value={activeScene.endPrompt}
                     onChange={this.handleChangeScene}
                   />
                   <small className="form-text text-muted">Optional text to display before the signpost of next scene options.</small>
