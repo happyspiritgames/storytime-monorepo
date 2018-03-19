@@ -223,10 +223,10 @@ export const saveDraftSignpostFailed = (error) => ({
   error: true
 })
 
-export const updateDraftSignpost = (storyId, sceneId, signpost) => {
+export const updateDraftSignpost = (storyId, sceneId, signpostUpdates) => {
   return (dispatch) => {
     dispatch(saveDraftSignpost())
-    authorApi.updateDraftSignpost(storyId, sceneId,
+    authorApi.updateDraftSignpost(storyId, sceneId, signpostUpdates,
       signpost => dispatch(savedDraftSignpost(sceneId, signpost)),
       error => dispatch(saveDraftSignpostFailed(error))
     )

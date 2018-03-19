@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
     loadDraftScene: (storyId, sceneId) => dispatch(retrieveDraftScene(storyId, sceneId)),
     saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
     loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
-    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, signpostUpdates))
+    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, sceneId, signpostUpdates))
   }
 }
 

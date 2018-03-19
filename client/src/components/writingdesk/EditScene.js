@@ -110,7 +110,7 @@ export default class EditScene extends Component {
     if (signpost && signpost.length) {
       signsOut = signpost.map((sign, index) => (
         <li key={`${sign.destinationId}|${index}`} className="list-group-item">
-          <span>Teaser 1 ==&gt; Scene title [abk39skj0]</span>
+          {`${sign.teaser} ---> ${this.props.draft.scenes[sign.destinationId].title} [${sign.destinationId}]`}
         </li>
       ))
     }

@@ -13,6 +13,7 @@ export default class EditSignpost extends Component {
   state = {
     isLoading: false,
     draftSummary: {},
+    draftScenes: {},
     draftScenesList: [],
     activeScene: {},
     activeSignpost: [],
@@ -36,11 +37,13 @@ export default class EditSignpost extends Component {
 
   initialize = (draft, sceneId) => {
     const draftSummary = draft.summary
-    const draftScenesList = Object.keys(draft.scenes).map(sceneId => draft.scenes[sceneId])
-    const activeScene = draft.scenes[sceneId]
+    const draftScenes = draft.scenes
+    const draftScenesList = Object.keys(draftScenes).map(sceneId => draftScenes[sceneId])
+    const activeScene = draftScenes[sceneId]
     this.setState({
       isLoading: false,
       draftSummary,
+      draftScenes,
       draftScenesList,
       activeScene,
       activeSignpost: activeScene.signpost,
@@ -55,25 +58,48 @@ export default class EditSignpost extends Component {
     })
   }
 
-  handleSaveSignpostUpdates = () => {
-    console.log('handleUpdateSignpost')
-    const { draftSummary, activeScene, signpostChanges } = this.state
-    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
+  handleChangeSignToAdd = (event) => {
+    const { target } = event
+    const { id, value } = target
+    console.log('handleChangeSignToAdd', id, value)
+    const newSign =  {
+      ...this.state.newSign,
+      [id]: value
+    }
+    this.setState({
+      newSign
+    })
   }
 
   handleAddSign = (destinationId, teaser) => {
     console.log('implement handleAddSign')
-    // const target = event.target
-    // let updateValue = target.value
-    // let draftScene = {
-    //   ...this.state.draftScene,
-    //   [target.id]: updateValue
-    // }
-    // this.setState({ draftScene })
+    const { draftSummary, activeScene, newSign } = this.state
+    if (!newSign.teaser || newSign.teaser === '' || !newSign.destinationId || newSign.destinationId === '') {
+      console.log('Teaser or destination ID is missing')
+      // TODO alert the user -- implement message box or popup, required field indicator
+      return
+    }
+    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, {
+      toUpdate: [
+        newSign
+      ]
+    })
   }
 
   handleDeleteSign = () => {
     console.log('implement handleDeleteSign')
+  }
+
+  handleSaveSignpostUpdates = () => {
+    console.log('handleSaveSignpostUpdates')
+    const { draftSummary, activeScene, signpostChanges } = this.state
+    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
+  }
+
+  handleCancelChanges = () => {
+    console.log('handleCancelChanges')
+    const { draftSummary, activeScene, signpostChanges } = this.state
+    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
   }
 
   componentDidMount() {
@@ -130,12 +156,55 @@ export default class EditSignpost extends Component {
     )
   }
 
-  render() {
-    const { isLoading, draftSummary, activeScene } = this.state
+  renderSignToEdit() {
+    const { draftScenes, activeSignpost } = this.state
 
-    if (isLoading) {
+    if (!draftScenes || !activeSignpost) {
+      return null
+    }
+
+    return activeSignpost.map(sign =>(
+      <li key={sign.destinationId} className="list-group-item">
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Teaser</span>
+          </div>
+          <input className="form-control" type="text" value={sign.teaser} />
+          <div className="input-group-append">
+            <button className="btn btn-primary" type="button">
+              <i className="icon ion-trash float-right"></i>
+            </button>
+          </div>
+        </div>
+        <div className="form-control-plaintext">
+          {`${draftScenes[sign.destinationId].title} [${sign.destinationId}]`}
+        </div>
+      </li>
+    ))
+  }
+
+  renderSceneOptionList = () => {
+    const { draftScenesList, activeScene } = this.state
+    if (!draftScenesList) {
+      return null
+    }
+    const availableSceneOptions = draftScenesList.filter(scene => scene.sceneId !== activeScene.sceneId)
+    return availableSceneOptions.map(scene => (
+      <option key={scene.sceneId} value={scene.sceneId}>{scene.title}</option>
+    ))
+  }
+
+  render() {
+    console.log('props', this.props)
+    console.log('state', this.state)
+
+    if (this.state.isLoading) {
       return this.renderLoading()
     }
+
+    const { draftSummary, activeScene, newSign } = this.state
+    const signsToEdit = this.renderSignToEdit()
+    const sceneOptions = this.renderSceneOptionList()
 
     return (
       <div id="edit-scene">
@@ -151,84 +220,58 @@ export default class EditSignpost extends Component {
             <h3>Signpost</h3>
             <form>
               <fieldset>
+                <legend className="text-info">Add a sign (where to go next)</legend>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">The sign says:</span>
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="teaser"
+                    value={newSign.teaser}
+                    onChange={this.handleChangeSignToAdd}
+                  />
+                </div>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">And takes player to:</span>
+                  </div>
+                  <select
+                    className="form-control"
+                    id="destinationId"
+                    value={newSign.destinationId}
+                    onChange={this.handleChangeSignToAdd}
+                  >
+                    <option value="">--Select a scene--</option>
+                    {sceneOptions}
+                  </select>
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" type="button" onClick={this.handleAddSign}>
+                      <i className="icon ion-plus"></i> Add Sign
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          { signsToEdit &&
+            <form>
+              <fieldset>
                 <legend className="text-info">Signs. Change whatever you like…</legend>
                 <ul className="list-group">
+                  {signsToEdit}
                   <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the left." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="fa fa-remove float-right"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext"
-                      type="text"
-                      value="Goes to Scene: You Went Left (ID)"
-                      readonly=""
-                    />
-                  </li>
-                  <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the right." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="fa fa-remove float-right"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext"
-                      type="text"
-                      value="Goes to Scene: You Went Right (ID)"
-                      readonly=""
-                    />
-                  </li>
-                  <li className="list-group-item">
-                    <button className="btn btn-primary" type="button">Save Changes to Signs</button>
+                    <button className="btn btn-primary" type="button" onClick={this.handleSaveSignpostUpdates}>
+                      <i className="icon ion-checkmark"></i> Save Changes
+                    </button>
+                    <button className="btn btn-primary" type="button" onClick={this.handleCancelChanges}>
+                      <i className="icon ion-close"></i>  Cancel Changes
+                    </button>
                   </li>
                 </ul>
               </fieldset>
             </form>
-            <form>
-              <fieldset>
-                <legend className="text-info">Add a sign (where to go next)</legend>
-                <input className="form-control" type="text" name="sceneTitle" placeholder="Teaser (what the option says)" />
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Goes to</span>
-                  </div>
-                  <input className="form-control" type="text" placeholder="scene select goes here" />
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
-                      Add Sign&nbsp;<i className="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <div className="form-row">
-                    <div className="col-11">
-                      <select className="form-control">
-                        <option value="new">Create new scene...</option>
-                        <option value="sceneA" selected="">Scene A</option>
-                        <option value="sceneB">Scene B</option>
-                        <option value="sceneC">Scene C</option>
-                      </select>
-                    </div>
-                    <div className="col-1">
-                      <button className="btn btn-primary" type="button">
-                        <i className="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
+          }
           </div>
         </div>
       </div>
