@@ -17,44 +17,54 @@ export default class EditSignpost extends Component {
     draftScenesList: [],
     activeScene: {},
     activeSignpost: [],
+    signToAdd: {
+      teaser: '',
+      destinationId: ''
+    },
+    signsToUpdate: {},
+    signsToDelete: []
+  }
+
+  /*
     signpostChanges: {
       toUpdate: [
         {
           destinationId: '42',
           teaser: 'Go here',
-          signOrder: 10
+          order: 10
         }
       ],
-      toDelete: []
+      toDelete: ['sceneId1']
     },
-    newSign: {
-      teaser: '',
-      destinationId: ''
-    }
-  }
+  */
 
-  // TODO extract signpostChangeUtil once it's working here
+  // TODO extract signpostChangeUtil ??
 
   initialize = (draft, sceneId) => {
     const draftSummary = draft.summary
     const draftScenes = draft.scenes
     const draftScenesList = Object.keys(draftScenes).map(sceneId => draftScenes[sceneId])
     const activeScene = draftScenes[sceneId]
+    const activeSignpost = activeScene.signpost
+    let signsToUpdate = {}
+    if (activeSignpost) {
+      activeSignpost.forEach(sign => {
+        console.log('adding sign to update', sign)
+        signsToUpdate[sign.destinationId] = sign
+      })
+    }
     this.setState({
       isLoading: false,
       draftSummary,
       draftScenes,
       draftScenesList,
       activeScene,
-      activeSignpost: activeScene.signpost,
-      signpostChanges: {
-        toUpdate: [],
-        toDelete: []
-      },
-      newSign: {
+      activeSignpost,
+      signToAdd: {
         teaser: '',
         destinationId: ''
-      }
+      },
+      signsToUpdate
     })
   }
 
@@ -62,38 +72,63 @@ export default class EditSignpost extends Component {
     const { target } = event
     const { id, value } = target
     console.log('handleChangeSignToAdd', id, value)
-    const newSign =  {
-      ...this.state.newSign,
+    const signToAdd =  {
+      ...this.state.signToAdd,
       [id]: value
     }
     this.setState({
-      newSign
+      signToAdd
     })
   }
 
   handleAddSign = (destinationId, teaser) => {
     console.log('implement handleAddSign')
-    const { draftSummary, activeScene, newSign } = this.state
-    if (!newSign.teaser || newSign.teaser === '' || !newSign.destinationId || newSign.destinationId === '') {
+    const { draftSummary, activeScene, signToAdd } = this.state
+    if (!signToAdd.teaser || signToAdd.teaser === '' || !signToAdd.destinationId || signToAdd.destinationId === '') {
       console.log('Teaser or destination ID is missing')
       // TODO alert the user -- implement message box or popup, required field indicator
       return
     }
     this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, {
       toUpdate: [
-        newSign
+        signToAdd
       ]
     })
   }
 
-  handleDeleteSign = () => {
-    console.log('implement handleDeleteSign')
+  handleChangeSign = (event) => {
+    const { target } = event
+    const { id, value } = target
+    console.log('handleChangeSign', id, value)
+    const destinationField = id.split('.')
+    const destinationId = destinationField[0]
+    const fieldId = destinationField[1]
+    const sign = this.state.signsToUpdate[destinationId]
+    const nextSignsToUpdate = {
+      ...this.state.signsToUpdate,
+      [destinationId]: {
+        ...sign,
+        [fieldId]: value
+      }
+    }
+    console.log('nextSignsToUpdate', nextSignsToUpdate)
+    this.setState({
+      signsToUpdate: nextSignsToUpdate
+    })
+  }
+
+  handleDeleteSign = (event) => {
+    console.log('implement handleDeleteSign', event)
   }
 
   handleSaveSignpostUpdates = () => {
     console.log('handleSaveSignpostUpdates')
-    const { draftSummary, activeScene, signpostChanges } = this.state
-    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
+    const { draftSummary, activeScene, signsToUpdate } = this.state
+    const updates = {
+      toUpdate: Object.keys(signsToUpdate).map(key => signsToUpdate[key])
+    }
+    console.log('updates being saved', updates)
+    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, updates)
   }
 
   handleCancelChanges = () => {
@@ -157,19 +192,25 @@ export default class EditSignpost extends Component {
   }
 
   renderSignToEdit() {
-    const { draftScenes, activeSignpost } = this.state
+    const { draftScenes, activeSignpost, signsToUpdate } = this.state
 
     if (!draftScenes || !activeSignpost) {
       return null
     }
 
-    return activeSignpost.map(sign =>(
+    return activeSignpost.map(sign => (
       <li key={sign.destinationId} className="list-group-item">
         <div className="input-group">
           <div className="input-group-prepend">
             <span className="input-group-text">Teaser</span>
           </div>
-          <input className="form-control" type="text" value={sign.teaser} />
+          <input
+            className="form-control"
+            id={`${sign.destinationId}.teaser`}
+            type="text"
+            value={signsToUpdate[sign.destinationId].teaser}
+            onChange={this.handleChangeSign}
+          />
           <div className="input-group-append">
             <button className="btn btn-primary" type="button">
               <i className="icon ion-trash float-right"></i>
@@ -202,7 +243,7 @@ export default class EditSignpost extends Component {
       return this.renderLoading()
     }
 
-    const { draftSummary, activeScene, newSign } = this.state
+    const { draftSummary, activeScene, signToAdd } = this.state
     const signsToEdit = this.renderSignToEdit()
     const sceneOptions = this.renderSceneOptionList()
 
@@ -229,7 +270,7 @@ export default class EditSignpost extends Component {
                     className="form-control"
                     type="text"
                     id="teaser"
-                    value={newSign.teaser}
+                    value={signToAdd.teaser}
                     onChange={this.handleChangeSignToAdd}
                   />
                 </div>
@@ -240,7 +281,7 @@ export default class EditSignpost extends Component {
                   <select
                     className="form-control"
                     id="destinationId"
-                    value={newSign.destinationId}
+                    value={signToAdd.destinationId}
                     onChange={this.handleChangeSignToAdd}
                   >
                     <option value="">--Select a scene--</option>
