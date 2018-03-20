@@ -21,8 +21,7 @@ export default class EditSignpost extends Component {
       teaser: '',
       destinationId: ''
     },
-    signsToUpdate: {},
-    signsToDelete: []
+    signsToUpdate: {}
   }
 
   /*
@@ -38,7 +37,19 @@ export default class EditSignpost extends Component {
     },
   */
 
-  // TODO extract signpostChangeUtil ??
+  initSignsToUpdate = (signpost) => {
+    let signsToUpdate = {}
+    if (signpost) {
+      signpost.forEach(sign => {
+        console.log('adding sign to update', sign)
+        signsToUpdate[sign.destinationId] = {
+          ...sign,
+          _original: sign
+        }
+      })
+    }
+    return signsToUpdate
+  }
 
   initialize = (draft, sceneId) => {
     const draftSummary = draft.summary
@@ -46,13 +57,7 @@ export default class EditSignpost extends Component {
     const draftScenesList = Object.keys(draftScenes).map(sceneId => draftScenes[sceneId])
     const activeScene = draftScenes[sceneId]
     const activeSignpost = activeScene.signpost
-    let signsToUpdate = {}
-    if (activeSignpost) {
-      activeSignpost.forEach(sign => {
-        console.log('adding sign to update', sign)
-        signsToUpdate[sign.destinationId] = sign
-      })
-    }
+    const signsToUpdate = this.initSignsToUpdate(activeSignpost)
     this.setState({
       isLoading: false,
       draftSummary,
@@ -117,15 +122,47 @@ export default class EditSignpost extends Component {
     })
   }
 
-  handleDeleteSign = (event) => {
-    console.log('implement handleDeleteSign', event)
+  handleDeleteSign = (destinationId) => {
+    console.log('handleDeleteSign', destinationId)
+    const sign = this.state.signsToUpdate[destinationId]
+    const nextDeleteValue = !sign.delete
+    const nextSignsToUpdate = {
+      ...this.state.signsToUpdate,
+      [destinationId]: {
+        ...sign,
+        delete: nextDeleteValue
+      }
+    }
+    console.log('nextSignsToUpdate', nextSignsToUpdate)
+    this.setState({
+      signsToUpdate: nextSignsToUpdate
+    })
   }
 
   handleSaveSignpostUpdates = () => {
     console.log('handleSaveSignpostUpdates')
     const { draftSummary, activeScene, signsToUpdate } = this.state
+    const signKeys = Object.keys(signsToUpdate)
     const updates = {
-      toUpdate: Object.keys(signsToUpdate).map(key => signsToUpdate[key])
+      toUpdate: [],
+      toDelete: []
+    }
+    signKeys.forEach(key => {
+      const toUpdate = signsToUpdate[key]
+      if (toUpdate.delete) {
+        updates.toDelete.push(key)
+      } else {
+        if (toUpdate._original.teaser !== toUpdate.teaser) {
+          updates.toUpdate.push({
+            destinationId: toUpdate.destinationId,
+            teaser: toUpdate.teaser
+          })
+        }
+      }
+    })
+    if (!updates.toUpdate.length && !updates.toDelete.length) {
+      console.log('No changes')
+      return
     }
     console.log('updates being saved', updates)
     this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, updates)
@@ -133,8 +170,9 @@ export default class EditSignpost extends Component {
 
   handleCancelChanges = () => {
     console.log('implement handleCancelChanges')
-    const { draftSummary, activeScene, signpostChanges } = this.state
-    this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
+    this.setState({
+      signsToUpdate: this.initSignsToUpdate(this.state.activeSignpost)
+    })
   }
 
   componentDidMount() {
@@ -257,15 +295,25 @@ export default class EditSignpost extends Component {
           <div className="input-group-prepend">
             <span className="input-group-text">The sign says:</span>
           </div>
+        { signsToUpdate[sign.destinationId].delete &&
+          <span><del>{signsToUpdate[sign.destinationId].teaser}</del></span>
+        }
+        { !signsToUpdate[sign.destinationId].delete &&
           <input
             className="form-control"
-            id={`${sign.destinationId}.teaser`}
             type="text"
+            id={`${sign.destinationId}.teaser`}
             value={signsToUpdate[sign.destinationId].teaser}
             onChange={this.handleChangeSign}
           />
+        }
           <div className="input-group-append">
-            <button className="btn btn-primary" type="button" onClick={this.handleDeleteSign}>
+            <button
+              className="btn btn-primary"
+              type="button"
+              id={`delete.${sign.destinationId}`}
+              onClick={() => { this.handleDeleteSign(sign.destinationId) }}
+            >
               <i className="icon ion-trash-a float-right"></i>
             </button>
           </div>
@@ -295,9 +343,9 @@ export default class EditSignpost extends Component {
             {signsToEdit}
             <li className="list-group-item">
               <button className="btn btn-primary" type="button" onClick={this.handleSaveSignpostUpdates}>
-                <i className="icon ion-checkmark"></i> Save Changes
+                <i className="icon ion-checkmark"></i> Save
               </button>
-              <button className="btn btn-primary" type="button" onClick={this.handleCancelChanges}>
+              <button className="btn btn-warning" type="button" onClick={this.handleCancelChanges}>
                 <i className="icon ion-close"></i>  Clear
               </button>
             </li>
