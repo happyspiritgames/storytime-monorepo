@@ -99,7 +99,10 @@ export const updateDraftSignpost = (storyId, sceneId, signpostChanges, handleRes
   }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${sceneId}/signpost`, fetchOptions)
     .then(res => res.json())
-    .then(response => handleResponse(response))
+    .then(response => {
+      console.log('updateDraftSignpost response', response)
+      handleResponse(response)
+    })
     .catch(error => handleError(error))
 }
 

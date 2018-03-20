@@ -81,7 +81,7 @@ export default class EditSignpost extends Component {
     })
   }
 
-  handleAddSign = (destinationId, teaser) => {
+  handleAddSign = () => {
     console.log('implement handleAddSign')
     const { draftSummary, activeScene, signToAdd } = this.state
     if (!signToAdd.teaser || signToAdd.teaser === '' || !signToAdd.destinationId || signToAdd.destinationId === '') {
@@ -132,7 +132,7 @@ export default class EditSignpost extends Component {
   }
 
   handleCancelChanges = () => {
-    console.log('handleCancelChanges')
+    console.log('implement handleCancelChanges')
     const { draftSummary, activeScene, signpostChanges } = this.state
     this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, signpostChanges)
   }
@@ -191,39 +191,6 @@ export default class EditSignpost extends Component {
     )
   }
 
-  renderSignToEdit() {
-    const { draftScenes, activeSignpost, signsToUpdate } = this.state
-
-    if (!draftScenes || !activeSignpost) {
-      return null
-    }
-
-    return activeSignpost.map(sign => (
-      <li key={sign.destinationId} className="list-group-item">
-        <div className="input-group">
-          <div className="input-group-prepend">
-            <span className="input-group-text">Teaser</span>
-          </div>
-          <input
-            className="form-control"
-            id={`${sign.destinationId}.teaser`}
-            type="text"
-            value={signsToUpdate[sign.destinationId].teaser}
-            onChange={this.handleChangeSign}
-          />
-          <div className="input-group-append">
-            <button className="btn btn-primary" type="button">
-              <i className="icon ion-trash float-right"></i>
-            </button>
-          </div>
-        </div>
-        <div className="form-control-plaintext">
-          {`${draftScenes[sign.destinationId].title} [${sign.destinationId}]`}
-        </div>
-      </li>
-    ))
-  }
-
   renderSceneOptionList = () => {
     const { draftScenesList, activeScene } = this.state
     if (!draftScenesList) {
@@ -235,6 +202,111 @@ export default class EditSignpost extends Component {
     ))
   }
 
+  renderAddSign = () => {
+    const { signToAdd } = this.state
+    return (
+      <form>
+        <fieldset>
+          <legend className="text-info">Add a sign</legend>
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text">The sign says:</span>
+            </div>
+            <input
+              className="form-control"
+              type="text"
+              id="teaser"
+              value={signToAdd.teaser}
+              onChange={this.handleChangeSignToAdd}
+            />
+          </div>
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text">And takes player to:</span>
+            </div>
+            <select
+              className="form-control"
+              id="destinationId"
+              value={signToAdd.destinationId}
+              onChange={this.handleChangeSignToAdd}
+            >
+              <option value="">--Select a scene--</option>
+              {this.renderSceneOptionList()}
+            </select>
+            <div className="input-group-append">
+              <button className="btn btn-primary" type="button" onClick={this.handleAddSign}>
+                <i className="icon ion-plus"></i> Add Sign
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    )
+  }
+
+  renderSignsToEdit() {
+    const { draftScenes, activeSignpost, signsToUpdate } = this.state
+
+    if (!draftScenes || !activeSignpost) {
+      return null
+    }
+
+    return activeSignpost.map(sign => (
+      <li key={sign.destinationId} className="list-group-item">
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">The sign says:</span>
+          </div>
+          <input
+            className="form-control"
+            id={`${sign.destinationId}.teaser`}
+            type="text"
+            value={signsToUpdate[sign.destinationId].teaser}
+            onChange={this.handleChangeSign}
+          />
+          <div className="input-group-append">
+            <button className="btn btn-primary" type="button" onClick={this.handleDeleteSign}>
+              <i className="icon ion-trash-a float-right"></i>
+            </button>
+          </div>
+        </div>
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">And takes player to:</span>
+          </div>
+          <div className="form-control">
+            {`${draftScenes[sign.destinationId].title} [${sign.destinationId}]`}
+          </div>
+        </div>
+      </li>
+    ))
+  }
+
+  renderEditSigns = () => {
+    const signsToEdit = this.renderSignsToEdit()
+    if (!signsToEdit) {
+      return null
+    }
+    return (
+      <form>
+        <fieldset>
+          <legend className="text-info">Signs. Change whatever you like. Click "Save" to keep the changes or "Clear" to reset.</legend>
+          <ul className="list-group">
+            {signsToEdit}
+            <li className="list-group-item">
+              <button className="btn btn-primary" type="button" onClick={this.handleSaveSignpostUpdates}>
+                <i className="icon ion-checkmark"></i> Save Changes
+              </button>
+              <button className="btn btn-primary" type="button" onClick={this.handleCancelChanges}>
+                <i className="icon ion-close"></i>  Clear
+              </button>
+            </li>
+          </ul>
+        </fieldset>
+      </form>
+    )
+  }
+
   render() {
     console.log('props', this.props)
     console.log('state', this.state)
@@ -243,9 +315,7 @@ export default class EditSignpost extends Component {
       return this.renderLoading()
     }
 
-    const { draftSummary, activeScene, signToAdd } = this.state
-    const signsToEdit = this.renderSignToEdit()
-    const sceneOptions = this.renderSceneOptionList()
+    const { draftSummary, activeScene } = this.state
 
     return (
       <div id="edit-scene">
@@ -259,60 +329,8 @@ export default class EditSignpost extends Component {
         <div className="row section">
           <div className="col">
             <h3>Signpost</h3>
-            <form>
-              <fieldset>
-                <legend className="text-info">Add a sign (where to go next)</legend>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">The sign says:</span>
-                  </div>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="teaser"
-                    value={signToAdd.teaser}
-                    onChange={this.handleChangeSignToAdd}
-                  />
-                </div>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">And takes player to:</span>
-                  </div>
-                  <select
-                    className="form-control"
-                    id="destinationId"
-                    value={signToAdd.destinationId}
-                    onChange={this.handleChangeSignToAdd}
-                  >
-                    <option value="">--Select a scene--</option>
-                    {sceneOptions}
-                  </select>
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button" onClick={this.handleAddSign}>
-                      <i className="icon ion-plus"></i> Add Sign
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-          { signsToEdit &&
-            <form>
-              <fieldset>
-                <legend className="text-info">Signs. Change whatever you like…</legend>
-                <ul className="list-group">
-                  {signsToEdit}
-                  <li className="list-group-item">
-                    <button className="btn btn-primary" type="button" onClick={this.handleSaveSignpostUpdates}>
-                      <i className="icon ion-checkmark"></i> Save Changes
-                    </button>
-                    <button className="btn btn-primary" type="button" onClick={this.handleCancelChanges}>
-                      <i className="icon ion-close"></i>  Cancel Changes
-                    </button>
-                  </li>
-                </ul>
-              </fieldset>
-            </form>
-          }
+            {this.renderAddSign()}
+            {this.renderEditSigns()}
           </div>
         </div>
       </div>
