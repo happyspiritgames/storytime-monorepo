@@ -5,6 +5,7 @@ import { draftShape } from '../../datastore/dataShapes'
 import Desktop from './Desktop'
 import EditStory from './EditStory'
 import EditScene from './EditScene'
+import EditSignpost from './EditSignpost'
 
 export default class WritingDesk extends Component {
   static propTypes = {
@@ -23,8 +24,7 @@ export default class WritingDesk extends Component {
   render() {
     const {
       draftProjects, activeDraft, loadDrafts, startNewDraft,
-      loadDraftForEdit, saveDraft, saveDraftScene, loadDraftScene,
-      loadDraftSignpost, updateDraftSignpost
+      loadDraftForEdit, saveDraft, saveDraftScene, updateDraftSignpost
     } = this.props
     return (
       <Switch>
@@ -48,14 +48,21 @@ export default class WritingDesk extends Component {
             />
           }
         />
-        <Route path="/writingdesk/:draftId/:sceneId"
+        <Route exact path="/writingdesk/:draftId/:sceneId"
           render={
             (props) => <EditScene
               draft={activeDraft}
               loadDraft={loadDraftForEdit}
-              loadScene={loadDraftScene}
               saveScene={saveDraftScene}
-              loadSignpost={loadDraftSignpost}
+              {...props}
+            />
+          }
+        />
+        <Route exact path="/writingdesk/:draftId/:sceneId/signpost"
+          render={
+            (props) => <EditSignpost
+              draft={activeDraft}
+              loadDraft={loadDraftForEdit}
               updateSignpost={updateDraftSignpost}
               {...props}
             />

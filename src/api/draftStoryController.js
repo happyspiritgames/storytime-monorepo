@@ -221,6 +221,7 @@ exports.updateSignpost = async (req, res) => {
       });
     }
     const signpost = await draftModel.getSignpost(sceneId);
+    console.log('return updated signpost', signpost)
     res.status(202).send(signpost);
   } catch (e) {
     console.error('Problem updating signpost for scene', e);

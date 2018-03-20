@@ -7,39 +7,26 @@ export default class EditScene extends Component {
   static propTypes = {
     draft: draftShape,
     loadDraft: PropTypes.func,
-    loadScene: PropTypes.func,
     saveScene: PropTypes.func
   }
 
   state = {
     draftSummary: {},
-    draftScene: {
+    activeScene: {
       title: '',
       prose: '',
       endPrompt: '',
       signpost: []
     },
-    draftScenes: [],
-    isLoading: false,
-    isSignpostDirty: false,
-    signpostChanges: {
-    },
-    newSign: {
-      teaser: '',
-      destinationId: ''
-    }
+    isLoading: false
   }
 
   establishInitialDraftState = (draft, sceneId) => {
     const draftSummary = draft.summary
-    const draftScenesList = Object.keys(draft.scenes).map(sceneId => draft.scenes[sceneId])
-    const draftScene = draft.scenes[sceneId]
+    const activeScene = draft.scenes[sceneId]
     this.setState({
       draftSummary,
-      draftScene,
-      draftScenesList,
-      isSignpostDirty: false,
-      signpostChange: {},
+      activeScene,
       isLoading: false
     })
   }
@@ -47,23 +34,21 @@ export default class EditScene extends Component {
   handleChangeScene = (event) => {
     const target = event.target
     let updateValue = target.value
-    let draftScene = {
-      ...this.state.draftScene,
+    let activeScene = {
+      ...this.state.activeScene,
       [target.id]: updateValue
     }
-    this.setState({ draftScene })
+    this.setState({ activeScene })
   }
 
   handleSaveScene = () => {
-    this.props.saveScene(this.state.draftSummary.storyId, this.state.draftScene)
+    this.props.saveScene(this.state.draftSummary.storyId, this.state.activeScene)
   }
 
-  handleAddOrUpdateSign = (destinationId, teaser) => {
-    console.log('implement addOrUpdateSign')
-  }
-
-  handleDeleteSign = () => {
-    console.log('implement deleteSign')
+  handleGoToEditSignpost = () => {
+    const { draftSummary, activeScene } = this.state
+    const signpostPage = `/writingdesk/${draftSummary.storyId}/${activeScene.sceneId}/signpost`
+    this.props.history.push(signpostPage)
   }
 
   componentDidMount() {
@@ -78,7 +63,7 @@ export default class EditScene extends Component {
       console.log('draft is missing')
       this.setState({
         isLoading: true,
-        draftScene: undefined
+        activeScene: undefined
       })
       this.props.loadDraft(draftId)
       return
@@ -101,7 +86,7 @@ export default class EditScene extends Component {
     // end loading once draft has been located
     if (this.state.isLoading
         && draft
-        && this.state.draftScene !== draft.scenes[nextSceneId]) {
+        && this.state.activeScene !== draft.scenes[nextSceneId]) {
       console.log('stop loading draft')
       this.establishInitialDraftState(draft, nextSceneId)
     }
@@ -120,12 +105,26 @@ export default class EditScene extends Component {
     )
   }
 
+  renderSigns(signpost) {
+    let signsOut = null
+    if (signpost && signpost.length) {
+      signsOut = signpost.map((sign, index) => (
+        <li key={`${sign.destinationId}|${index}`} className="list-group-item">
+          {`${sign.teaser} ---> ${this.props.draft.scenes[sign.destinationId].title} [${sign.destinationId}]`}
+        </li>
+      ))
+    }
+    return signsOut
+  }
+
   render() {
-    const { isLoading, draftSummary, draftScene } = this.state
+    const { isLoading, draftSummary, activeScene } = this.state
 
     if (isLoading) {
       return this.renderLoading()
     }
+
+    const signs = this.renderSigns(activeScene.signpost)
 
     return (
       <div id="edit-scene">
@@ -133,7 +132,7 @@ export default class EditScene extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
-          <li className="breadcrumb-item">{draftScene.title}</li>
+          <li className="breadcrumb-item">{activeScene.title}</li>
         </ol>
         <div className="row section">
           <div className="col">
@@ -147,7 +146,7 @@ export default class EditScene extends Component {
                     className="form-control"
                     type="text"
                     id="title"
-                    value={draftScene.title}
+                    value={activeScene.title}
                     onChange={this.handleChangeScene}
                   />
                 </div>
@@ -157,7 +156,7 @@ export default class EditScene extends Component {
                   <textarea
                     className="form-control"
                     id="prose"
-                    value={draftScene.prose}
+                    value={activeScene.prose}
                     onChange={this.handleChangeScene}
                   ></textarea>
                 </div>
@@ -167,7 +166,7 @@ export default class EditScene extends Component {
                     className="form-control"
                     type="text"
                     id="endPrompt"
-                    value={draftScene.endPrompt}
+                    value={activeScene.endPrompt}
                     onChange={this.handleChangeScene}
                   />
                   <small className="form-text text-muted">Optional text to display before the signpost of next scene options.</small>
@@ -183,73 +182,12 @@ export default class EditScene extends Component {
         <div className="row section">
           <div className="col">
             <h3>Signpost</h3>
-            <form>
-              <fieldset>
-                <legend className="text-info">Add a sign (where to go next)</legend>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Teaser</span>
-                  </div>
-                  <input className="form-control" type="text" name="teaser" placeholder="Explains the option to the player." />
-                </div>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Goes to</span>
-                  </div>
-                  <select className="form-control" name="destinationScene">
-                    <option value="new">Create new scene...</option>
-                    <option value="sceneA">Scene A</option>
-                    <option value="sceneB">Scene B</option>
-                    <option value="sceneC">Scene C</option>
-                  </select>
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
-                      <i className="icon ion-plus"></i> Add
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-            <form>
-              <fieldset>
-                <legend className="text-info">Signs. Change whatever you like…</legend>
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the left." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a"></i> Remove
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext" type="text" value="Goes to Scene: You Went Left (ID)" readonly="" />
-                  </li>
-                  <li className="list-group-item">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">Teaser</span>
-                      </div>
-                      <input className="form-control" type="text" value="Go to the right." />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="button">
-                          <i className="icon ion-trash-a"></i> Remove
-                        </button>
-                      </div>
-                    </div>
-                    <input className="form-control-plaintext" type="text" value="Goes to Scene: You Went Right (ID)" readonly="" />
-                  </li>
-                  <li className="list-group-item">
-                    <button className="btn btn-primary" type="button">
-                      Save Changes to Signs
-                    </button>
-                  </li>
-                </ul>
-              </fieldset>
-            </form>
+            <ul className="list-group">
+              {signs}
+              <li className="list-group-item">
+                <button className="btn btn-primary" type="button" onClick={this.handleGoToEditSignpost}>Change Signpost</button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -90,16 +90,19 @@ export const fetchDraftSignpost = (storyId, sceneId, handleResponse, handleError
     .catch(error => handleError(error))
 }
 
-export const updateDraftSignpost = (storyId, sceneId, signpost, handleResponse, handleError) => {
-  console.log('updateDraftSignpost: summary', storyId, sceneId, signpost)
+export const updateDraftSignpost = (storyId, sceneId, signpostChanges, handleResponse, handleError) => {
+  console.log('updateDraftSignpost: summary', storyId, sceneId, signpostChanges)
   const fetchOptions = {
     method: 'PUT',
     headers: getHeaders(),
-    body: JSON.stringify(signpost)
+    body: JSON.stringify(signpostChanges)
   }
   fetch(`${draftStoriesBaseURI}/${storyId}/scenes/${sceneId}/signpost`, fetchOptions)
     .then(res => res.json())
-    .then(response => handleResponse(response))
+    .then(response => {
+      console.log('updateDraftSignpost response', response)
+      handleResponse(response)
+    })
     .catch(error => handleError(error))
 }
 

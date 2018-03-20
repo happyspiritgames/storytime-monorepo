@@ -11,7 +11,7 @@ export default class Footer extends Component {
           <div className="social">
             <a href="https://www.instagram.com/"><i className="icon ion-social-instagram"></i></a>
             <a href="https://www.snapchat.com/"><i className="icon ion-social-snapchat"></i></a>
-            <a href="https://twitter.com/"><i className="icon ion-social-twitter"></i></a>
+            <a href="https://twitter.com/HappySpiritGms"><i className="icon ion-social-twitter"></i></a>
             <a href="https://www.facebook.com/"><i className="icon ion-social-facebook"></i></a>
           </div>
           <ul className="list-inline">
