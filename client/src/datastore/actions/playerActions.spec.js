@@ -1,28 +1,29 @@
 import * as actions from './index'
+import { testError, testProfile } from '../testData'
 
 describe('player actions', () => {
-  const testError = new Error('bah')
-  const testProfile = {
-    id: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-    email: 'bubba@happyspiritgames.com',
-    nickname: 'bubba',
-    createdAt: '2018-01-26T00:02:21.635Z',
-    status: 1,
-    emailOptInAt: '2018-02-09T17:55:09.176Z',
-    authorOptInAt: null,
-    penName: null
-  }
-  const profileUpdate = {
-    id: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-    nickname: 'bubba',
-    emailOptIn: false,
-    penName: null
-  }
-
   it('creates LOGIN action', () => {
     expect(actions.login())
     .toEqual({
       type: actions.LOGIN
+    })
+  })
+  it('creates LOGGED_IN action', () => {
+    expect(actions.loggedIn('ID Token', 'Access Token'))
+    .toEqual({
+      type: actions.LOGGED_IN,
+      payload: {
+        idToken: 'ID Token',
+        accessToken: 'Access Token'
+      }
+    })
+  })
+  it('creates LOGIN_FAILED action', () => {
+    expect(actions.loginFailed(testError))
+    .toEqual({
+      type: actions.LOGIN_FAILED,
+      payload: testError,
+      error: true
     })
   })
   it('creates LOGOUT action', () => {
@@ -38,6 +39,7 @@ describe('player actions', () => {
       type: actions.FETCH_ROLES
     })
   })
+
   it('creates FETCHED_ROLES action', () => {
     const testRoles = ['player', 'admin', 'critic']
     expect(actions.fetchedRoles(testRoles))
@@ -48,6 +50,17 @@ describe('player actions', () => {
       }
     })
   })
+
+  it('creates FETCHED_ROLES action with one role if array is empty', () => {
+    expect(actions.fetchedRoles([]))
+    .toEqual({
+      type: actions.FETCHED_ROLES,
+      payload: {
+        roles: ['noRoles']
+      }
+    })
+  })
+
   it('creates FETCH_ROLES_FAILED action', () => {
     expect(actions.fetchRolesFailed(testError))
     .toEqual({

@@ -1,3 +1,16 @@
+export const testError = new Error('Bah')
+
+export const testProfile = {
+    id: '88888888-8888-4888-8888-888888888888',
+    email: 'bubba@happyspiritgames.com',
+    nickname: 'bubba',
+    createdAt: '2018-01-26T00:02:21.635Z',
+    status: 1,
+    emailOptInAt: '2018-02-09T17:55:09.176Z',
+    authorOptInAt: null,
+    penName: null
+  }
+
 export const testDraftSummary = {
     storyId: "o9n84u0h",
     authorId: "8a095fb3-8cd3-475b-a3c2-a842bac9ee39",

@@ -1,20 +1,31 @@
 import player, { initialState } from './player'
 import * as actions from '../actions'
+import { testProfile } from '../testData'
 
 describe('player reducer', () => {
-  const testProfile = {
-    id: '88888888-8888-4888-8888-888888888888',
-    email: 'bubba@happyspiritgames.com',
-    nickname: 'bubba',
-    createdAt: '2018-01-26T00:02:21.635Z',
-    status: 1,
-    emailOptInAt: '2018-02-09T17:55:09.176Z',
-    authorOptInAt: null,
-    penName: null
-  }
+  let nextState
 
   it('provides initial state', () => {
     expect(player(undefined, {})).toEqual(initialState)
+  })
+
+  it('handles LOGGED_IN', () => {
+    expect(player(undefined, actions.loggedIn('ID token', 'Access Token')))
+    .toEqual({
+      ...initialState,
+      idToken: 'ID token',
+      accessToken: 'Access Token',
+      userLoggedOut: false
+    })
+  })
+
+  it('handles LOGOUT', () => {
+    nextState = player(undefined, actions.loggedIn('ID123', 'AccessABC'))
+    expect(player(nextState, actions.logout()))
+    .toEqual({
+      ...initialState,
+      userLoggedOut: true
+    })
   })
 
   it('handles FETCHED_PROFILE', () => {
@@ -39,6 +50,14 @@ describe('player reducer', () => {
     .toEqual({
       ...initialState,
       roles: testRoles
+    })
+  })
+
+  it('handles FETCHED_ROLES_FAILED', () => {
+    expect(player(undefined, actions.fetchRolesFailed([])))
+    .toEqual({
+      ...initialState,
+      roles: ['noRoles-fetchFailed']
     })
   })
 })

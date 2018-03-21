@@ -6,12 +6,15 @@ import './navigation.css'
 
 class Navigation extends Component {
   static propTypes = {
-    isLoggedIn: PropTypes.bool,
-    isAdmin: PropTypes.bool,
-    isAuthor: PropTypes.bool,
-    doLogin: PropTypes.func,
-    doLogout: PropTypes.func,
-    doLoadRoles: PropTypes.func,
+    roles: PropTypes.array,
+    userLoggedOut: PropTypes.bool,
+    login: PropTypes.func,
+    logout: PropTypes.func,
+    loadRoles: PropTypes.func
+  }
+
+  hasRole = (role) => {
+    return this.props.roles && this.props.roles.includes(role)
   }
 
   handleLogin = () => {
@@ -19,17 +22,22 @@ class Navigation extends Component {
   }
 
   handleLogout = () => {
-    this.props.doLogout()
+    this.props.logout()
     logout(() => this.props.history.push('/'))
   }
 
-  componentDidMount() {
-    if (isLoggedIn()) {
-      this.props.doLogin()
-      this.props.doLoadRoles()
-    } else {
-      this.props.doLogout()
+  loadRolesIfMissing(roles) {
+    if (!roles || !roles.length) {
+      this.props.loadRoles()
     }
+  }
+
+  componentDidMount() {
+    this.loadRolesIfMissing(this.props.roles)
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.loadRolesIfMissing(newProps.roles)
   }
 
   componentDidCatch(error, info) {
@@ -39,9 +47,9 @@ class Navigation extends Component {
   }
 
   render() {
-    const isSignedIn = this.props.isLoggedIn;
-    const isAdmin = this.props.isAdmin
-    const isAuthor = this.props.isAuthor
+    const isSignedIn = !this.props.userLoggedOut && isLoggedIn();
+    const isAdmin = this.hasRole('admin')
+    const isAuthor = this.hasRole('author')
 
     return (
       <nav className="navbar navbar-light navbar-expand-md navigation-clean">
@@ -62,10 +70,10 @@ class Navigation extends Component {
               <li className="nav-item" role="presentation"><Link className="nav-link" to="/admin">Admin</Link></li>
           }
           {isSignedIn &&
-              <li className="nav-item" role="presentation"><a className="nav-link" onClick={this.handleLogout}>Sign Out</a></li>
+              <li className="nav-item" role="presentation"><button onClick={this.handleLogout}>Sign Out</button></li>
           }
           {!isSignedIn &&
-              <li className="nav-item" role="presentation"><a className="nav-link" onClick={this.handleLogin}>Sign In</a></li>
+              <li className="nav-item" role="presentation"><button onClick={this.handleLogin}>Sign In</button></li>
           }
           </ul>
         </div>

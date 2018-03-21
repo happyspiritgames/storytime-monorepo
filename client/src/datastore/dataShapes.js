@@ -109,6 +109,8 @@ export const reduxStoreDataShape = {
     'blargy': {}
   },
   player: {
+    accessToken: 'asdlkjfaiuh3f3nw3jincianhfjafnphn98cDfafesdFaeaFDSFAE$A',
+    idToken: 'blargy-random-blargy-123',
     profile: {
       id: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
       email: 'bubba@happyspiritgames.com',
@@ -120,7 +122,7 @@ export const reduxStoreDataShape = {
       penName: null
     },
     roles: ['player', 'author', 'admin', 'slacker'],
-    sessionKey: 'blargy-random-blargy-123'
+    userLoggedOut: false
   },
   stories: {
     'abc': {
