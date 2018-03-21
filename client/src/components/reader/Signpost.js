@@ -6,7 +6,7 @@ import { sceneShape } from '../../datastore/dataShapes'
 const DEFAULT_PROMPT = 'What would you like to do?'
 const DEFAULT_ENDING_PROMPT = 'The End'
 
-const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
+const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => {
   const { endPrompt, signpost } = scene
   let signs
   let prompt
@@ -20,7 +20,7 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary }) => {
     prompt = endPrompt || DEFAULT_ENDING_PROMPT
     signs = [
       <Sign key='replay' onClick={() => { playAgain() }} text='Go back to the beginning and try again.' />,
-      <Sign key='feedback' onClick={() => { console.log('implement feedback') }} text='Give some feedback.' />,
+      <Sign key='feedback' onClick={() => { goToContact() }} text='Give some feedback.' />,
       <Sign key='library' onClick={() => { goToLibrary() }} text='Find another story.' />
     ]
   }
@@ -42,6 +42,7 @@ Signpost.propTypes = {
   scene: sceneShape,
   goToScene: PropTypes.func,
   playAgain: PropTypes.func,
+  goToContact: PropTypes.func,
   goToLibrary: PropTypes.func
 }
 
