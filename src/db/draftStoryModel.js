@@ -60,7 +60,7 @@ exports.getStoryOwner = async (storyId) => {
   }
 }
 
-exports.createStory = async (authorId, title, tagLine, about) => {
+exports.createStory = async (authorId, title = '', tagLine = '', about = '') => {
   console.log('draftStoryModel.createStory');
   const INS_STORY = 'INSERT INTO story (id, author_id, title, tag_line, about) VALUES ($1, $2, $3, $4, $5)';
   const storyId = generateRandomString(8);
@@ -120,7 +120,7 @@ exports.getScene = async (storyId, sceneId) => {
   }
 }
 
-exports.createScene = async (storyId, title, prose, endPrompt) => {
+exports.createScene = async (storyId, title = '', prose = '', endPrompt = '') => {
   console.log('draftStoryModel.createScene');
   const INS_SCENE = 'INSERT INTO scene (id, story_id, title, prose, end_of_scene_prompt) VALUES ($1, $2, $3, $4, $5)';
   const sceneId = generateRandomString(8);
