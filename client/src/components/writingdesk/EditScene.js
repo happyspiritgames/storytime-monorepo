@@ -60,7 +60,6 @@ export default class EditScene extends Component {
     const { draft } = this.props
 
     if (!draft) {
-      console.log('draft is missing')
       this.setState({
         isLoading: true,
         activeScene: undefined
@@ -79,7 +78,6 @@ export default class EditScene extends Component {
 }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
     const nextSceneId = nextProps.match.params.sceneId
     const { draft } = nextProps
 
@@ -87,7 +85,10 @@ export default class EditScene extends Component {
     if (this.state.isLoading
         && draft
         && this.state.activeScene !== draft.scenes[nextSceneId]) {
-      console.log('stop loading draft')
+      this.establishInitialDraftState(draft, nextSceneId)
+    }
+
+    if (draft && this.state.activeScene.signpost !== nextProps.draft.scenes[nextSceneId].signpost) {
       this.establishInitialDraftState(draft, nextSceneId)
     }
   }

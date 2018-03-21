@@ -185,6 +185,10 @@ exports.getSignpost = async (req, res) => {
   }
 };
 
+const takeNap = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 exports.updateSignpost = async (req, res) => {
   console.log('draftStoryController.updateSignpost');
   const { playerId } = req.user;
@@ -220,6 +224,10 @@ exports.updateSignpost = async (req, res) => {
         }
       });
     }
+
+    // TODO might be horrible; just a work-around until I can troubleshoot async problems
+    await takeNap(500);
+
     const signpost = await draftModel.getSignpost(sceneId);
     console.log('return updated signpost', signpost)
     res.status(202).send(signpost);

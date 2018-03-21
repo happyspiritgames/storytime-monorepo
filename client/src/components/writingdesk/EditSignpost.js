@@ -24,24 +24,10 @@ export default class EditSignpost extends Component {
     signsToUpdate: {}
   }
 
-  /*
-    signpostChanges: {
-      toUpdate: [
-        {
-          destinationId: '42',
-          teaser: 'Go here',
-          order: 10
-        }
-      ],
-      toDelete: ['sceneId1']
-    },
-  */
-
   initSignsToUpdate = (signpost) => {
     let signsToUpdate = {}
     if (signpost) {
       signpost.forEach(sign => {
-        console.log('adding sign to update', sign)
         signsToUpdate[sign.destinationId] = {
           ...sign,
           _original: sign
@@ -76,7 +62,6 @@ export default class EditSignpost extends Component {
   handleChangeSignToAdd = (event) => {
     const { target } = event
     const { id, value } = target
-    console.log('handleChangeSignToAdd', id, value)
     const signToAdd =  {
       ...this.state.signToAdd,
       [id]: value
@@ -87,10 +72,9 @@ export default class EditSignpost extends Component {
   }
 
   handleAddSign = () => {
-    console.log('implement handleAddSign')
     const { draftSummary, activeScene, signToAdd } = this.state
     if (!signToAdd.teaser || signToAdd.teaser === '' || !signToAdd.destinationId || signToAdd.destinationId === '') {
-      console.log('Teaser or destination ID is missing')
+      console.warn('Teaser or destination ID is missing')
       // TODO alert the user -- implement message box or popup, required field indicator
       return
     }
@@ -104,7 +88,6 @@ export default class EditSignpost extends Component {
   handleChangeSign = (event) => {
     const { target } = event
     const { id, value } = target
-    console.log('handleChangeSign', id, value)
     const destinationField = id.split('.')
     const destinationId = destinationField[0]
     const fieldId = destinationField[1]
@@ -116,14 +99,12 @@ export default class EditSignpost extends Component {
         [fieldId]: value
       }
     }
-    console.log('nextSignsToUpdate', nextSignsToUpdate)
     this.setState({
       signsToUpdate: nextSignsToUpdate
     })
   }
 
   handleDeleteSign = (destinationId) => {
-    console.log('handleDeleteSign', destinationId)
     const sign = this.state.signsToUpdate[destinationId]
     const nextDeleteValue = !sign.delete
     const nextSignsToUpdate = {
@@ -133,14 +114,12 @@ export default class EditSignpost extends Component {
         delete: nextDeleteValue
       }
     }
-    console.log('nextSignsToUpdate', nextSignsToUpdate)
     this.setState({
       signsToUpdate: nextSignsToUpdate
     })
   }
 
   handleSaveSignpostUpdates = () => {
-    console.log('handleSaveSignpostUpdates')
     const { draftSummary, activeScene, signsToUpdate } = this.state
     const signKeys = Object.keys(signsToUpdate)
     const updates = {
@@ -164,12 +143,10 @@ export default class EditSignpost extends Component {
       console.log('No changes')
       return
     }
-    console.log('updates being saved', updates)
     this.props.updateSignpost(draftSummary.storyId, activeScene.sceneId, updates)
   }
 
   handleCancelChanges = () => {
-    console.log('implement handleCancelChanges')
     this.setState({
       signsToUpdate: this.initSignsToUpdate(this.state.activeSignpost)
     })
@@ -184,7 +161,6 @@ export default class EditSignpost extends Component {
     const { draft } = this.props
 
     if (!draft) {
-      console.log('draft is missing')
       this.setState({
         isLoading: true,
         draftScene: undefined
@@ -203,7 +179,6 @@ export default class EditSignpost extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
     const nextSceneId = nextProps.match.params.sceneId
     const { draft } = nextProps
 
@@ -211,7 +186,10 @@ export default class EditSignpost extends Component {
     if (this.state.isLoading
         && draft
         && this.state.draftScene !== draft.scenes[nextSceneId]) {
-      console.log('stop loading draft')
+      this.initialize(draft, nextSceneId)
+    }
+
+    if (draft && this.state.activeScene.signpost !== nextProps.draft.scenes[nextSceneId].signpost) {
       this.initialize(draft, nextSceneId)
     }
   }
@@ -356,9 +334,6 @@ export default class EditSignpost extends Component {
   }
 
   render() {
-    console.log('props', this.props)
-    console.log('state', this.state)
-
     if (this.state.isLoading) {
       return this.renderLoading()
     }

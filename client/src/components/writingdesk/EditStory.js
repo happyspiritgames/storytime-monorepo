@@ -46,7 +46,7 @@ export default class EditStory extends Component {
 
   handleAddScene = () => {
     if (!this.state.draftSummary.storyId) {
-      console.log('We need to establish a draft before adding a scene.')
+      console.warn('We need to establish a draft before adding a scene.')
       return
     }
     this.props.addScene(this.state.draftSummary.storyId, this.state.newScene)
@@ -69,7 +69,6 @@ export default class EditStory extends Component {
     const { draft, loadDraft, startDraft } = this.props
 
     if (draftId === NEW_DRAFT_ID) {
-      console.log('clear for new draft')
       startDraft()
       this.setState({
         draftSummary: {
@@ -81,7 +80,6 @@ export default class EditStory extends Component {
       })
       return
     } else if (!draft || (draftId !== draft.summary.storyId)) {
-      console.log('start loading draft')
       this.setState({
         isLoading: true,
         draftSummary: undefined,
@@ -90,23 +88,18 @@ export default class EditStory extends Component {
       loadDraft(draftId)
       return
     } else {
-      console.log('already have the right draft')
       this.setDraftAndStopLoading(draft)
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
-
     // redirect page if isNew and draft is set
     if (nextProps.match.params.draftId === NEW_DRAFT_ID && nextProps.draft) {
-      console.log('just created draft')
       this.props.history.replace(`/writingdesk/${nextProps.draft.summary.storyId}`)
     }
 
     // end loading once draft has been located
     if (this.state.isLoading && nextProps.draft) {
-      console.log('stop loading draft')
       this.setDraftAndStopLoading(nextProps.draft)
     }
 
