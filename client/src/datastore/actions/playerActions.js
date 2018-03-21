@@ -10,6 +10,22 @@ export const login = () => ({
   type: LOGIN
 })
 
+export const LOGGED_IN = 'LOGGED_IN'
+export const loggedIn = (idToken, accessToken) => ({
+  type: LOGGED_IN,
+  payload: {
+    idToken,
+    accessToken
+  }
+})
+
+export const LOGIN_FAILED = 'LOGIN_FAILED'
+export const loginFailed = (error) => ({
+  type: LOGIN_FAILED,
+  payload: error,
+  error: true
+})
+
 export const LOGOUT = 'LOGOUT'
 export const logout = () => ({
   type: LOGOUT
@@ -21,12 +37,15 @@ export const fetchRoles = () => ({
 })
 
 export const FETCHED_ROLES = 'FETCHED_ROLES'
-export const fetchedRoles = (roles) => ({
-  type: FETCHED_ROLES,
-  payload: {
-    roles
+export const fetchedRoles = (roles) => {
+  const rolesToUse = (roles && roles.length) ? roles : ['noRoles']
+  return {
+    type: FETCHED_ROLES,
+    payload: {
+      roles: rolesToUse
+    }
   }
-})
+}
 
 export const FETCH_ROLES_FAILED = 'FETCH_ROLES_FAILED'
 export const fetchRolesFailed = (error) => ({

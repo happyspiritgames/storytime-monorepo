@@ -3,18 +3,18 @@ import { login, logout, loadRoles } from '../../datastore/actions'
 import Navigation from './Navigation'
 
 const mapStateToProps = (state) => {
+  const roles = state.player.roles ? state.player.roles : []
   return {
-    isLoggedIn: state.account.isLoggedIn,
-    isAdmin: state.account.isAdmin,
-    isAuthor: state.account.isAuthor
-  }
+    roles,
+    userLoggedOut: state.player.userLoggedOut
+   }
 }
 
 const mapDispatchToProp = (dispatch) => {
   return {
-    doLogin: () => dispatch(login()),
-    doLogout: () => dispatch(logout()),
-    doLoadRoles: () => dispatch(loadRoles())
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout()),
+    loadRoles: () => dispatch(loadRoles())
   }
 }
 
