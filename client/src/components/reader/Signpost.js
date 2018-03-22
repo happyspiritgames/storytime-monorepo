@@ -19,9 +19,24 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => 
   } else {
     prompt = endPrompt || DEFAULT_ENDING_PROMPT
     signs = [
-      <Sign key='replay' onClick={() => { playAgain() }} text='Go back to the beginning and try again.' />,
-      <Sign key='feedback' onClick={() => { goToContact() }} text='Give some feedback.' />,
-      <Sign key='library' onClick={() => { goToLibrary() }} text='Find another story.' />
+      <Sign
+        key='replay'
+        onClick={() => { playAgain() }}
+        text='Go back to the beginning and try again.'
+        icon='arrow-return-left'
+      />,
+      <Sign
+        key='feedback'
+        onClick={() => { goToContact() }}
+        text='Give some feedback.'
+        icon='email'
+      />,
+      <Sign
+        key='library'
+        onClick={() => { goToLibrary() }}
+        text='Find another story.'
+        icon='search'
+      />
     ]
   }
   return (
