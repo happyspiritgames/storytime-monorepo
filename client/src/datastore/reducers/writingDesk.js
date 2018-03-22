@@ -36,6 +36,7 @@ export const initialState = {
 }
 
 export default (state = initialState, action) => {
+  let projectIds
   switch (action.type) {
     case LOAD_DRAFTS:
     case LOAD_DRAFT:
@@ -46,14 +47,22 @@ export default (state = initialState, action) => {
         status: writingDeskStates.LOADING
       }
     case LOADED_DRAFTS:
-      const projectIds = action.payload.drafts.map(draft => draft.storyId)
+      projectIds = action.payload.drafts.map(draft => draft.storyId)
       return {
         ...state,
         draftProjects: projectIds,
         status: writingDeskStates.READY
       }
-    case LOADED_DRAFT:
     case SAVED_DRAFT:
+      projectIds = (state.draftProjects.includes(action.payload.nextDraft.storyId))
+        ? state.draftProjects : [...state.draftProjects, action.payload.nextDraft.storyId]
+      return {
+        ...state,
+        activeDraft: activeDraft(state.activeDraft, action),
+        draftProjects: projectIds,
+        status: writingDeskStates.READY
+      }
+    case LOADED_DRAFT:
     case LOADED_DRAFT_SCENE:
     case SAVED_DRAFT_SCENE:
     case LOADED_DRAFT_SIGNPOST:
