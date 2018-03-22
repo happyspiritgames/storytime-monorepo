@@ -14,10 +14,9 @@ import {
 const mapStateToProps = state => {
   const writingDesk = state.writingDesk
   const draftProjects = writingDesk.draftProjects.map(storyId => state.drafts[storyId])
-  const activeDraft = writingDesk.activeDraft
   return {
     draftProjects,
-    activeDraft
+    activeDraft: writingDesk.activeDraft
   }
 }
 
