@@ -273,18 +273,14 @@ export default class EditSignpost extends Component {
           <div className="input-group-prepend">
             <span className="input-group-text">The sign says:</span>
           </div>
-        { signsToUpdate[sign.destinationId].delete &&
-          <span><del>{signsToUpdate[sign.destinationId].teaser}</del></span>
-        }
-        { !signsToUpdate[sign.destinationId].delete &&
           <input
             className="form-control"
             type="text"
             id={`${sign.destinationId}.teaser`}
             value={signsToUpdate[sign.destinationId].teaser}
+            disabled={signsToUpdate[sign.destinationId].delete}
             onChange={this.handleChangeSign}
           />
-        }
           <div className="input-group-append">
             <button
               className="btn btn-primary"
@@ -316,7 +312,7 @@ export default class EditSignpost extends Component {
     return (
       <form>
         <fieldset>
-          <legend className="text-info">Signs. Change whatever you like. Click "Save" to keep the changes or "Clear" to reset.</legend>
+          <legend className="text-info">Make changes and click "Save" to keep them. Click "Clear" to reset.</legend>
           <ul className="list-group">
             {signsToEdit}
             <li className="list-group-item">

@@ -22,19 +22,19 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => 
       <Sign
         key='replay'
         onClick={() => { playAgain() }}
-        text='Go back to the beginning and try again.'
-        icon='arrow-return-left'
+        text='Play again'
+        icon='refresh'
       />,
       <Sign
         key='feedback'
         onClick={() => { goToContact() }}
-        text='Give some feedback.'
+        text='Give feedback'
         icon='email'
       />,
       <Sign
         key='library'
         onClick={() => { goToLibrary() }}
-        text='Find another story.'
+        text='Find another'
         icon='search'
       />
     ]
