@@ -1,17 +1,26 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types"
 
+const cleanState = {
+  title: ''
+}
+
 export default class AddScene extends Component {
   static propTypes = {
     addScene: PropTypes.func
   }
 
-  state = { title: '' }
+  state = cleanState
 
   handleChange = (event) => {
     this.setState({
       [event.target.id]: event.target.value
     })
+  }
+
+  handleAddScene = () => {
+    this.props.addScene(this.state)
+    this.setState(cleanState)
   }
 
   render() {
@@ -35,7 +44,7 @@ export default class AddScene extends Component {
                 className="btn btn-primary"
                 type="button"
                 enabled={readyToAdd}
-                onClick={() => this.props.addScene(this.state)}
+                onClick={this.handleAddScene}
               >
                 <i className="icon ion-plus float-right"></i>
               </button>
