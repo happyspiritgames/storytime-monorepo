@@ -12,7 +12,6 @@ export default class WritingDesk extends Component {
     draftProjects: PropTypes.array,
     activeDraft: draftShape,
     loadDrafts: PropTypes.func,
-    startNewDraft: PropTypes.func,
     loadDraftForEdit: PropTypes.func,
     saveDraft: PropTypes.func,
     loadDraftScene: PropTypes.func,
@@ -23,16 +22,23 @@ export default class WritingDesk extends Component {
 
   render() {
     const {
-      draftProjects, activeDraft, loadDrafts, startNewDraft,
-      loadDraftForEdit, saveDraft, saveDraftScene, updateDraftSignpost
+      draftProjects,
+      activeDraft,
+      loadDrafts,
+      loadDraftForEdit,
+      saveDraft,
+      saveDraftScene,
+      updateDraftSignpost
     } = this.props
     return (
       <Switch>
         <Route exact path="/writingdesk"
           render={
-            () => <Desktop
+            (props) => <Desktop
               draftProjects={draftProjects}
               loadDrafts={loadDrafts}
+              createDraft={saveDraft}
+              {...props}
             />
           }
         />
@@ -40,7 +46,6 @@ export default class WritingDesk extends Component {
           render={
             (props) => <EditStory
               draft={activeDraft}
-              startDraft={startNewDraft}
               loadDraft={loadDraftForEdit}
               saveDraft={saveDraft}
               addScene={saveDraftScene}

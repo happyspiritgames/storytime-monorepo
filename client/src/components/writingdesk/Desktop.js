@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { NEW_DRAFT_ID } from './EditStory'
 import { formatDateTime } from '../../util/formatter'
+import AddStory from './AddStory'
 
 export default class WritingDesk extends Component {
   static propTypes = {
     draftProjects: PropTypes.array,
-    loadDrafts: PropTypes.func
+    loadDrafts: PropTypes.func,
+    createDraft: PropTypes.func
   }
 
   componentDidMount() {
@@ -77,11 +78,8 @@ export default class WritingDesk extends Component {
             <h4 className="text-center">Projects (Work In Progress)</h4>
             <ul className="list-group">
               {draftProjectList}
-              <li className="list-group-item">
-                <Link className="btn btn-primary" to={`/writingdesk/${NEW_DRAFT_ID}`}>Start a new story</Link>
-                <span className="text-muted help-text">Stories are created in draft mode. Nothing is shared until you publish.</span>
-              </li>
             </ul>
+            <AddStory addStory={this.props.createDraft} />
           </div>
         </div>
         {publishedList}

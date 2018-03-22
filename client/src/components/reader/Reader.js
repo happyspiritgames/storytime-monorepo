@@ -64,6 +64,7 @@ export default class Reader extends Component {
 
     const playAgain = () => { onPlay(summary.storyId) }
     const goToLibrary = () => { dispatch(push('/')) }
+    const goToContact = () => { dispatch(push('/contact')) }
 
     return (
       <div id="reader">
@@ -81,6 +82,7 @@ export default class Reader extends Component {
           scene={scene}
           goToScene={onGoToScene}
           playAgain={playAgain}
+          goToContact={goToContact}
           goToLibrary={goToLibrary}
         />
       </div>

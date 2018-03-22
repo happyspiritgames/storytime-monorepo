@@ -81,7 +81,8 @@ describe('writing desk reducer', () => {
       activeDraft: {
         summary: testDraftSummaries[1],
         scenes: {}
-      }
+      },
+      draftProjects: [testDraftSummaries[1].storyId]
     })
   })
 
