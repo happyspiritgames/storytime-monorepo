@@ -1,18 +1,27 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types"
 
-export default class AddScene extends Component {
+const cleanState = {
+  title: ''
+}
+
+export default class AddStory extends Component {
   static propTypes = {
-    addScene: PropTypes.func
+    addStory: PropTypes.func
   }
 
-  state = { title: '' }
+  state = cleanState
 
   handleChange = (event) => {
     console.log(event)
     this.setState({
       [event.target.id]: event.target.value
     })
+  }
+
+  handleAddStory = () => {
+    this.props.addStory(this.state)
+    this.setState(cleanState)
   }
 
   render() {
@@ -22,7 +31,7 @@ export default class AddScene extends Component {
         <fieldset>
           <div className="input-group">
             <div className="input-group-prepend">
-              <span className="input-group-text">Scene To Add</span>
+              <span className="input-group-text">Story Title</span>
             </div>
             <input
               className="form-control"
@@ -36,7 +45,7 @@ export default class AddScene extends Component {
                 className="btn btn-primary"
                 type="button"
                 enabled={readyToAdd}
-                onClick={() => this.props.addScene(this.state)}
+                onClick={this.handleAddStory}
               >
                 <i className="icon ion-plus float-right"></i>
               </button>

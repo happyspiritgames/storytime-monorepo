@@ -115,21 +115,6 @@ export default class EditStory extends Component {
     )
   }
 
-  // renderSceneList() {
-  //   if (!(this.state.draftSummary && this.state.draftScenes)) {
-  //     return null
-  //   }
-  //   const storyId = this.state.draftSummary.storyId
-  //   const sceneIds = Object.keys(this.state.draftScenes)
-  //   const sceneList = sceneIds.map(sceneId => (
-  //     <li key={sceneId} className="list-group-item">
-  //       <span>{this.state.draftScenes[sceneId].title} [id: {this.state.draftScenes[sceneId].sceneId}]</span>
-  //       <Link to={`/writingdesk/${storyId}/${sceneId}`}><i className="icon ion-edit float-right"></i></Link>
-  //     </li>
-  //   ))
-  //   return sceneList
-  // }
-
   render() {
     const { draft } = this.props
     const { isLoading, draftSummary } = this.state

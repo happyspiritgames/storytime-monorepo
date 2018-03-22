@@ -33,6 +33,7 @@ export default class WritingDesk extends Component {
             () => <Desktop
               draftProjects={draftProjects}
               loadDrafts={loadDrafts}
+              createDraft={saveDraft}
             />
           }
         />

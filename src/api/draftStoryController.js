@@ -38,7 +38,7 @@ exports.beginNewStory = async (req, res) => {
   console.log('draftStoryController.beginNewStory', playerId, title);
   try {
     const storyId = await draftModel.createStory(playerId, title, tagLine, about);
-    const sceneId = await draftModel.createScene(storyId, 'Start Here', 'Tell your story', 'Now what?');
+    const sceneId = await draftModel.createScene(storyId, 'First Scene');
     await draftModel.updateStory(storyId, null, null, null, sceneId);
     const summary = await draftModel.getStory(storyId);
     res.status(201).json(summary);
