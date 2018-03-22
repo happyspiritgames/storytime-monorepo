@@ -13,7 +13,6 @@ export default class AddStory extends Component {
   state = cleanState
 
   handleChange = (event) => {
-    console.log(event)
     this.setState({
       [event.target.id]: event.target.value
     })
@@ -25,7 +24,7 @@ export default class AddStory extends Component {
   }
 
   render() {
-    const readyToAdd = this.state.title && this.state.title !== ''
+    const readyToAdd = (this.state.title !== '') ? 'true' : 'false'
     return (
       <form>
         <fieldset>

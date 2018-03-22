@@ -9,7 +9,6 @@ export default class AddScene extends Component {
   state = { title: '' }
 
   handleChange = (event) => {
-    console.log(event)
     this.setState({
       [event.target.id]: event.target.value
     })

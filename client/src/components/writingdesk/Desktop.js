@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { NEW_DRAFT_ID } from './EditStory'
 import { formatDateTime } from '../../util/formatter'
 import AddStory from './AddStory'
 
