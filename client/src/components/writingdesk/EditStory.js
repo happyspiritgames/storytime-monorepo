@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 import Breadcrumbs from './Breadcrumbs'
 import EditSummary from './EditSummary'
@@ -32,7 +31,6 @@ export default class EditStory extends Component {
       <div id="edit-story">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <Breadcrumbs summary={summary} />
-
         <h4 className="text-center">Story Editor</h4>
         <div>
         { draft && draft.summary &&
