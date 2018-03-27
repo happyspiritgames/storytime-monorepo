@@ -1,0 +1,1541 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "StoryTime Service API",
+    "description" : "Application programming interface (API) to the StoryTime service, supporting clients and consumers of interactive fiction stories where the player decides what path to take through the story.",
+    "termsOfService" : "https://happyspiritgames.blog/terms-of-service/",
+    "contact" : {
+      "name" : "Happy Spirit Games Support",
+      "url" : "https://happyspiritgames.blog/terms-of-service/",
+      "email" : "welcome@happyspiritgames.com"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    },
+    "version" : "2.1.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/Happy-Spirit-Games/StoryTimeReaderAPI/2.1.0",
+    "description" : "API definition design and testing"
+  }, {
+    "url" : "https://hsg-storytime.herokuapp.com/api",
+    "description" : "Production StoryTime service"
+  }, {
+    "url" : "https://hsg-storytime-staging.herokuapp.com/api",
+    "description" : "Staging StoryTime service for pre-production testing"
+  } ],
+  "paths" : {
+    "/ping" : {
+      "get" : {
+        "tags" : [ "admin" ],
+        "summary" : "Checks that service is responsive",
+        "operationId" : "ping",
+        "responses" : {
+          "200" : {
+            "description" : "A fun little message from the service to prove that it is still responsive.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Pong"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stories" : {
+      "description" : "To access published stories that are available for general consumption.  See '/author' endpoints for working with in-progress drafts.",
+      "get" : {
+        "tags" : [ "player" ],
+        "summary" : "Returns the catalog of published stories",
+        "description" : "Method that returns all published stories, to be extended with search criteria once there are too many stories.",
+        "operationId" : "searchStories",
+        "responses" : {
+          "200" : {
+            "description" : "All published stories",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StorySearchResults"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stories/{storyId}" : {
+      "get" : {
+        "tags" : [ "player" ],
+        "summary" : "Gets published story",
+        "description" : "Get published story for the given story ID",
+        "operationId" : "getPublishedStorySummary",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Story found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StorySummary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stories/{storyId}/scenes/{sceneId}" : {
+      "get" : {
+        "tags" : [ "player" ],
+        "summary" : "Gets a scene of a story.",
+        "description" : "Gets a scene of a story.",
+        "operationId" : "getStoryScene",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sceneId",
+          "in" : "path",
+          "description" : "scene ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Scene found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Scene"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/self/roles" : {
+      "get" : {
+        "tags" : [ "player" ],
+        "summary" : "Returns the roles assigned to the user making the request.",
+        "description" : "Returns the roles assigned to the user making the request.",
+        "operationId" : "getRoles",
+        "responses" : {
+          "200" : {
+            "description" : "Roles found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/self/roles/agree-author" : {
+      "put" : {
+        "tags" : [ "player" ],
+        "summary" : "To be called when user agrees to terms of being an author.",
+        "description" : "To be called when user agrees to terms of being an author. Uses authorization header to identify the player.",
+        "operationId" : "agreeToAuthorTerms",
+        "responses" : {
+          "202" : {
+            "description" : "Accepted agreement to terms"
+          }
+        }
+      }
+    },
+    "/self/profile" : {
+      "get" : {
+        "tags" : [ "player" ],
+        "summary" : "Retrieves player profile information about the active user",
+        "description" : "Retrieves player profile information about the active user, using authorization header to identify the player.",
+        "operationId" : "getSelfProfile",
+        "responses" : {
+          "200" : {
+            "description" : "Profile found",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "player" ],
+        "summary" : "Updates profile",
+        "description" : "Updates player's own profile, using authorization header to identify the player. Only select properties are available for edit by the player.  Note that emailOptIn is a boolean, not a timestamp.  If true is passed while the stored field value is empty, the service will timestamp the field.  If true is passed while the field already has a timestamp, no change is made, preserving the existing timestamp.  If false is passed while the field has a value, the field will be nulled.  If false is passed while the field is null, no change is made.",
+        "operationId" : "updateSelfProfile",
+        "requestBody" : {
+          "description" : "Editable fields from PlayerProfile",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PlayerProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted changes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codes/player-status" : {
+      "get" : {
+        "tags" : [ "system" ],
+        "summary" : "Returns all player status codes.",
+        "description" : "Returns all player status codes for use in drop-downs and to look up display values.",
+        "operationId" : "getPlayerStatusCodes",
+        "responses" : {
+          "200" : {
+            "description" : "Found codes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeLookups"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codes/genres" : {
+      "get" : {
+        "tags" : [ "system" ],
+        "summary" : "Returns all genres that stories can be assigned.",
+        "description" : "Returns a list of available genres, such as sci-fi, adventure, mystery. Stories can be classified by one genre or a combination.",
+        "operationId" : "getGenres",
+        "responses" : {
+          "200" : {
+            "description" : "Found codes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeLookups"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codes/ratings" : {
+      "get" : {
+        "tags" : [ "system" ],
+        "summary" : "Returns all ratings that stories can be assigned.",
+        "description" : "Returns a list of available ratings, such as Y, Y7, PG, etc. Books don't seem to have a rating system. TV ratings probably make the most sense, but movie ratings could work as well. Or video game ratings. Basically this is a way to indicate age-appropriateness of a story.",
+        "operationId" : "getContentRatings",
+        "responses" : {
+          "200" : {
+            "description" : "Found codes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeLookups"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/players" : {
+      "get" : {
+        "tags" : [ "admin" ],
+        "summary" : "Returns all players in the system",
+        "description" : "Returns a list of players in the system with information that an administrator might want to see.",
+        "operationId" : "getPlayers",
+        "responses" : {
+          "200" : {
+            "description" : "Found players",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Player"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/players/{playerId}" : {
+      "get" : {
+        "tags" : [ "admin" ],
+        "summary" : "Returns all players in the system",
+        "description" : "Returns a list of players in the system with information that an administrator might want to see.",
+        "operationId" : "getPlayer",
+        "parameters" : [ {
+          "name" : "playerId",
+          "in" : "path",
+          "description" : "player UUID",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Found player",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Player"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/players/{playerId}/suspend" : {
+      "put" : {
+        "tags" : [ "admin" ],
+        "summary" : "Tells the system to suspend the given player.",
+        "description" : "Sends a signal to the service that the given player should be in suspended status.",
+        "operationId" : "suspendPlayer",
+        "parameters" : [ {
+          "name" : "playerId",
+          "in" : "path",
+          "description" : "player UUID",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Accepted status change"
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/players/{playerId}/activate" : {
+      "put" : {
+        "tags" : [ "admin" ],
+        "summary" : "Tells the system to activate the given player.",
+        "description" : "Sends a signal to the service that the given player should be in active status.",
+        "operationId" : "activatePlayer",
+        "parameters" : [ {
+          "name" : "playerId",
+          "in" : "path",
+          "description" : "player UUID",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Accepted status change"
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/players/{playerId}/delete" : {
+      "put" : {
+        "tags" : [ "admin" ],
+        "summary" : "Tells the system to delete the given player.",
+        "description" : "Sends a signal to the service that the given player should be in deleted status.",
+        "operationId" : "deletePlayer",
+        "parameters" : [ {
+          "name" : "playerId",
+          "in" : "path",
+          "description" : "player UUID",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Accepted status change"
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Returns all draft stories owned by the current author.",
+        "description" : "Returns a list of stories in draft and owned by the user who is logged in. That means they are open for changes.",
+        "operationId" : "getDraftSummaries",
+        "responses" : {
+          "200" : {
+            "description" : "Draft stories",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DraftStorySummary"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "author" ],
+        "summary" : "Creates new draft story",
+        "description" : "Creates a story in draft mode that is owned by the logged in user, a.k.a. the author.  Being in draft means that the story is open for editing.  Note that firstSceneId is assigned by the system.  Any value supplied by the client will be ignored.",
+        "operationId" : "beginNewStory",
+        "requestBody" : {
+          "description" : "Story summary information",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DraftStorySummaryUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created draft story",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftStorySummary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{storyId}" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Returns draft stories with the given ID.",
+        "description" : "Returns draft stories with the given ID.  The story must be owned by the user.",
+        "operationId" : "getStorySummary",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Draft story",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftStorySummary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "author" ],
+        "summary" : "Updates a draft story",
+        "description" : "Updates a story that is in draft mode and owned by the logged in user, a.k.a. the author.",
+        "operationId" : "updateStorySummary",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Story summary information",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DraftStorySummaryUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted changes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftStorySummary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{storyId}/full" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Returns draft stories with the given ID.",
+        "description" : "Returns draft stories with the given ID.  The story must be owned by the user.",
+        "operationId" : "getStorySummary",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Draft story",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FullDraftStory"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{storyId}/scenes" : {
+      "post" : {
+        "tags" : [ "author" ],
+        "summary" : "Creates new draft scene",
+        "description" : "Creates a scene in draft mode for the given story.  Being in draft means that the scene is open for editing.",
+        "operationId" : "beginNewScene",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Scene information",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DraftSceneUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created scene",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftScene"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{storyId}/scenes/{sceneId}" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Updates a scene in draft mode.",
+        "description" : "Updates a scene in draft mode.",
+        "operationId" : "updateScene",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sceneId",
+          "in" : "path",
+          "description" : "scene ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Found scene",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftScene"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "author" ],
+        "summary" : "Updates a scene in draft mode.",
+        "description" : "Updates a scene in draft mode.",
+        "operationId" : "updateScene",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sceneId",
+          "in" : "path",
+          "description" : "scene ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Scene information",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DraftSceneUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted changes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftScene"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{storyId}/scenes/{sceneId}/signpost" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Gets the signpost for a draft scene.",
+        "description" : "Gets the signpost for a draft scene.  The signpost lists the options for where the player can go next.",
+        "operationId" : "getSignpost",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sceneId",
+          "in" : "path",
+          "description" : "scene ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Found scene",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftSignpost"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "author" ],
+        "summary" : "Updates a signpost on a scene for a story in draft mode.",
+        "description" : "Updates a signpost on a scene for a story in draft mode.  This method handles all of the ways to modify a signpost.  Including a new destination in toUpdate will create a new sign.  Including an existing destination will update the sign.  Adding a destination to the toDelete array will remove the sign.  Removal happens first, but there is no need to remove a destination that is being updated.  It will simply be recreated.  If you are trying to remove a destination, be sure not to update it in the same call.",
+        "operationId" : "updateSignpost",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sceneId",
+          "in" : "path",
+          "description" : "scene ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Scene information",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DraftSignpostUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted changes",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DraftSignpost"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{draftId}/publish" : {
+      "post" : {
+        "tags" : [ "author" ],
+        "summary" : "Creates a new version of the story to be published.",
+        "description" : "Creates a record of the metadata for the draft story that is about to be published. This method gets the publishing process started. Changes to story metadata and even to the draft itself are allowed at this point.",
+        "operationId" : "prepareToPublish",
+        "parameters" : [ {
+          "name" : "draftId",
+          "in" : "path",
+          "description" : "draft story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Story metadata to be used for publishing",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StoryMetadata"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Story metadata to be used for publishing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StoryMetadata"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/draft-stories/{draftId}/publish/{version}" : {
+      "get" : {
+        "tags" : [ "author" ],
+        "summary" : "Returns story metadata.",
+        "description" : "Returns metadata about a published (or to be published) version of a story.",
+        "operationId" : "getStoryMetadata",
+        "parameters" : [ {
+          "name" : "draftId",
+          "in" : "path",
+          "description" : "draft story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "version",
+          "in" : "path",
+          "description" : "version number",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Story metadata",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StoryMetadata"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "author" ],
+        "summary" : "Creates a new published version of the story.",
+        "description" : "Publishes the story, creating a read-only copy of the story content that is available to players. Most of the metadata can still be modified, but not the version number. See the put method.",
+        "operationId" : "publish",
+        "parameters" : [ {
+          "name" : "draftId",
+          "in" : "path",
+          "description" : "draft story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "version",
+          "in" : "path",
+          "description" : "version number",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Published story"
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "author" ],
+        "summary" : "Updates the metadata for a story that is meant to be published.",
+        "description" : "Accepts changes to the metadata that is used to publish a story. Most of the metadata can be changed after publishing as well. There will be a single instance per story version, and changes to metadata go live immediately once the story has been published.",
+        "operationId" : "updateStoryMetadata",
+        "parameters" : [ {
+          "name" : "storyId",
+          "in" : "path",
+          "description" : "draft story ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "version",
+          "in" : "path",
+          "description" : "version number",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Story metadata to be used for publishing",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StoryMetadata"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created published story"
+          },
+          "default" : {
+            "description" : "Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "CodeLookup" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "sortOrder" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "CodeLookups" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/CodeLookup"
+        }
+      },
+      "DraftScene" : {
+        "type" : "object",
+        "properties" : {
+          "sceneId" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "prose" : {
+            "type" : "string"
+          },
+          "endPrompt" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "signpost" : {
+            "$ref" : "#/components/schemas/DraftSignpost"
+          }
+        }
+      },
+      "DraftSceneUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "prose" : {
+            "type" : "string"
+          },
+          "endPrompt" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DraftSign" : {
+        "type" : "object",
+        "properties" : {
+          "destinationId" : {
+            "type" : "string"
+          },
+          "teaser" : {
+            "type" : "string"
+          },
+          "order" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "DraftSignpost" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/DraftSign"
+        }
+      },
+      "DraftSignpostUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "toUpdate" : {
+            "$ref" : "#/components/schemas/DraftSignpost"
+          },
+          "toDelete" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "DraftStorySummary" : {
+        "type" : "object",
+        "properties" : {
+          "storyId" : {
+            "type" : "string"
+          },
+          "authorId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "tagLine" : {
+            "type" : "string"
+          },
+          "about" : {
+            "type" : "string"
+          },
+          "firstSceneId" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "DraftStorySummaryUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "tagLine" : {
+            "type" : "string"
+          },
+          "about" : {
+            "type" : "string"
+          },
+          "firstSceneId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "message" ]
+      },
+      "FullDraftStory" : {
+        "type" : "object",
+        "properties" : {
+          "summary" : {
+            "$ref" : "#/components/schemas/DraftStorySummary"
+          },
+          "scenes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/DraftScene"
+            }
+          }
+        }
+      },
+      "Player" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email"
+          },
+          "nickname" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "status" : {
+            "type" : "integer"
+          },
+          "emailOptInAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "authorOptInAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "penName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "PlayerProfileUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "nickname" : {
+            "type" : "string"
+          },
+          "emailOptIn" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "Pong" : {
+        "type" : "object",
+        "properties" : {
+          "salutation" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Scene" : {
+        "type" : "object",
+        "properties" : {
+          "sceneId" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "prose" : {
+            "type" : "string"
+          },
+          "endPrompt" : {
+            "type" : "string"
+          },
+          "signpost" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Sign"
+            }
+          }
+        }
+      },
+      "Sign" : {
+        "type" : "object",
+        "properties" : {
+          "sceneId" : {
+            "type" : "string"
+          },
+          "teaser" : {
+            "type" : "string"
+          }
+        }
+      },
+      "StorySearchResults" : {
+        "type" : "object",
+        "properties" : {
+          "stories" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/StorySummary"
+            }
+          }
+        }
+      },
+      "StoryMetadata" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "storyKey" : {
+            "type" : "string"
+          },
+          "author" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "penName" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "tagLine" : {
+            "type" : "string"
+          },
+          "about" : {
+            "type" : "string"
+          },
+          "rating" : {
+            "type" : "string"
+          },
+          "genre" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "firstSceneId" : {
+            "type" : "string"
+          },
+          "publishedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "StorySummary" : {
+        "type" : "object",
+        "properties" : {
+          "storyId" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "penName" : {
+            "type" : "string"
+          },
+          "tagLine" : {
+            "type" : "string"
+          },
+          "about" : {
+            "type" : "string"
+          },
+          "firstSceneId" : {
+            "type" : "string"
+          },
+          "publishedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer"
+      }
+    }
+  },
+  "security" : [ {
+    "BearerAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "name" : "admin",
+    "description" : "Only available to administrators"
+  }, {
+    "name" : "author",
+    "description" : "Operations available to players who build story worlds"
+  }, {
+    "name" : "player",
+    "description" : "Operations available to all players"
+  }, {
+    "name" : "system",
+    "description" : "For retrieving system information that applies to all"
+  } ]
+}
