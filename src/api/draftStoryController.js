@@ -269,6 +269,25 @@ exports.prepareToPublish = async (req, res) => {
   }
 }
 
+const getStoryFromCatalog = async (draftId, version) => {
+  const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
+  if (!metadata) {
+    return
+  }
+
+  // use rating code instead of internal ID
+  // TODO get this to come out of query result instead of patching
+  if (metadata.rating) {
+    const ratingCode = await publishingModel.getRatingCode(metadata.rating)
+    metadata['rating'] = ratingCode
+  }
+  // merge in associated genres
+  const genre = await publishingModel.getStoryGenre(draftId, version)
+  metadata['genre'] = genre
+
+  return metadata
+}
+
 exports.getMetadataForPublishing = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
@@ -278,22 +297,11 @@ exports.getMetadataForPublishing = async (req, res) => {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
       return
     }
-    const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
+    const metadata = await getStoryFromCatalog(draftId, version)
     if (!metadata) {
       res.status(404).send()
       return
     }
-
-    // use rating code instead of internal ID
-    // TODO get this to come out of query result instead of patching
-    if (metadata.rating) {
-      const ratingCode = await publishingModel.getRatingCode(metadata.rating)
-      metadata['rating'] = ratingCode
-    }
-
-    // merge in associated genres
-    const genres = await publishingModel.getStoryGenres(draftId, version)
-    metadata['genres'] = genres
     res.status(200).json(metadata)
   } catch (e) {
     console.error('Problem creating metadata for publishing', e)
@@ -302,7 +310,23 @@ exports.getMetadataForPublishing = async (req, res) => {
 }
 
 exports.updateMetadataForPublishing = async (req, res) => {
-  res.status(501).send()
+  const { playerId } = req.user
+  const { draftId, version } = req.params
+  const metadataUpdate = req.body
+  console.log('draftStoryController.updateMetadataForPublishing',
+    draftId, version, metadataUpdate)
+
+  try {
+    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+      return
+    }
+    await publishingModel.updateCatalogRecord(draftId, version, metadataUpdate)
+    const result = await getStoryFromCatalog(draftId, version)
+    res.status(202).json(result)
+  } catch (e) {
+    console.error('Problem updating metadata for publishing', e)
+    res.status(500).json(internalError)
+  }
 }
 
 exports.publish = async (req, res) => {

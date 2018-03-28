@@ -80,8 +80,8 @@ where catalog.draft_id='v7kv89xo'
 and catalog.id=catalog_genre.catalog_id
 and catalog_genre.genre_id=genre.id;
  */
-exports.getStoryGenres = async (draftId, version) => {
-  console.log('publishingModel.getStoryGenres')
+exports.getStoryGenre = async (draftId, version) => {
+  console.log('publishingModel.getStoryGenre')
   const SELECT = 'select genre.code as code from genre, catalog_genre, catalog '
     + 'where catalog.draft_id=$1 and catalog.version=$2 '
     + 'and catalog.id=catalog_genre.catalog_id and catalog_genre.genre_id=genre.id'
@@ -91,7 +91,6 @@ exports.getStoryGenres = async (draftId, version) => {
   } else {
     return []
   }
-
 }
 
 exports.getRatingCode = async (ratingId) => {
@@ -106,6 +105,75 @@ insert into catalog_genre (catalog_id, genre_id)
 select catalog.id, genre.id from catalog, genre
 where catalog.draft_id='v7kv89xo' and genre.code='mystery';
 */
-exports.assignGenreToCatalogRecord = async (draftId, genreCode) => {
+const assignGenre = async (draftId, version, genreToAssign) => {
+  console.log('publishingModel.assignGenre')
+  const INSERT = 'insert into catalog_genre (catalog_id, genre_id) '
+    + 'select catalog.id, genre.id from catalog, genre '
+    + 'where catalog.draft_id=$1 and genre.code=$2'
+  try {
+    const dbResult = await db.query(INSERT, [draftId, genreToAssign])
+  } catch (error) {
+    // want to swallow dupes -- or only insert if not found
+    console.log(error)
+  }
+}
 
+const removeGenre = async (draft, version, genreCodes) => {
+
+}
+
+/*
+update catalog
+set story_key='wumpus', pen_name='wumpus', title='wumpus', tag_line='wumpus', about='wumpus',
+rating=(select id from rating where code=='Y')
+where draft_id='v7kv89xo' and version='0-1';
+*/
+exports.updateCatalogRecord = async (draftId, version, metadataUpdate) => {
+  console.log('publishingModel.updateCatalogRecord')
+  let updates = ''
+  const args = [draftId, version]
+  if (metadataUpdate.storyKey) {
+    args.push(metadataUpdate.storyKey)
+    updates = updates.concat(`, story_key=$${args.length}`)
+  }
+  if (metadataUpdate.penName) {
+    args.push(metadataUpdate.penName)
+    updates = updates.concat(`, pen_name=$${args.length}`)
+  }
+  if (metadataUpdate.title) {
+    args.push(metadataUpdate.title)
+    updates = updates.concat(`, title=$${args.length}`)
+  }
+  if (metadataUpdate.tagLine) {
+    args.push(metadataUpdate.tagLine)
+    updates = updates.concat(`, tag_line=$${args.length}`)
+  }
+  if (metadataUpdate.about) {
+    args.push(metadataUpdate.about)
+    updates = updates.concat(`, about=$${args.length}`)
+  }
+  if (metadataUpdate.rating) {
+    args.push(metadataUpdate.rating)
+    updates = updates.concat(`, rating=(select id from rating where code=$${args.length})`)
+  }
+
+  // skip if no args added
+  if (args.length > 2) {
+    updates = updates.substring(2)
+    const UPDATE = `update catalog set ${updates} where draft_id=$1 and version=$2`
+    dbResult = await db.query(UPDATE, args)
+  }
+
+  // determine if they are different
+  if (metadataUpdate.genre) {
+    const currentGenre = getStoryGenre(draftId, versionId)
+    const diff = {
+      count: 0,
+      add: [],
+      remove: []
+    }
+    const different = currentGenre.length != metadataUpdate.genre.length
+      ||
+    assignGenre(draftId, version, metadataUpdate.genre)
+  }
 }
