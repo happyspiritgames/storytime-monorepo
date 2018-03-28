@@ -21,17 +21,17 @@ create table rating (
 );
 
 create table catalog (
-  id integer primary key,
+  id serial primary key,
+  draft_id varchar(8) not null references story (id),
   version varchar(8) not null,
   story_key varchar(20) not null,
-  draft_id varchar(8) not null references story (id),
   author_id uuid not null references player (id),
   pen_name varchar(32),
   title varchar(100),
   tag_line varchar(256),
   about text,
-  first_scene_id varchar(8),
   rating integer references rating (id),
+  first_scene_id varchar(8),
   published_at timestamp
 );
 

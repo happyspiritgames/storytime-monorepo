@@ -1,4 +1,5 @@
 const draftModel = require('../db/draftStoryModel')
+const publishingModel = require('../db/publishingModel')
 const { internalError, errorMessage, theEnd } = require('./errors')
 
 const verifyStoryAuthorization = async (playerId, storyId, res) => {
@@ -260,51 +261,43 @@ exports.prepareToPublish = async (req, res) => {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
       return;
     }
-    const unpublishedMetadata = await draftModel.findUnpublishedInCatalog(playerId, draftId)
+    const unpublishedMetadata = await publishingModel.findUnpublishedInCatalog(playerId, draftId)
     if (unpublishedMetadata) {
       res.status(201).json(unpublishedMetadata)
       return;
     }
-
-    // gather default data for publishing record
-    const metadata = {
-      draftId: draftId,
-      version: '0.1',
-      storyKey: draftId,
-      author: authorId,
-      penName: 'player.pen_name',
-      title: 'story.title',
-      tagLine: 'story.tag_line',
-      about: 'story.about',
-      firstSceneId: 'story.firstSceneId'
-    }
-    const storyMetadataId = await draftModel.createCatalogRecord(metadata)
-    const scene = await draftModel.getMetadata(draftId, version);
-    res.status(201).json(scene);
+    const metadata = await publishingModel.createCatalogRecord(draftId, '0.1')
+    res.status(201).json(metadata);
   } catch (e) {
     console.error('Problem creating new scene', e)
     res.status(500).json(internalError)
   }
 }
 
-exports.getStoryMetadata = async (req, res) => {
+exports.getMetadataForPublishing = async (req, res) => {
 
   // find record in catalog that matches draft ID and version
-  const storyMetadata = draftModel.getMetadata(draftId, version)
+  // const storyMetadata = publishingModel.getMetadata(draftId, version)
 
   // merge in associated genres
-  const genres =
+  // const genres =
 
-  if (genres) {
-    storyMetadata['genres'] = genres
-  }
-  res.status(200).json(storyMetadata)
+  // if (genres) {
+  //   storyMetadata['genres'] = genres
+  // }
+  // res.status(200).json(storyMetadata)
+  res.status(501).send()
 }
 
-exports.updateStoryMetadata = async (req, res) => {
-  res.status(202)
+exports.updateMetadataForPublishing = async (req, res) => {
+  res.status(501).send()
 }
 
 exports.publish = async (req, res) => {
-  res.status(200)
+
+  // build story JSON and store in S3
+  // set published_at timestamp
+  // this might be better as batch job since there could be some lag
+
+  res.status(501).send()
 }
