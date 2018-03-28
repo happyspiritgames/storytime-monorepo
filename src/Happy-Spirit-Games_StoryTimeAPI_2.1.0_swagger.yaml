@@ -697,14 +697,8 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        description: Story metadata to be used for publishing
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StoryMetadata'
       responses:
-        '202':
+        '201':
           description: Story metadata to be used for publishing
           content:
             application/json:
@@ -722,7 +716,7 @@ paths:
         - author
       summary: Returns story metadata.
       description: Returns metadata about a published (or to be published) version of a story.
-      operationId: getStoryMetadata
+      operationId: getMetadataForPublishing
       parameters:
         - name: draftId
           in: path
@@ -769,8 +763,12 @@ paths:
           schema:
             type: string
       responses:
-        '202':
+        '201':
           description: Published story
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoryMetadata'
         default:
           description: Error
           content:
@@ -782,9 +780,9 @@ paths:
         - author
       summary: Updates the metadata for a story that is meant to be published.
       description: Accepts changes to the metadata that is used to publish a story. Most of the metadata can be changed after publishing as well. There will be a single instance per story version, and changes to metadata go live immediately once the story has been published.
-      operationId: updateStoryMetadata
+      operationId: updateMetadataForPublishing
       parameters:
-        - name: storyId
+        - name: draftId
           in: path
           description: draft story ID
           required: true
@@ -801,10 +799,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StoryMetadata'
+              $ref: '#/components/schemas/StoryMetadataUpdate'
       responses:
-        '201':
+        '202':
           description: Created published story
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoryMetadata'
         default:
           description: Error
           content:
@@ -995,7 +997,7 @@ components:
     StoryMetadata:
       type: object
       properties:
-        id:
+        draftId:
           type: string
         version:
           type: string
@@ -1023,6 +1025,32 @@ components:
         publishedAt:
           type: string
           format: date-time
+    StoryMetadataUpdate:
+      type: object
+      properties:
+        storyKey:
+          type: string
+        penName:
+          type: string
+        title:
+          type: string
+        tagLine:
+          type: string
+        about:
+          type: string
+        rating:
+          type: string
+        genre:
+          type: object
+          properties:
+            toAssign:
+              type: array
+              items:
+                type: string
+            toDelete:
+              type: array
+              items:
+                type: string
     StorySummary:
       type: object
       properties:
