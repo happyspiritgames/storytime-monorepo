@@ -16,13 +16,6 @@ const mapCatalogRowToApi = (catalogRow) => {
   }
 }
 
-const mapGenreRowsToArray = (genreRows) => {
-  genreRows.forEach(row => {
-    console.log(row)
-  })
-  return genreRows.map(row => row.code)
-}
-
 /*
 select draft_id, version, story_key, author_id, pen_name, title, tag_line, about, rating.code
 from catalog, rating
@@ -80,18 +73,20 @@ where catalog.draft_id='v7kv89xo'
 and catalog.id=catalog_genre.catalog_id
 and catalog_genre.genre_id=genre.id;
  */
-exports.getStoryGenre = async (draftId, version) => {
+const getGenreForStory = async (draftId, version) => {
   console.log('publishingModel.getStoryGenre')
   const SELECT = 'select genre.code as code from genre, catalog_genre, catalog '
     + 'where catalog.draft_id=$1 and catalog.version=$2 '
     + 'and catalog.id=catalog_genre.catalog_id and catalog_genre.genre_id=genre.id'
   const dbResult = await db.query(SELECT, [draftId, version])
   if (dbResult.rowCount) {
-    return mapGenreRowsToArray(dbResult.rows)
+    return dbResult.rows.map(row => row.code)
   } else {
     return []
   }
 }
+
+exports.getStoryGenre = getGenreForStory
 
 exports.getRatingCode = async (ratingId) => {
   console.log('publishingModel.getRatingCode')
@@ -103,23 +98,32 @@ exports.getRatingCode = async (ratingId) => {
 /*
 insert into catalog_genre (catalog_id, genre_id)
 select catalog.id, genre.id from catalog, genre
-where catalog.draft_id='v7kv89xo' and genre.code='mystery';
+where catalog.draft_id='v7kv89xo' and catalog.version='0-1' and genre.code='mystery';
 */
-const assignGenre = async (draftId, version, genreToAssign) => {
+const assignGenre = async (draftId, version, code) => {
   console.log('publishingModel.assignGenre')
   const INSERT = 'insert into catalog_genre (catalog_id, genre_id) '
     + 'select catalog.id, genre.id from catalog, genre '
-    + 'where catalog.draft_id=$1 and genre.code=$2'
+    + 'where catalog.draft_id=$1 and catalog.version=$2 and genre.code=$3'
   try {
-    const dbResult = await db.query(INSERT, [draftId, genreToAssign])
+    const dbResult = await db.query(INSERT, [draftId, version, code])
   } catch (error) {
     // want to swallow dupes -- or only insert if not found
     console.log(error)
   }
 }
 
-const removeGenre = async (draft, version, genreCodes) => {
-
+/*
+delete from catalog_genre
+where catalog_id=(select id from catalog where draft_id='v7kv89xo' and version='0-1')
+and genre_id=(select id from genre where code='mystery');
+*/
+const unassignGenre = async (draftId, version, code) => {
+  console.log('publishingModel.removeGenre')
+  const DELETE = 'delete from catalog_genre '
+    + 'where catalog_id=(select id from catalog where draft_id=$1 and version=$2) '
+    + 'and genre_id=(select id from genre where code=$3)'
+  const dbResult = await db.query(DELETE, [draftId, version, code])
 }
 
 /*
@@ -164,16 +168,24 @@ exports.updateCatalogRecord = async (draftId, version, metadataUpdate) => {
     dbResult = await db.query(UPDATE, args)
   }
 
-  // determine if they are different
+  // take care of genre changes
   if (metadataUpdate.genre) {
-    const currentGenre = getStoryGenre(draftId, versionId)
-    const diff = {
-      count: 0,
-      add: [],
-      remove: []
+    const currentGenreList = await getGenreForStory(draftId, version)
+    if (metadataUpdate.genre.toAssign) {
+      metadataUpdate.genre.toAssign.forEach(code => {
+        if (!currentGenreList.includes(code)) {
+          console.log('Assigning', code)
+          assignGenre(draftId, version, code)
+        }
+      })
     }
-    const different = currentGenre.length != metadataUpdate.genre.length
-      ||
-    assignGenre(draftId, version, metadataUpdate.genre)
+    if (metadataUpdate.genre.toUnassign) {
+      metadataUpdate.genre.toUnassign.forEach(code => {
+        if (currentGenreList.includes(code)) {
+          console.log('Unassigning', code)
+          unassignGenre(draftId, version, code)
+        }
+      })
+    }
   }
 }
