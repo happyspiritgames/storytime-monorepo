@@ -31,7 +31,7 @@ exports.getDraftSummaries = async (req, res) => {
     console.error('Problem getting draft stories', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.beginNewStory = async (req, res) => {
   const { playerId } = req.user
@@ -47,7 +47,7 @@ exports.beginNewStory = async (req, res) => {
     console.error('Problem creating draft story', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.getStorySummary = async (req, res) => {
   console.log('draftStoryController.getStorySummary')
@@ -63,7 +63,7 @@ exports.getStorySummary = async (req, res) => {
     console.error('Problem getting draft summary', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.updateStorySummary = async (req, res) => {
   console.log('draftStoryController.updateStorySummary')
@@ -81,7 +81,7 @@ exports.updateStorySummary = async (req, res) => {
     console.error('Problem updating draft summary', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.getFullStory = async (req, res) => {
   console.log('draftStoryController.getFullStory')
@@ -103,13 +103,13 @@ exports.getFullStory = async (req, res) => {
     const fullStory = {
       summary: summary,
       scenes: scenes
-    };
+    }
     res.json(fullStory)
   } catch (e) {
     console.error('Problem getting full draft', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.beginNewScene = async (req, res) => {
   const { playerId } = req.user
@@ -127,7 +127,7 @@ exports.beginNewScene = async (req, res) => {
     console.error('Problem creating new scene', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.getScene = async (req, res) => {
   const { playerId } = req.user
@@ -147,7 +147,7 @@ exports.getScene = async (req, res) => {
     console.error('Problem getting draft scene', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.updateScene = async (req, res) => {
   console.log('draftStoryController.updateScene')
@@ -165,7 +165,7 @@ exports.updateScene = async (req, res) => {
     console.error('Problem updating draft scene', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 exports.getSignpost = async (req, res) => {
   console.log('draftStoryController.getSignpost')
@@ -184,7 +184,7 @@ exports.getSignpost = async (req, res) => {
     console.error('Problem getting signpost for scene', e)
     res.status(500).json(internalError)
   }
-};
+}
 
 const takeNap = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -205,7 +205,7 @@ exports.updateSignpost = async (req, res) => {
       console.log('deleting signs on signpost')
       toDelete.forEach(async destinationId => {
         await draftModel.deleteSignpostSign(sceneId, destinationId)
-      });
+      })
     }
     if (toUpdate) {
       console.log('updating signpost', toUpdate, toUpdate.length)
@@ -266,27 +266,36 @@ exports.prepareToPublish = async (req, res) => {
       res.status(201).json(unpublishedMetadata)
       return;
     }
-    const metadata = await publishingModel.createCatalogRecord(draftId, '0.1')
-    res.status(201).json(metadata);
+    const metadata = await publishingModel.createCatalogRecord(draftId, '0-1')
+    res.status(201).json(metadata)
   } catch (e) {
-    console.error('Problem creating new scene', e)
+    console.error('Problem creating metadata for publishing', e)
     res.status(500).json(internalError)
   }
 }
 
 exports.getMetadataForPublishing = async (req, res) => {
 
-  // find record in catalog that matches draft ID and version
-  // const storyMetadata = publishingModel.getMetadata(draftId, version)
+  const { playerId } = req.user
+  const { draftId, version } = req.params
+  console.log('draftStoryController.getMetadataForPublishing', draftId, version)
 
-  // merge in associated genres
-  // const genres =
+  try {
+    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+      return
+    }
+    const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
+    if (!metadata) {
+      res.status(404).send()
+      return
+    }
+    // merge in associated genres
 
-  // if (genres) {
-  //   storyMetadata['genres'] = genres
-  // }
-  // res.status(200).json(storyMetadata)
-  res.status(501).send()
+    res.status(200).json(metadata)
+  } catch (e) {
+    console.error('Problem creating metadata for publishing', e)
+    res.status(500).json(internalError)
+  }
 }
 
 exports.updateMetadataForPublishing = async (req, res) => {
