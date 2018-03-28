@@ -244,18 +244,9 @@ exports.updateSignpost = async (req, res) => {
   record will be returned.
  */
 exports.prepareToPublish = async (req, res) => {
-
   const { playerId } = req.user
   const { draftId } = req.params
   console.log('draftStoryController.prepareToPublish', draftId)
-
-  // see if there's a catalog row for this draft and author that does not have a publishedAt timestamp.
-  // if found, return it.
-
-  // might make sense to use integers for major, minor version #s.
-  // then default major to 0 to signify a draft.
-
-  // might make sense to keep this simple for now.
 
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
@@ -266,6 +257,10 @@ exports.prepareToPublish = async (req, res) => {
       res.status(201).json(unpublishedMetadata)
       return;
     }
+    // TODO implement version numbering logic
+    //  a) find the latest published and increment minor
+    //  b) find the latest published and increment major, reset minor
+    //  ?? how to decide which one ??
     const metadata = await publishingModel.createCatalogRecord(draftId, '0-1')
     res.status(201).json(metadata)
   } catch (e) {
@@ -275,7 +270,6 @@ exports.prepareToPublish = async (req, res) => {
 }
 
 exports.getMetadataForPublishing = async (req, res) => {
-
   const { playerId } = req.user
   const { draftId, version } = req.params
   console.log('draftStoryController.getMetadataForPublishing', draftId, version)
@@ -289,8 +283,17 @@ exports.getMetadataForPublishing = async (req, res) => {
       res.status(404).send()
       return
     }
-    // merge in associated genres
 
+    // use rating code instead of internal ID
+    // TODO get this to come out of query result instead of patching
+    if (metadata.rating) {
+      const ratingCode = await publishingModel.getRatingCode(metadata.rating)
+      metadata['rating'] = ratingCode
+    }
+
+    // merge in associated genres
+    const genres = await publishingModel.getStoryGenres(draftId, version)
+    metadata['genres'] = genres
     res.status(200).json(metadata)
   } catch (e) {
     console.error('Problem creating metadata for publishing', e)
