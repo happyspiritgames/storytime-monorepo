@@ -1,7 +1,6 @@
 -- DATABASE UPGRADES FOR STORYTIME 1.5, PUBLISHING
 
 drop table if exists catalog_genre;
-drop table if exists catalog_storyfile;
 drop table if exists catalog;
 drop table if exists genre;
 drop table if exists rating;
@@ -32,6 +31,7 @@ create table catalog (
   about text,
   rating integer references rating (id),
   first_scene_id varchar(8),
+  published_filename varchar(100),
   published_at timestamp
 );
 
@@ -39,11 +39,6 @@ create table catalog_genre (
   catalog_id integer not null references catalog (id),
   genre_id integer not null references genre (id),
   primary key (catalog_id, genre_id)
-);
-
-create table catalog_storyfile (
-  catalog_id integer not null references catalog (id),
-  story_filename varchar(100)
 );
 
 insert into genre (code, display_name, sort_order) values ('adventure', 'Adventure', 1);

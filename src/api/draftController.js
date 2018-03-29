@@ -1,6 +1,7 @@
-const draftModel = require('../db/draftStoryModel')
+const draftModel = require('../db/draftModel')
 const publishingModel = require('../db/publishingModel')
 const { internalError, errorMessage, theEnd } = require('./errors')
+const { saveStory } = require('../db/storyRepo')
 
 const verifyStoryAuthorization = async (playerId, storyId, res) => {
   const authorId = await draftModel.getStoryOwner(storyId)
@@ -22,7 +23,7 @@ const verifyStoryAuthorization = async (playerId, storyId, res) => {
  * @param {*} res - the HTTP response
  */
 exports.getDraftSummaries = async (req, res) => {
-  console.log('draftStoryController.getStories')
+  console.log('draftController.getStories')
   const authorId = req.user.playerId
   try {
     const stories = await draftModel.getStories(authorId)
@@ -36,7 +37,7 @@ exports.getDraftSummaries = async (req, res) => {
 exports.beginNewStory = async (req, res) => {
   const { playerId } = req.user
   const { title, tagLine, about } = req.body
-  console.log('draftStoryController.beginNewStory', playerId, title)
+  console.log('draftController.beginNewStory', playerId, title)
   try {
     const storyId = await draftModel.createStory(playerId, title, tagLine, about)
     const sceneId = await draftModel.createScene(storyId, 'First Scene')
@@ -50,7 +51,7 @@ exports.beginNewStory = async (req, res) => {
 }
 
 exports.getStorySummary = async (req, res) => {
-  console.log('draftStoryController.getStorySummary')
+  console.log('draftController.getStorySummary')
   const { playerId } = req.user
   const { storyId } = req.params
   try {
@@ -66,7 +67,7 @@ exports.getStorySummary = async (req, res) => {
 }
 
 exports.updateStorySummary = async (req, res) => {
-  console.log('draftStoryController.updateStorySummary')
+  console.log('draftController.updateStorySummary')
   const { playerId } = req.user
   const { storyId } = req.params
   const { title, tagLine, about, firstSceneId } = req.body
@@ -83,27 +84,32 @@ exports.updateStorySummary = async (req, res) => {
   }
 }
 
+const assembleFullStory = async (draftId) => {
+  const summary = await draftModel.getStory(draftId)
+  const scenes = await draftModel.getScenes(draftId)
+  for (let i = 0; i < scenes.length; i++) {
+    const scene = scenes[i]
+    const signpost = await draftModel.getSignpost(scene.sceneId)
+    if (signpost) {
+      scene['signpost'] = signpost
+    }
+  }
+  const fullStory = {
+    summary: summary,
+    scenes: scenes
+  }
+  return fullStory
+}
+
 exports.getFullStory = async (req, res) => {
-  console.log('draftStoryController.getFullStory')
+  console.log('draftController.getFullStory')
   const { playerId } = req.user
   const { storyId } = req.params
   try {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return
     }
-    const summary = await draftModel.getStory(storyId)
-    const scenes = await draftModel.getScenes(storyId)
-    for (let i = 0; i < scenes.length; i++) {
-      const scene = scenes[i]
-      const signpost = await draftModel.getSignpost(scene.sceneId)
-      if (signpost) {
-        scene['signpost'] = signpost
-      }
-    }
-    const fullStory = {
-      summary: summary,
-      scenes: scenes
-    }
+    const fullStory = assembleFullStory(storyId)
     res.json(fullStory)
   } catch (e) {
     console.error('Problem getting full draft', e)
@@ -115,7 +121,7 @@ exports.beginNewScene = async (req, res) => {
   const { playerId } = req.user
   const { storyId } = req.params
   const { title, prose, endPrompt } = req.body
-  console.log('draftStoryController.beginNewScene', storyId, title)
+  console.log('draftController.beginNewScene', storyId, title)
   try {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return
@@ -132,7 +138,7 @@ exports.beginNewScene = async (req, res) => {
 exports.getScene = async (req, res) => {
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
-  console.log('draftStoryController.getScene', storyId, sceneId)
+  console.log('draftController.getScene', storyId, sceneId)
   try {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return
@@ -150,7 +156,7 @@ exports.getScene = async (req, res) => {
 }
 
 exports.updateScene = async (req, res) => {
-  console.log('draftStoryController.updateScene')
+  console.log('draftController.updateScene')
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   const { title, prose, endPrompt } = req.body
@@ -168,7 +174,7 @@ exports.updateScene = async (req, res) => {
 }
 
 exports.getSignpost = async (req, res) => {
-  console.log('draftStoryController.getSignpost')
+  console.log('draftController.getSignpost')
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   try {
@@ -191,7 +197,7 @@ const takeNap = (ms) => {
 }
 
 exports.updateSignpost = async (req, res) => {
-  console.log('draftStoryController.updateSignpost')
+  console.log('draftController.updateSignpost')
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   const { toUpdate, toDelete } = req.body
@@ -243,10 +249,10 @@ exports.updateSignpost = async (req, res) => {
   So if this is called a second time while a published version exists with a publishedAt timestamp, the existing
   record will be returned.
  */
-exports.prepareToPublish = async (req, res) => {
+exports.createProof = async (req, res) => {
   const { playerId } = req.user
   const { draftId } = req.params
-  console.log('draftStoryController.prepareToPublish', draftId)
+  console.log('draftController.createProof', draftId)
 
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
@@ -288,10 +294,10 @@ const getStoryFromCatalog = async (draftId, version) => {
   return metadata
 }
 
-exports.getMetadataForPublishing = async (req, res) => {
+exports.getProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
-  console.log('draftStoryController.getMetadataForPublishing', draftId, version)
+  console.log('draftController.getMetadataForPublishing', draftId, version)
 
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
@@ -309,11 +315,11 @@ exports.getMetadataForPublishing = async (req, res) => {
   }
 }
 
-exports.updateMetadataForPublishing = async (req, res) => {
+exports.updateProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
   const metadataUpdate = req.body
-  console.log('draftStoryController.updateMetadataForPublishing',
+  console.log('draftController.updateMetadataForPublishing',
     draftId, version, metadataUpdate)
 
   try {
@@ -330,10 +336,49 @@ exports.updateMetadataForPublishing = async (req, res) => {
 }
 
 exports.publish = async (req, res) => {
+  const { playerId } = req.user
+  const { draftId, version } = req.params
+  console.log('draftController.publish')
+  try {
+    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+      return
+    }
+    let proofMetadata = await getStoryFromCatalog(draftId, version)
 
-  // build story JSON and store in S3
-  // set published_at timestamp
-  // this might be better as batch job since there could be some lag
+    // TODO this might be better as batch job since there could be some lag
 
-  res.status(501).send()
+    // build story JSON
+    const fullStory = await assembleFullStory(draftId)
+
+    // merge changes to summary from metadata
+    const summary = fullStory.summary
+    if (summary.storyId !== proofMetadata.storyKey) {
+      summary['storyId'] = proofMetadata.storyKey
+    }
+    if (summary.title !== proofMetadata.title) {
+      summary['title'] = proofMetadata.title
+    }
+    if (summary.tagLine !== proofMetadata.tagLine) {
+      summary['tagLine'] = proofMetadata.tagLine
+    }
+    if (summary.about !== proofMetadata.about) {
+      summary['about'] = proofMetadata.about
+    }
+
+    // store story in S3
+    const key = proofMetadata.storyKey ? proofMetadata.storyKey : draftId
+    const filename = `${key}_${version}.json`
+    const serializedStory = JSON.stringify(fullStory)
+    saveStory(filename, serializedStory)
+
+    // set published_at timestamp
+    await publishingModel.recordPublishingEvent(draftId, version, filename)
+
+    // return updated metadata
+    proofMetadata = await getStoryFromCatalog(draftId, version)
+    res.status(201).json(proofMetadata)
+  } catch (e) {
+    console.error('Problem publishing', e)
+    res.status(500).json(internalError)
+  }
 }

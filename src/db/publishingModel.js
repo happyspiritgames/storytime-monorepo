@@ -189,3 +189,14 @@ exports.updateCatalogRecord = async (draftId, version, metadataUpdate) => {
     }
   }
 }
+
+/*
+update catalog set published_filename='979jafrz_0-1.json', published_at=current_timestamp
+where draft_id='979jafrz' and version='0-1';
+*/
+exports.recordPublishingEvent = async (draftId, version, filename) => {
+  console.log('publishingModel.removeGenre')
+  const UPDATE = 'update catalog set published_filename=$3, published_at=current_timestamp '
+    + 'where draft_id=$1 and version=$2'
+  const dbResult = await db.query(UPDATE, [draftId, version, filename])
+}

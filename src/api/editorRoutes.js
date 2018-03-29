@@ -1,5 +1,5 @@
 const express = require('express');
-const draftController = require('./draftStoryController');
+const draftController = require('./draftController');
 
 const router = express.Router();
 
@@ -38,11 +38,11 @@ router.route('/:storyId/scenes/:sceneId/signpost')
 .put(draftController.updateSignpost);
 
 // publishing methods
-router.route('/:draftId/publish')
-.post(draftController.prepareToPublish)
-router.route('/:draftId/publish/:version')
-.get(draftController.getMetadataForPublishing)
-.put(draftController.updateMetadataForPublishing)
+router.route('/:draftId/proof')
+.post(draftController.createProof)
+router.route('/:draftId/proof/:version')
+.get(draftController.getProofMetadata)
+.put(draftController.updateProofMetadata)
 .post(draftController.publish)
 
 module.exports = router;
