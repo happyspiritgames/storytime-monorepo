@@ -23,5 +23,6 @@ exports.loadStorySummaries = () => {
 
 exports.saveStory = (filename, story) => {
   console.log('storyRepo.saveStory')
-  fs.writeFileSync(filename, story)
+  const storyPath = `${repoDir}/${filename}`
+  fs.writeFileSync(storyPath, story)
 }
