@@ -54,12 +54,11 @@ exports.getStoryScene = (req, res) => {
  */
 exports.getCodes = async (req, res) => {
   const { type } = req.params
-  console.log('storyController.getCodes')
+  console.log('storyController.getCodes', type)
   try {
     if (type) {
       const codes = await systemModel.getCodeLookup(type)
       if (codes) {
-        console.log('got codes', codes)
         res.status(200).json(codes)
       } else {
         res.sendStatus(404)

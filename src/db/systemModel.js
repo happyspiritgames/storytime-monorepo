@@ -1,7 +1,6 @@
 const db = require('./postgres');
 
 const mapCodesToApi = codesFromDb => {
-  console.log('mapping codes', codesFromDb)
   return codesFromDb.map(code => ({
     code: code.code,
     displayName: code.display_name,
@@ -37,7 +36,6 @@ exports.getCodeLookup = async (type) => {
     const dbResult = await db.query(SELECT)
     if (dbResult.rowCount > 0) {
       const results = mapCodesToApi(dbResult.rows)
-      console.log('returning', results)
       return results
     }
   }
