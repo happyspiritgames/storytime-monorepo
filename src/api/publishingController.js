@@ -36,15 +36,22 @@ exports.createProof = async (req, res) => {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
       return
     }
-    const unpublishedVersion = await publishingModel.findUnpublished(playerId, draftId)
+    const unpublishedVersion = await publishingModel.findUnpublishedVersion(draftId)
     if (unpublishedVersion) {
       // already exists; do nothing
       console.log('proof already started; doing nothing')
       res.status(304).end()
       return
     }
-    // TODO implement version numbering logic -- find the latest published and increment
-    const metadata = await publishingModel.createProof(draftId, '1')
+    // version numbering -- find the latest published and increment
+    let nextVersion = 1
+    const latestVersion = await publishingModel.getLatestPublishedVersion(draftId)
+    if (latestVersion) {
+      nextVersion = parseInt(latestVersion)
+      nextVersion++
+    }
+    console.log('next version', nextVersion)
+    const metadata = await publishingModel.createProof(draftId, nextVersion.toString())
     res.status(201).json(metadata)
   } catch (e) {
     console.error('Problem creating metadata for publishing', e)

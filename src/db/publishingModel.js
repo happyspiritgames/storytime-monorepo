@@ -58,24 +58,32 @@ const mapCatalogRowToApi = async (catalogRow) => {
 }
 
 /*
-select draft_id, version, story_key, author_id, pen_name, title, tag_line, about, rating_codes.code
-from catalog, rating_codes
-where catalog.author_id=$1 and draft_id=$2 and rating_codes.id=catalog.rating;
-
-select * from catalog, story
-where story.author_id=''
-and story.id=''
-and catalog.draft_id=story.id
-and catalog.published_at is null;
+select version from catalog where draft_id='abcdefg' and published_at is null;
 */
-exports.findUnpublished = async (playerId, draftId) => {
-  console.log('publishingModel.findUnpublished')
-  const SEL_STORY = 'SELECT version FROM catalog WHERE author_id=$1 AND draft_id=$2 AND published_at IS NULL'
-  const dbResult = await db.query(SEL_STORY, [playerId, draftId])
+exports.findUnpublishedVersion = async (draftId) => {
+  console.log('publishingModel.findUnpublishedVersion')
+  const SEL_STORY = 'select version from catalog where draft_id=$1 and published_at is null'
+  const dbResult = await db.query(SEL_STORY, [draftId])
   if (dbResult.rowCount > 0) {
     return dbResult.rows[0].version
   } else {
     return false
+  }
+}
+
+/*
+select version from catalog
+where draft_id='979jafrz' and published_at is not null
+order by published_at desc nulls last limit 1;
+*/
+exports.getLatestPublishedVersion = async (draftId) => {
+  console.log('publishingModel.getLatestPublishedVersion')
+  const SELECT = 'select version from catalog '
+    + 'where draft_id=$1 and published_at is not null '
+    + 'order by published_at desc nulls last limit 1'
+  const dbResult = await db.query(SELECT, [draftId])
+  if (dbResult.rowCount) {
+    return dbResult.rows[0].version
   }
 }
 
