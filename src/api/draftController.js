@@ -109,7 +109,7 @@ exports.getFullStory = async (req, res) => {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return
     }
-    const fullStory = assembleFullStory(storyId)
+    const fullStory = await assembleFullStory(storyId)
     res.json(fullStory)
   } catch (e) {
     console.error('Problem getting full draft', e)
