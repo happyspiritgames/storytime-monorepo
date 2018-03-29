@@ -201,8 +201,6 @@ exports.updateSignpost = async (req, res) => {
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   const { toUpdate, toDelete } = req.body
-  console.log(req.body)
-
   try {
     if (!verifyStoryAuthorization(playerId, storyId, res)) {
       return
@@ -244,23 +242,24 @@ exports.updateSignpost = async (req, res) => {
   }
 }
 
-const getStoryFromCatalog = async (draftId, version) => {
-  const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
-  if (!metadata) {
-    return
+exports.getCatalogProofs = async (req, res) => {
+  const { playerId } = req.user
+  const { draftId } = req.params
+  console.log('draftController.getProofs', draftId)
+  try {
+    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+      return
+    }
+    const metadata = await getProofs(draftId)
+    if (!metadata) {
+      res.status(404).send()
+      return
+    }
+    res.status(200).json(metadata)
+  } catch (e) {
+    console.error('Problem creating metadata for publishing', e)
+    res.status(500).json(internalError)
   }
-
-  // use rating code instead of internal ID
-  // TODO get this to come out of query result instead of patching
-  if (metadata.rating) {
-    const ratingCode = await publishingModel.getRatingCode(metadata.rating)
-    metadata['rating'] = ratingCode
-  }
-  // merge in associated genres
-  const genre = await publishingModel.getStoryGenre(draftId, version)
-  metadata['genre'] = genre
-
-  return metadata
 }
 
 /**
@@ -272,16 +271,16 @@ exports.createProof = async (req, res) => {
   const { playerId } = req.user
   const { draftId } = req.params
   console.log('draftController.createProof', draftId)
-
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
-      return;
+      return
     }
     const unpublishedVersion = await publishingModel.findUnpublishedInCatalog(playerId, draftId)
     if (unpublishedVersion) {
-      const metadata = getStoryFromCatalog(draftId, unpublishedVersion)
-      res.status(304).json(metadata)
-      return;
+      // already exists; do nothing
+      console.log('proof already started; doing nothing')
+      res.status(304).end()
+      return
     }
     // TODO implement version numbering logic -- find the latest published and increment
     const metadata = await publishingModel.createCatalogRecord(draftId, '1')
@@ -296,7 +295,6 @@ exports.getProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
   console.log('draftController.getMetadataForPublishing', draftId, version)
-
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
       return

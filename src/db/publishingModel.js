@@ -16,6 +16,26 @@ const mapCatalogRowToApi = (catalogRow) => {
   }
 }
 
+const patchProofRecord = async (metadata) => {
+  if (metadata.rating) {
+    const ratingCode = await publishingModel.getRatingCode(metadata.rating)
+    metadata['rating'] = ratingCode
+  }
+  // merge in associated genres
+  const genre = await publishingModel.getStoryGenre(draftId, version)
+  metadata['genre'] = genre
+
+  return metadata
+}
+
+const getCatalogProof = async (draftId, version) => {
+  const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
+  if (!metadata) {
+    return
+  }
+  return patchProofRecord(metadata)
+}
+
 /*
 select draft_id, version, story_key, author_id, pen_name, title, tag_line, about, rating_codes.code
 from catalog, rating_codes
@@ -36,6 +56,16 @@ exports.findUnpublishedInCatalog = async (playerId, draftId) => {
   } else {
     return false
   }
+}
+
+/*
+select * from catalog where draft_id='abcde'
+*/
+exports.getCatalogProofs = async (draftId) => {
+  console.log('publishingModel.getCatalogRecords')
+  const SEL_STORY = 'select * from catalog WHERE draft_id=$1'
+  const dbResult = await db.query(SEL_STORY, [draftId])
+  return dbResult.rows.map(row => mapCatalogRowToApi(row))
 }
 
 /*
