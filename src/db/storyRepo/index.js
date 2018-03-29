@@ -20,3 +20,9 @@ exports.loadStorySummaries = () => {
     return story.summary;
   });
 };
+
+exports.saveStory = (filename, story) => {
+  console.log('storyRepo.saveStory')
+  const storyPath = `generated/${filename}`
+  fs.writeFileSync(storyPath, story)
+}
