@@ -683,13 +683,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/publish:
+  /draft-stories/{draftId}/proof:
     post:
       tags:
         - author
       summary: Creates a new version of the story to be published.
       description: Creates a record of the metadata for the draft story that is about to be published. This method gets the publishing process started. Changes to story metadata and even to the draft itself are allowed at this point.
-      operationId: prepareToPublish
+      operationId: createProof
       parameters:
         - name: draftId
           in: path
@@ -703,20 +703,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoryMetadata'
+                $ref: '#/components/schemas/ProofMetadata'
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/publish/{version}:
+  /draft-stories/{draftId}/proof/{version}:
     get:
       tags:
         - author
       summary: Returns story metadata.
       description: Returns metadata about a published (or to be published) version of a story.
-      operationId: getMetadataForPublishing
+      operationId: getProofMetadata
       parameters:
         - name: draftId
           in: path
@@ -736,7 +736,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoryMetadata'
+                $ref: '#/components/schemas/ProofMetadata'
         default:
           description: Error
           content:
@@ -768,7 +768,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoryMetadata'
+                $ref: '#/components/schemas/ProofMetadata'
         default:
           description: Error
           content:
@@ -780,7 +780,7 @@ paths:
         - author
       summary: Updates the metadata for a story that is meant to be published.
       description: Accepts changes to the metadata that is used to publish a story. Most of the metadata can be changed after publishing as well. There will be a single instance per story version, and changes to metadata go live immediately once the story has been published.
-      operationId: updateMetadataForPublishing
+      operationId: updateProofMetadata
       parameters:
         - name: draftId
           in: path
@@ -799,14 +799,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StoryMetadataUpdate'
+              $ref: '#/components/schemas/ProofMetadataUpdate'
       responses:
         '202':
           description: Created published story
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoryMetadata'
+                $ref: '#/components/schemas/ProofMetadata'
         default:
           description: Error
           content:
@@ -965,36 +965,7 @@ components:
       properties:
         salutation:
           type: string
-    Scene:
-      type: object
-      properties:
-        sceneId:
-          type: string
-        title:
-          type: string
-        prose:
-          type: string
-        endPrompt:
-          type: string
-        signpost:
-          type: array
-          items:
-            $ref: '#/components/schemas/Sign'
-    Sign:
-      type: object
-      properties:
-        sceneId:
-          type: string
-        teaser:
-          type: string
-    StorySearchResults:
-      type: object
-      properties:
-        stories:
-          type: array
-          items:
-            $ref: '#/components/schemas/StorySummary'
-    StoryMetadata:
+    ProofMetadata:
       type: object
       properties:
         draftId:
@@ -1025,7 +996,7 @@ components:
         publishedAt:
           type: string
           format: date-time
-    StoryMetadataUpdate:
+    ProofMetadataUpdate:
       type: object
       properties:
         storyKey:
@@ -1047,10 +1018,39 @@ components:
               type: array
               items:
                 type: string
-            toDelete:
+            toUnassign:
               type: array
               items:
                 type: string
+    Scene:
+      type: object
+      properties:
+        sceneId:
+          type: string
+        title:
+          type: string
+        prose:
+          type: string
+        endPrompt:
+          type: string
+        signpost:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sign'
+    Sign:
+      type: object
+      properties:
+        sceneId:
+          type: string
+        teaser:
+          type: string
+    StorySearchResults:
+      type: object
+      properties:
+        stories:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorySummary'
     StorySummary:
       type: object
       properties:
