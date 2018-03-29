@@ -115,13 +115,13 @@ exports.createProof = async (draftId, version) => {
 
 exports.getProof = async (draftId, version) => {
   console.log('publishingModel.getProof')
+  let result
   const SEL_STORY = 'SELECT * FROM catalog WHERE draft_id=$1 and version=$2'
   const dbResult = await db.query(SEL_STORY, [draftId, version])
   if (dbResult.rowCount === 1) {
-    return await mapCatalogRowToApi(dbResult.rows[0])
-  } else {
-    return null
+    result = await mapCatalogRowToApi(dbResult.rows[0])
   }
+  return result
 }
 
 /*
@@ -199,7 +199,7 @@ exports.updateProof = async (draftId, version, metadataUpdate) => {
 
   // take care of genre changes
   if (metadataUpdate.genre) {
-    const currentGenreList = await getGenreForStory(draftId, version)
+    const currentGenreList = await getStoryGenre(draftId, version)
     if (metadataUpdate.genre.toAssign) {
       metadataUpdate.genre.toAssign.forEach(code => {
         if (!currentGenreList.includes(code)) {

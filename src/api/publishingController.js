@@ -1,6 +1,7 @@
-const publishingModel = require('../db/publishingModel')
+const { verifyStoryAuthorization, assembleFullStory } = require('./draftUtil')
 const { internalError } = require('./errors')
-const { verifyStoryAuthorization } = require('./authUtil')
+const publishingModel = require('../db/publishingModel')
+const { saveStory } = require('../db/storyRepo')
 
 exports.getProofs = async (req, res) => {
   const { playerId } = req.user
@@ -54,7 +55,7 @@ exports.createProof = async (req, res) => {
 exports.getProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
-  console.log('publishingController.getMetadataForPublishing', draftId, version)
+  console.log('publishingController.getProofMetadata', draftId, version)
   try {
     if (!verifyStoryAuthorization(playerId, draftId, res)) {
       return
@@ -75,7 +76,7 @@ exports.updateProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
   const metadataUpdate = req.body
-  console.log('publishingController.updateMetadataForPublishing',
+  console.log('publishingController.updateProofMetadata',
     draftId, version, metadataUpdate)
 
   try {
@@ -131,7 +132,7 @@ exports.publish = async (req, res) => {
     await publishingModel.recordPublishingEvent(draftId, version, filename)
 
     // return updated metadata
-    proofMetadata = await publishingModel.getStoryFromCatalog(draftId, version)
+    proofMetadata = await publishingModel.getProof(draftId, version)
     res.status(201).json(proofMetadata)
   } catch (e) {
     console.error('Problem publishing', e)

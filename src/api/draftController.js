@@ -1,7 +1,6 @@
-const draftModel = require('../db/draftModel')
+const { verifyStoryAuthorization, assembleFullStory } = require('./draftUtil')
 const { internalError, errorMessage, theEnd } = require('./errors')
-const { saveStory } = require('../db/storyRepo')
-const { verifyStoryAuthorization } = require('./authUtil')
+const draftModel = require('../db/draftModel')
 
 /**
  * StoryTime API method for retrieving draft story summaries for the current player.
@@ -69,23 +68,6 @@ exports.updateStorySummary = async (req, res) => {
     console.error('Problem updating draft summary', e)
     res.status(500).json(internalError)
   }
-}
-
-const assembleFullStory = async (draftId) => {
-  const summary = await draftModel.getStory(draftId)
-  const scenes = await draftModel.getScenes(draftId)
-  for (let i = 0; i < scenes.length; i++) {
-    const scene = scenes[i]
-    const signpost = await draftModel.getSignpost(scene.sceneId)
-    if (signpost) {
-      scene['signpost'] = signpost
-    }
-  }
-  const fullStory = {
-    summary: summary,
-    scenes: scenes
-  }
-  return fullStory
 }
 
 exports.getFullStory = async (req, res) => {
