@@ -10,6 +10,7 @@ module.exports = function (app, authCheck) {
   apiRouter.route('/stories').get(storyController.searchStories);
   apiRouter.route('/stories/:storyId').get(storyController.getPublishedStorySummary);
   apiRouter.route('/stories/:storyId/scenes/:sceneId').get(storyController.getStoryScene);
+  apiRouter.route('/codes/:type').get(storyController.getCodes);
 
   const authRouter = express.Router();
   authRouter.all('*', authCheck, playerController.findOrCreatePlayer);
