@@ -17,9 +17,9 @@ const mapCatalogRowToApi = (catalogRow) => {
 }
 
 /*
-select draft_id, version, story_key, author_id, pen_name, title, tag_line, about, rating.code
-from catalog, rating
-where catalog.author_id=$1 and draft_id=$2 and rating.id=catalog.rating;
+select draft_id, version, story_key, author_id, pen_name, title, tag_line, about, rating_codes.code
+from catalog, rating_codes
+where catalog.author_id=$1 and draft_id=$2 and rating_codes.id=catalog.rating;
 
 select * from catalog, story
 where story.author_id=''
@@ -29,19 +29,19 @@ and catalog.published_at is null;
 */
 exports.findUnpublishedInCatalog = async (playerId, draftId) => {
   console.log('publishingModel.findUnpublishedInCatalog')
-  const SEL_STORY = 'SELECT * FROM catalog WHERE author_id=$1 AND draft_id=$2 AND published_at IS NULL'
+  const SEL_STORY = 'SELECT version FROM catalog WHERE author_id=$1 AND draft_id=$2 AND published_at IS NULL'
   const dbResult = await db.query(SEL_STORY, [playerId, draftId])
-  if (dbResult.rowCount === 1) {
-    return mapCatalogRowToApi(dbResult.rows[0])
+  if (dbResult.rowCount > 0) {
+    return dbResult.rows[0].version
   } else {
-    return null
+    return false
   }
 }
 
 /*
 insert into catalog
 (draft_id, version, story_key, author_id, pen_name, title, tag_line, about, first_scene_id)
-select story.id, '0.1', story.id, author_id, player.pen_name, title, tag_line, about, first_scene_id
+select story.id, '1', story.id, author_id, player.pen_name, title, tag_line, about, first_scene_id
 from story, player
 where story.id='979jafrz';
 */
@@ -68,16 +68,16 @@ exports.getStoryFromCatalog = async (draftId, version) => {
 }
 
 /*
-select genre.code from genre, catalog_genre, catalog
+select genre_codes.code from genre_codes, catalog_genre, catalog
 where catalog.draft_id='v7kv89xo'
 and catalog.id=catalog_genre.catalog_id
-and catalog_genre.genre_id=genre.id;
+and catalog_genre.genre_id=genre_codes.id;
  */
 const getGenreForStory = async (draftId, version) => {
   console.log('publishingModel.getStoryGenre')
-  const SELECT = 'select genre.code as code from genre, catalog_genre, catalog '
+  const SELECT = 'select genre_codes.code as code from genre_codes, catalog_genre, catalog '
     + 'where catalog.draft_id=$1 and catalog.version=$2 '
-    + 'and catalog.id=catalog_genre.catalog_id and catalog_genre.genre_id=genre.id'
+    + 'and catalog.id=catalog_genre.catalog_id and catalog_genre.genre_id=genre_codes.id'
   const dbResult = await db.query(SELECT, [draftId, version])
   if (dbResult.rowCount) {
     return dbResult.rows.map(row => row.code)
@@ -88,23 +88,26 @@ const getGenreForStory = async (draftId, version) => {
 
 exports.getStoryGenre = getGenreForStory
 
+/*
+select code from rating_codes where id=19
+*/
 exports.getRatingCode = async (ratingId) => {
   console.log('publishingModel.getRatingCode')
-  const SELECT = 'select code from rating where id=$1'
+  const SELECT = 'select code from rating_codes where id=$1'
   const dbResult = await db.query(SELECT, [ratingId])
   return dbResult.rows[0].code
 }
 
 /*
 insert into catalog_genre (catalog_id, genre_id)
-select catalog.id, genre.id from catalog, genre
-where catalog.draft_id='v7kv89xo' and catalog.version='0-1' and genre.code='mystery';
+select catalog.id, genre_codes.id from catalog, genre_codes
+where catalog.draft_id='v7kv89xo' and catalog.version='1' and genre_codes.code='mystery';
 */
 const assignGenre = async (draftId, version, code) => {
   console.log('publishingModel.assignGenre')
   const INSERT = 'insert into catalog_genre (catalog_id, genre_id) '
-    + 'select catalog.id, genre.id from catalog, genre '
-    + 'where catalog.draft_id=$1 and catalog.version=$2 and genre.code=$3'
+    + 'select catalog.id, genre_codes.id from catalog, genre_codes '
+    + 'where catalog.draft_id=$1 and catalog.version=$2 and genre_codes.code=$3'
   try {
     const dbResult = await db.query(INSERT, [draftId, version, code])
   } catch (error) {
@@ -122,14 +125,14 @@ const unassignGenre = async (draftId, version, code) => {
   console.log('publishingModel.removeGenre')
   const DELETE = 'delete from catalog_genre '
     + 'where catalog_id=(select id from catalog where draft_id=$1 and version=$2) '
-    + 'and genre_id=(select id from genre where code=$3)'
+    + 'and genre_id=(select id from genre_codes where code=$3)'
   const dbResult = await db.query(DELETE, [draftId, version, code])
 }
 
 /*
 update catalog
 set story_key='wumpus', pen_name='wumpus', title='wumpus', tag_line='wumpus', about='wumpus',
-rating=(select id from rating where code=='Y')
+rating=(select id from rating_codes where code=='Y')
 where draft_id='v7kv89xo' and version='0-1';
 */
 exports.updateCatalogRecord = async (draftId, version, metadataUpdate) => {
@@ -158,7 +161,7 @@ exports.updateCatalogRecord = async (draftId, version, metadataUpdate) => {
   }
   if (metadataUpdate.rating) {
     args.push(metadataUpdate.rating)
-    updates = updates.concat(`, rating=(select id from rating where code=$${args.length})`)
+    updates = updates.concat(`, rating=(select id from rating_codes where code=$${args.length})`)
   }
 
   // skip if no args added

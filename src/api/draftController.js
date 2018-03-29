@@ -244,37 +244,6 @@ exports.updateSignpost = async (req, res) => {
   }
 }
 
-/**
-  Initiates a new published version. There can only be one unresolved published version at a time.
-  So if this is called a second time while a published version exists with a publishedAt timestamp, the existing
-  record will be returned.
- */
-exports.createProof = async (req, res) => {
-  const { playerId } = req.user
-  const { draftId } = req.params
-  console.log('draftController.createProof', draftId)
-
-  try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
-      return;
-    }
-    const unpublishedMetadata = await publishingModel.findUnpublishedInCatalog(playerId, draftId)
-    if (unpublishedMetadata) {
-      res.status(201).json(unpublishedMetadata)
-      return;
-    }
-    // TODO implement version numbering logic
-    //  a) find the latest published and increment minor
-    //  b) find the latest published and increment major, reset minor
-    //  ?? how to decide which one ??
-    const metadata = await publishingModel.createCatalogRecord(draftId, '0-1')
-    res.status(201).json(metadata)
-  } catch (e) {
-    console.error('Problem creating metadata for publishing', e)
-    res.status(500).json(internalError)
-  }
-}
-
 const getStoryFromCatalog = async (draftId, version) => {
   const metadata = await publishingModel.getStoryFromCatalog(draftId, version)
   if (!metadata) {
@@ -292,6 +261,35 @@ const getStoryFromCatalog = async (draftId, version) => {
   metadata['genre'] = genre
 
   return metadata
+}
+
+/**
+  Initiates a new published version. There can only be one unresolved published version at a time.
+  So if this is called a second time while a published version exists with a publishedAt timestamp, the existing
+  record will be returned.
+ */
+exports.createProof = async (req, res) => {
+  const { playerId } = req.user
+  const { draftId } = req.params
+  console.log('draftController.createProof', draftId)
+
+  try {
+    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+      return;
+    }
+    const unpublishedVersion = await publishingModel.findUnpublishedInCatalog(playerId, draftId)
+    if (unpublishedVersion) {
+      const metadata = getStoryFromCatalog(draftId, unpublishedVersion)
+      res.status(304).json(metadata)
+      return;
+    }
+    // TODO implement version numbering logic -- find the latest published and increment
+    const metadata = await publishingModel.createCatalogRecord(draftId, '1')
+    res.status(201).json(metadata)
+  } catch (e) {
+    console.error('Problem creating metadata for publishing', e)
+    res.status(500).json(internalError)
+  }
 }
 
 exports.getProofMetadata = async (req, res) => {

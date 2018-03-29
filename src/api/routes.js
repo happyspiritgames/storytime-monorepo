@@ -20,7 +20,6 @@ module.exports = function (app, authCheck) {
   .get(playerController.getSelfProfile)
   .put(playerController.updateSelfProfile)
   authRouter.route('/players/:playerId').get(playerController.getPlayer)
-  authRouter.route('/codes/player-status').get(playerController.getPlayerStatusCodes)
 
   // assemble routers
   apiRouter.use('/', authRouter)
