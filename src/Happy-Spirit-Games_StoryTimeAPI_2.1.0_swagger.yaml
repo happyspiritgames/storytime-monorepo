@@ -199,7 +199,7 @@ paths:
         - system
       summary: Returns all player status codes.
       description: Returns all player status codes for use in drop-downs and to look up display values.
-      operationId: getPlayerStatusCodes
+      operationId: getCodes
       responses:
         '200':
           description: Found codes
@@ -213,13 +213,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /codes/genres:
+  /codes/{type}:
     get:
       tags:
         - system
-      summary: Returns all genres that stories can be assigned.
-      description: Returns a list of available genres, such as sci-fi, adventure, mystery. Stories can be classified by one genre or a combination.
-      operationId: getGenres
+      summary: Returns all codes of the given type
+      description: Returns a list of code for the given type. Supported values of type include -- 'player-status', 'genre' and 'rating'.
+      operationId: getCodes
+      parameters:
+        - name: type
+          in: path
+          description: type of code to retrieve. 
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Found codes
@@ -233,13 +240,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /codes/ratings:
+  /codes/rating:
     get:
       tags:
         - system
       summary: Returns all ratings that stories can be assigned.
       description: Returns a list of available ratings, such as Y, Y7, PG, etc. Books don't seem to have a rating system. TV ratings probably make the most sense, but movie ratings could work as well. Or video game ratings. Basically this is a way to indicate age-appropriateness of a story.
-      operationId: getContentRatings
+      operationId: getCodes
       responses:
         '200':
           description: Found codes
@@ -684,6 +691,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
   /draft-stories/{draftId}/proof:
+    get:
+      tags:
+        - author
+      summary: Retrieves list of proofs for the given draft.
+      description: Retrieves list of proofs for the given draft.
+      operationId: getProofs
+      parameters:
+        - name: draftId
+          in: path
+          description: draft story ID 
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of proofs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProofMetadata'
     post:
       tags:
         - author
@@ -699,11 +728,13 @@ paths:
             type: string
       responses:
         '201':
-          description: Story metadata to be used for publishing
+          description: New metadata for unpublished story
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProofMetadata'
+        '304':
+          description: Already exists, so no action
         default:
           description: Error
           content:
@@ -818,9 +849,7 @@ components:
     CodeLookup:
       type: object
       properties:
-        id:
-          type: integer
-        name:
+        code:
           type: string
         displayName:
           type: string
