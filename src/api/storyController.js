@@ -1,5 +1,4 @@
 const storyModel = require('../db/storyModel')
-const playerModel = require('../db/playerModel')
 const systemModel = require('../db/systemModel')
 const { errorMessage, internalError } = require('./errors')
 
@@ -53,13 +52,15 @@ exports.getStoryScene = (req, res) => {
 /**
  * Supports the following types: player-status, genre, rating.
  */
-exports.getCodes = (req, res) => {
+exports.getCodes = async (req, res) => {
   const { type } = req.params
+  console.log('storyController.getCodes')
   try {
     if (type) {
-      const codes = systemModel.getCodes(type)
+      const codes = await systemModel.getCodeLookup(type)
       if (codes) {
-        res.json(codes)
+        console.log('got codes', codes)
+        res.status(200).json(codes)
       } else {
         res.sendStatus(404)
       }

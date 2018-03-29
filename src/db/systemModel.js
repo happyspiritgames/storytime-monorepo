@@ -1,14 +1,12 @@
 const db = require('./postgres');
 
 const mapCodesToApi = codesFromDb => {
-  return codesFromDb.map(code => {
-    return {
-      id: code.id,
-      code: code.code,
-      displayName: code.display_name,
-      sortOrde: code.sort_order
-    }
-  })
+  console.log('mapping codes', codesFromDb)
+  return codesFromDb.map(code => ({
+    code: code.code,
+    displayName: code.display_name,
+    sortOrder: code.sort_order
+  }))
 }
 
 const mapTypeToTableName = (type) => {
@@ -38,7 +36,9 @@ exports.getCodeLookup = async (type) => {
     const SELECT = `select * from ${tableName}`
     const dbResult = await db.query(SELECT)
     if (dbResult.rowCount > 0) {
-      return mapCodesToApi(dbResult.rows)
+      const results = mapCodesToApi(dbResult.rows)
+      console.log('returning', results)
+      return results
     }
   }
 }
