@@ -57,6 +57,21 @@ export const draftShape = PropTypes.shape({
   scenes: PropTypes.object
 })
 
+export const proofShape = PropTypes.shape({
+  draftId: PropTypes.string,
+  version: PropTypes.string,
+  storyKey: PropTypes.string,
+  authorId: PropTypes.string,
+  penName: PropTypes.string,
+  title: PropTypes.string,
+  tagLine: PropTypes.string,
+  about: PropTypes.string,
+  rating: PropTypes.string,
+  genre: PropTypes.arrayOf(PropTypes.string),
+  firstSceneId: PropTypes.string,
+  publishedAt: PropTypes.string
+})
+
 
 // for reference
 export const reduxStoreDataShape = {

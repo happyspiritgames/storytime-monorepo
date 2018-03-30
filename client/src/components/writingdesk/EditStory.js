@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 import Breadcrumbs from './Breadcrumbs'
 import EditSummary from './EditSummary'
@@ -36,6 +37,9 @@ export default class EditStory extends Component {
         { draft && draft.summary &&
           <div id="summary">
             <EditSummary draftSummary={draft.summary} save={this.props.saveDraft} />
+            <div className="centered-action text-center">
+              <Link className="btn" to={`/publish/${draft.summary.storyId}`}>Prepare to Publish</Link>
+            </div>
           </div>
         }
           <div id="scenes">
