@@ -3,6 +3,14 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { proofShape } from '../../datastore/dataShapes'
 
+const sampleProof = {
+  title: 'My First Story',
+  penName: 'Bubba Gump',
+  tagLine: 'This is gonna be great, I can tell.',
+  about: 'Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.',
+  publishedAt: 'March 31, 2018 at 4:30 PM'
+}
+
 export default class Publishing extends Component {
   static propTypes = {
     proof: proofShape,
@@ -32,7 +40,8 @@ export default class Publishing extends Component {
   }
 
   render() {
-    const { proof } = this.props
+    // const { proof } = this.props
+    const proof = sampleProof
     const { draftId } = this.props.match.params
     const title = proof ? proof.title : 'Untitled'
 
@@ -46,8 +55,9 @@ export default class Publishing extends Component {
         </ol>
         <div className="row section">
           <div className="col">
-            <h3 className="text-center">Polish, Proof and Publish</h3>
-            <h4 className="text-center">Polish</h4>
+            <h3 className="text-center">Publishing</h3>
+            <p>You are three steps away from publishing your story-game. The only thing you have to do is step 3, publish. Check out the other steps on your way down the page.</p>
+            <h4 className="text-center">1. Categorize</h4>
             <form>
               <fieldset>
                 <legend className="text-info">Classify your story-game</legend>
@@ -55,29 +65,38 @@ export default class Publishing extends Component {
                   <div className="col-6">
                     <div className="form-group">
                       <label>Story Unique Key</label>
-                      <small className="form-text text-muted">Use the random key or invent something more fun.</small>
-                      <input className="form-control" type="text" id="storyKey" value={this.state.storyKey} onChange={this.handleChange}/>
+                      <small className="form-text text-muted">For now, use the random key your story was assigned.</small>
+                      <small className="form-text text-muted">In the future, you can change to something more fun.</small>
+                      <input
+                        className="form-control"
+                        type="text"
+                        id="storyKey"
+                        value={this.state.storyKey}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
                     </div>
                   </div>
                   <div className="col-6">
                     <div className="form-group">
                       <label>Content Rating</label>
                       <small className="form-text text-muted">Age group for whom your story-game is appropriate.</small>
+                      <small className="form-text text-muted">Take your best guess. We might adjust this after review.</small>
                       <select className="form-control" id="rating" value={this.state.rating} onChange={this.handleChange}>
-                        <optgroup label="This is a group">
-                          <option value="Y">Youth</option>
-                          <option value="Y7">Youth Age 7+</option>
-                          <option value="14">Teen</option>
-                          <option value="G">General (G)</option>
-                          <option value="PG">Parental Guidance (PG)</option>
-                          <option value="MA">Mature</option>
-                        </optgroup>
+                        <option value="">--Not Rated--</option>
+                        <option value="Y">Youth</option>
+                        <option value="Y7">Youth Age 7+</option>
+                        <option value="14">Teen</option>
+                        <option value="G">General (G)</option>
+                        <option value="PG">Parental Guidance (PG)</option>
+                        <option value="MA">Mature</option>
                       </select>
                     </div>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Genre</label>
+                  <small className="form-text text-muted">What kind of story is this? Choose from 1 to 3 of the following options.</small>
                   <div className="form-row">
                     <div className="col-3">
                       <div className="form-check">
@@ -142,7 +161,7 @@ export default class Publishing extends Component {
                 <button className="btn btn-primary" type="button" onClick={this.save}>Save</button>
               </fieldset>
             </form>
-            <h4 className="text-center">Proof</h4>
+            <h4 className="text-center">2. Proof</h4>
             <div className="row">
               <div className="col">
                 <p>This is how your story-game will appear in the catalog. If it looks good, you are all set.</p>
@@ -153,9 +172,9 @@ export default class Publishing extends Component {
                 <div className="card">
                   <img className="card-img-top w-100 d-block" src="" alt="" />
                   <div className="card-body">
-                    <h4 className="card-title"><em>My First Story</em></h4>
-                    <h6 className="card-subtitle">by Bubba Gump</h6>
-                    <p className="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                    <h4 className="card-title"><em>{proof.title}</em></h4>
+                    <h6 className="card-subtitle">by {proof.penName}</h6>
+                    <p className="card-text">{proof.about}</p>
                     <button className="btn btn-primary" type="button" onClick={this.playStory}>Play</button>
                   </div>
                 </div>
@@ -163,10 +182,14 @@ export default class Publishing extends Component {
             </div>
             <div className="row">
               <div className="col">
-                <h4 className="text-center">Publish</h4>
+                <h4 className="text-center">3. Publish</h4>
                 <p>Your story has not been published.</p>
-                <p>Your story was published on March 31, 2018 at 4:30 PM.</p>
-                <button className="btn btn-primary" type="button" onClick={this.publish}>Publish Now - Do It - Make it so!</button>
+                <p>Your story was published on {proof.publishedAt}.</p>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={this.publish}
+                >Publish Now - Do It - Make it so!</button>
                 <p>(Note: publishing happens once. After that, classifications can change, but you cannot re-publish. Can always go through the publishing cycle again and publish a new version. Should make it easy to delete non-current published versions.)</p>
               </div>
             </div>
