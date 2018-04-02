@@ -223,7 +223,7 @@ paths:
       parameters:
         - name: type
           in: path
-          description: type of code to retrieve. 
+          description: type of code to retrieve.
           required: true
           schema:
             type: string
@@ -690,7 +690,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/proof:
+  /draft-stories/{draftId}/proofs:
     get:
       tags:
         - author
@@ -700,7 +700,7 @@ paths:
       parameters:
         - name: draftId
           in: path
-          description: draft story ID 
+          description: draft story ID
           required: true
           schema:
             type: string
@@ -722,7 +722,7 @@ paths:
       parameters:
         - name: draftId
           in: path
-          description: draft story ID 
+          description: draft story ID
           required: true
           schema:
             type: string
@@ -741,7 +741,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/proof/{version}:
+  /draft-stories/{draftId}/proofs/{version}:
     get:
       tags:
         - author
@@ -1102,7 +1102,7 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-security: 
+security:
   - BearerAuth: []
 tags:
   - name: admin
