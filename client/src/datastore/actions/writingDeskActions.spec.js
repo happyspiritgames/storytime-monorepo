@@ -3,12 +3,11 @@ import {
   testDraftSummaries,
   testDraftSummary,
   testDraftScene,
-  testSignpost
+  testSignpost,
+  testError
 } from '../testData'
 
 describe('writing desk actions', () => {
-  const testError = new Error('bah')
-
   it('creates LOAD_DRAFTS action', () => {
     expect(actions.loadDrafts())
     .toEqual({

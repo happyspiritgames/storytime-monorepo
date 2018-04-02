@@ -16,9 +16,10 @@ export const startedToPublish = (proof) => ({
 export const START_TO_PUBLISH_FAILED = 'START_TO_PUBLISH_FAILED'
 export const startToPublishFailed = (error) => ({
   type: START_TO_PUBLISH_FAILED,
-  payload: (
+  payload: {
     error
-  )
+  },
+  error: true
 })
 
 export const prepareToPublish = (draftId) => {
@@ -49,9 +50,10 @@ export const fetchedProofs = (proofs) => ({
 export const FETCH_PROOFS_FAILED = 'FETCH_PROOFS_FAILED'
 export const fetchProofsFailed = (error) => ({
   type: FETCH_PROOFS_FAILED,
-  payload: (
+  payload: {
     error
-  )
+  },
+  error: true
 })
 
 export const getProofs = (draftId) => {
@@ -81,9 +83,10 @@ export const fetchedProof = (proof) => ({
 export const FETCH_PROOF_FAILED = 'FETCH_PROOF_FAILED'
 export const fetchProofFailed = (error) => ({
   type: FETCH_PROOF_FAILED,
-  payload: (
+  payload: {
     error
-  )
+  },
+  error: true
 })
 
 export const getProof = (draftId, version) => {
@@ -113,9 +116,10 @@ export const updatedProof = (proof) => ({
 export const UPDATE_PROOF_FAILED = 'UPDATE_PROOF_FAILED'
 export const updateProofFailed = (error) => ({
   type: UPDATE_PROOF_FAILED,
-  payload: (
+  payload: {
     error
-  )
+  },
+  error: true
 })
 
 export const saveProof = (draftId, version, proofUpdate) => {
@@ -143,11 +147,12 @@ export const published = (proof) => ({
 })
 
 export const PUBLISH_FAILED = 'PUBLISH_FAILED'
-export const publishFailed = (error) => ({
+export const sendPublishFailed = (error) => ({
   type: PUBLISH_FAILED,
-  payload: (
+  payload: {
     error
-  )
+  },
+  error: true
 })
 
 export const publish = (draftId, version) => {
@@ -156,7 +161,7 @@ export const publish = (draftId, version) => {
     publishApi.publish(
       draftId, version,
       proof => dispatch(published(proof)),
-      error => dispatch(publishFailed(error))
+      error => dispatch(sendPublishFailed(error))
     )
   }
 }
