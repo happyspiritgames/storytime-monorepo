@@ -9,7 +9,7 @@ export const prepareToPublish = (draftId, handleResponse, handleError) => {
     headers: getHeaders()
   }
   // TODO handle 304
-  fetch(`${draftStoriesBaseURI}/${draftId}/proof`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${draftId}/proofs`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
@@ -18,7 +18,7 @@ export const prepareToPublish = (draftId, handleResponse, handleError) => {
 export const getProofs = (draftId, handleResponse, handleError) => {
   console.log('publishApi.getProofs')
   const fetchOptions = { headers: getHeaders() }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proof`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${draftId}/proofs`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
@@ -27,7 +27,7 @@ export const getProofs = (draftId, handleResponse, handleError) => {
 export const getProof = (draftId, version, handleResponse, handleError) => {
   console.log('publishApi.getProof')
   const fetchOptions = { headers: getHeaders() }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proof/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
@@ -40,7 +40,7 @@ export const updateProof = (draftId, version, updates, handleResponse, handleErr
     headers: getHeaders(),
     body: JSON.stringify(updates)
   }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proof/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
@@ -52,7 +52,7 @@ export const publish = (draftId, version, handleResponse, handleError) => {
     method: 'POST',
     headers: getHeaders()
   }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proof/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
