@@ -12,7 +12,9 @@ const mapStateToProps = state => {
   let activeProof
   let proofs
   if (state.writingDesk) {
-    activeProof = state.writingDesk.activeProof
+    activeProof = (state.writingDesk.activeProof)
+      ? state.writingDesk.proofs[state.writingDesk.activeProof]
+      : undefined
     proofs = state.writingDesk.proofs
   }
   return {

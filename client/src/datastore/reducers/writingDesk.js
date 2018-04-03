@@ -1,33 +1,11 @@
-import {
-  LOAD_DRAFTS,
-  LOADED_DRAFTS,
-  LOAD_DRAFTS_FAILED,
-  START_NEW_DRAFT,
-  SAVE_DRAFT,
-  SAVED_DRAFT,
-  SAVE_DRAFT_FAILED,
-  LOAD_DRAFT,
-  LOADED_DRAFT,
-  LOAD_DRAFT_FAILED,
-  SAVE_DRAFT_SCENE,
-  SAVED_DRAFT_SCENE,
-  SAVE_DRAFT_SCENE_FAILED,
-  LOAD_DRAFT_SCENE,
-  LOADED_DRAFT_SCENE,
-  LOAD_DRAFT_SCENE_FAILED,
-  LOAD_DRAFT_SIGNPOST,
-  LOADED_DRAFT_SIGNPOST,
-  LOAD_DRAFT_SIGNPOST_FAILED,
-  SAVE_DRAFT_SIGNPOST,
-  SAVED_DRAFT_SIGNPOST,
-  SAVE_DRAFT_SIGNPOST_FAILED
-} from '../actions'
-import activeDraft from './activeDraft'
+import * as actions from '../actions'
+import activeDraftReducer from './activeDraft'
 
 export const writingDeskStates = {
   READY: 'READY',
   LOADING: 'LOADING',
-  SAVING: 'SAVING'
+  SAVING: 'SAVING',
+  PUBLISHING: 'PUBLISHING'
 }
 
 export const initialState = {
@@ -38,59 +16,98 @@ export const initialState = {
 export default (state = initialState, action) => {
   let projectIds
   switch (action.type) {
-    case LOAD_DRAFTS:
-    case LOAD_DRAFT:
-    case LOAD_DRAFT_SCENE:
-    case LOAD_DRAFT_SIGNPOST:
+    case actions.LOAD_DRAFTS:
+    case actions.LOAD_DRAFT:
+    case actions.LOAD_DRAFT_SCENE:
+    case actions.LOAD_DRAFT_SIGNPOST:
+    case actions.START_TO_PUBLISH:
+    case actions.FETCH_PROOFS:
+    case actions.FETCH_PROOF:
       return {
         ...state,
         status: writingDeskStates.LOADING
       }
-    case LOADED_DRAFTS:
+    case actions.PUBLISH:
+      return {
+        ...state,
+        status: writingDeskStates.PUBLISHING
+      }
+    case actions.LOADED_DRAFTS:
       projectIds = action.payload.drafts.map(draft => draft.storyId)
       return {
         ...state,
         draftProjects: projectIds,
         status: writingDeskStates.READY
       }
-    case SAVED_DRAFT:
+    case actions.SAVED_DRAFT:
       projectIds = (state.draftProjects.includes(action.payload.nextDraft.storyId))
         ? state.draftProjects : [...state.draftProjects, action.payload.nextDraft.storyId]
       return {
         ...state,
-        activeDraft: activeDraft(state.activeDraft, action),
+        activeDraft: activeDraftReducer(state.activeDraft, action),
         draftProjects: projectIds,
         status: writingDeskStates.READY
       }
-    case LOADED_DRAFT:
-    case LOADED_DRAFT_SCENE:
-    case SAVED_DRAFT_SCENE:
-    case LOADED_DRAFT_SIGNPOST:
-    case SAVED_DRAFT_SIGNPOST:
+    case actions.FETCHED_PROOFS:
+      const nextProofs = {}
+      action.payload.proofs.forEach(proof => {
+        const key = `${proof.draftId}-${proof.version}`
+        nextProofs[key] = proof
+      })
       return {
         ...state,
-        activeDraft: activeDraft(state.activeDraft, action),
+        status: writingDeskStates.READY,
+        proofs: nextProofs
+      }
+    case actions.LOADED_DRAFT:
+    case actions.LOADED_DRAFT_SCENE:
+    case actions.SAVED_DRAFT_SCENE:
+    case actions.LOADED_DRAFT_SIGNPOST:
+    case actions.SAVED_DRAFT_SIGNPOST:
+      return {
+        ...state,
+        activeDraft: activeDraftReducer(state.activeDraft, action),
         status: writingDeskStates.READY
       }
-    case SAVE_DRAFT:
-    case SAVE_DRAFT_SCENE:
-    case SAVE_DRAFT_SIGNPOST:
+    case actions.STARTED_TO_PUBLISH:
+    case actions.FETCHED_PROOF:
+    case actions.UPDATED_PROOF:
+    case actions.PUBLISHED:
+      const proof = action.payload.proof
+      const key = `${proof.draftId}-${proof.version}`
+      const proofs = state.proofs ? { ...state.proofs } : {}
+      proofs[key] = proof
+      return {
+        ...state,
+        activeProof: key,
+        proofs,
+        status: writingDeskStates.READY
+      }
+    case actions.SAVE_DRAFT:
+    case actions.SAVE_DRAFT_SCENE:
+    case actions.SAVE_DRAFT_SIGNPOST:
+    case actions.UPDATE_PROOF:
       return {
         ...state,
         status: writingDeskStates.SAVING
       }
-    case LOAD_DRAFTS_FAILED:
-    case LOAD_DRAFT_FAILED:
-    case SAVE_DRAFT_FAILED:
-    case SAVE_DRAFT_SCENE_FAILED:
-    case LOAD_DRAFT_SCENE_FAILED:
-    case LOAD_DRAFT_SIGNPOST_FAILED:
-    case SAVE_DRAFT_SIGNPOST_FAILED:
+    case actions.LOAD_DRAFTS_FAILED:
+    case actions.LOAD_DRAFT_FAILED:
+    case actions.SAVE_DRAFT_FAILED:
+    case actions.SAVE_DRAFT_SCENE_FAILED:
+    case actions.LOAD_DRAFT_SCENE_FAILED:
+    case actions.LOAD_DRAFT_SIGNPOST_FAILED:
+    case actions.SAVE_DRAFT_SIGNPOST_FAILED:
+    case actions.START_TO_PUBLISH_FAILED:
+    case actions.FETCH_PROOFS_FAILED:
+    case actions.FETCH_PROOF_FAILED:
+    case actions.UPDATE_PROOF_FAILED:
+    case actions.PUBLISH_FAILED:
       return {
         ...state,
         status: writingDeskStates.READY
       }
-    case START_NEW_DRAFT:
+    case actions.START_NEW_DRAFT:
       const nextState = {...state}
       delete nextState.activeDraft
       return nextState

@@ -117,21 +117,23 @@ export const reduxStoreDataShape = {
           '42': {}
         }
       },
-      activeProof: {
-        draftId: 'abcdef',
-        version: '1',
-        storyKey: 'abcdef',
-        author: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-        penName: 'bubba',
-        title: 'Blargy',
-        tagLine: 'Blargy blargy.',
-        about: 'Blargy blargy, blargy blargy',
-        rating: 'PG',
-        genre: ['scifi'],
-        firstSceneId: 'jhu3248',
-        publishedAt: '2018-01-26T00:02:21.635Z'
-      },
-      proofs: []
+      activeProof: 'abcdef-1',
+      proofs: {
+        'abcdef-1': {
+          draftId: 'abcdef',
+          version: '1',
+          storyKey: 'abcdef',
+          author: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
+          penName: 'bubba',
+          title: 'Blargy',
+          tagLine: 'Blargy blargy.',
+          about: 'Blargy blargy, blargy blargy',
+          rating: 'PG',
+          genre: ['scifi'],
+          firstSceneId: 'jhu3248',
+          publishedAt: '2018-01-26T00:02:21.635Z'
+        }
+      }
     },
   },
   drafts: {
