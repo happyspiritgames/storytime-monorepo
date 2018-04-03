@@ -25,7 +25,7 @@ export default class StoryTimeApp extends Component {
       <Provider store={store}>
         <ErrorBoundaryContainer>
           <ConnectedRouter history={history}>
-            <div className="container-fluid desktop page">
+            <div className="container-fluid">
               <Navigation />
               <main className="main-content">
                 <Switch>
