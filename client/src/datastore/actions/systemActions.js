@@ -27,7 +27,7 @@ export const loadGenreCodes = () => {
   return (dispatch) => {
     dispatch(fetchCodes())
     systemApi.fetchGenreCodes(
-      (type, codes) => dispatch(fetchCodes(type, codes)),
+      (type, codes) => dispatch(fetchedCodes(type, codes)),
       error => dispatch(fetchCodesFailed(error))
     )
   }
@@ -36,8 +36,8 @@ export const loadGenreCodes = () => {
 export const loadRatingCodes = () => {
   return (dispatch) => {
     dispatch(fetchCodes())
-    systemApi.fetchGenreCodes(
-      (type, codes) => dispatch(fetchCodes(type, codes)),
+    systemApi.fetchRatingCodes(
+      (type, codes) => dispatch(fetchedCodes(type, codes)),
       error => dispatch(fetchCodesFailed(error))
     )
   }
@@ -46,8 +46,8 @@ export const loadRatingCodes = () => {
 export const loadPlayerStatusCodes = () => {
   return (dispatch) => {
     dispatch(fetchCodes())
-    systemApi.fetchGenreCodes(
-      (type, codes) => dispatch(fetchCodes(type, codes)),
+    systemApi.fetchPlayerStatusCodes(
+      (type, codes) => dispatch(fetchedCodes(type, codes)),
       error => dispatch(fetchCodesFailed(error))
     )
   }

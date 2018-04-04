@@ -15,4 +15,13 @@ describe('codes reducer', () => {
       'wumpus': testCodes
     })
   })
+
+  it('should handle FETCHED_CODES action multiple times without wipingn out previous', () => {
+    nextState = codes(undefined, actions.fetchedCodes('wumpus', testCodes))
+    nextState = codes(nextState, actions.fetchedCodes('wigwam', testCodes))
+    expect(nextState).toEqual({
+      'wumpus': testCodes,
+      'wigwam': testCodes
+    })
+  })
 })

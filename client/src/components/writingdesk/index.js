@@ -13,7 +13,9 @@ import {
   getProofs,
   getProof,
   updateProof,
-  publish
+  publish,
+  loadRatingCodes,
+  loadGenreCodes
 } from '../../datastore/actions'
 
 const mapStateToProps = state => {
@@ -27,7 +29,9 @@ const mapStateToProps = state => {
     draftProjects,
     activeDraft: writingDesk.activeDraft,
     proofs,
-    activeProof
+    activeProof,
+    ratingCodes: state.codes.rating,
+    genreCodes: state.codes.genre
   }
 }
 
@@ -45,7 +49,9 @@ const mapDispatchToProps = dispatch => {
     getProofs: (draftId) => dispatch(getProofs(draftId)),
     getProof: (draftId, version) => dispatch(getProof(draftId, version)),
     updateProof: (draftId, version, proofUpdate) => dispatch(updateProof(draftId, version, proofUpdate)),
-    publish: (draftId, version) => dispatch(publish(draftId, version))
+    publish: (draftId, version) => dispatch(publish(draftId, version)),
+    loadRatingCodes: () => dispatch(loadRatingCodes()),
+    loadGenreCodes: () => dispatch(loadGenreCodes())
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { draftShape, proofShape } from '../../datastore/dataShapes'
+import { draftShape, proofShape, codeLookupShape } from '../../datastore/dataShapes'
 import Desktop from './Desktop'
 import EditPublishingInfo from './EditPublishingInfo'
 import EditStory from './EditStory'
@@ -15,6 +15,8 @@ export default class WritingDesk extends Component {
     activeDraft: draftShape,
     proofs: PropTypes.array,
     activeProof: proofShape,
+    ratingCodes: PropTypes.arrayOf(codeLookupShape),
+    genreCodes: PropTypes.arrayOf(codeLookupShape),
     loadDrafts: PropTypes.func,
     loadDraftForEdit: PropTypes.func,
     saveDraft: PropTypes.func,
@@ -25,6 +27,8 @@ export default class WritingDesk extends Component {
     prepareToPublish: PropTypes.func,
     getProofs: PropTypes.func,
     getProof: PropTypes.func,
+    loadRatingCodes: PropTypes.func,
+    loadGenreCodes: PropTypes.func,
     updateProof: PropTypes.func,
     publish: PropTypes.func
   }
@@ -35,6 +39,8 @@ export default class WritingDesk extends Component {
       activeDraft,
       proofs,
       activeProof,
+      ratingCodes,
+      genreCodes,
       loadDrafts,
       loadDraftForEdit,
       saveDraft,
@@ -43,6 +49,8 @@ export default class WritingDesk extends Component {
       prepareToPublish,
       getProofs,
       getProof,
+      loadRatingCodes,
+      loadGenreCodes,
       updateProof,
       publish
     } = this.props
@@ -97,7 +105,6 @@ export default class WritingDesk extends Component {
               loadDraft={loadDraftForEdit}
               loadProofs={getProofs}
               begin={prepareToPublish}
-              publish={publish}
               {...props}
             />
           }
@@ -107,9 +114,14 @@ export default class WritingDesk extends Component {
             (props) => <EditPublishingInfo
               draft={activeDraft}
               proof={activeProof}
+              ratingCodes={ratingCodes}
+              genreCodes={genreCodes}
               loadDraft={loadDraftForEdit}
+              loadProof={getProof}
+              loadRatingCodes={loadRatingCodes}
+              loadGenreCodes={loadGenreCodes}
               updateProof={updateProof}
-              getProof={getProof}
+              publish={publish}
               {...props}
             />
           }

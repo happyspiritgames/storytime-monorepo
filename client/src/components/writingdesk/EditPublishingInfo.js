@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { proofShape, draftShape } from '../../datastore/dataShapes'
+import { proofShape, draftShape, codeLookupShape } from '../../datastore/dataShapes'
 
 export default class EditPublishingInfo extends Component {
   static propTypes = {
     draft: draftShape,
     proof: proofShape,
-    getProof: PropTypes.func,
+    ratingCodes: PropTypes.arrayOf(codeLookupShape),
+    genreCodes: PropTypes.arrayOf(codeLookupShape),
+    loadProof: PropTypes.func,
+    loadRatingCodes: PropTypes.func,
+    loadGenreCodes: PropTypes.func,
     saveProof: PropTypes.func,
     publish: PropTypes.func
   }
@@ -17,16 +21,12 @@ export default class EditPublishingInfo extends Component {
       storyKey: '',
       penName: '',
       rating: '',
-      genre: {
-        toAssign: [],
-        toUnassign: []
-      }
-    },
-    isLoading: false
+      genre: []
+    }
   }
 
   establishInitialState = (draft, proof) => {
-    const activeUpdate = this.state.activeUpdate
+    const activeUpdate = { ...this.state.activeUpdate }
     if (proof.storyKey) {
       activeUpdate.storyKey = proof.storyKey
     }
@@ -36,6 +36,7 @@ export default class EditPublishingInfo extends Component {
     if (proof.rating) {
       activeUpdate.rating = proof.rating
     }
+    this.setState({ activeUpdate })
   }
 
   handleChange = (event) => {
@@ -50,11 +51,39 @@ export default class EditPublishingInfo extends Component {
 
   handleChangeGenre = (event) => {
     console.log('handleChangeGenre')
+    const { id, checked } = event.target
+    const code = id.split('.')[1]
+    let nextGenre
+    if (checked && !nextGenre.includes(code)) {
+      nextGenre = [...this.state.activeUpdate.genre].push(code)
+    } else if (!checked && nextGenre.includes(code)) {
+      nextGenre = this.state.activeUpdate.genre.filter(existingCode => existingCode !== code)
+    }
+    if (nextGenre) {
+      this.setState({
+        activeUpdate: {
+          ...this.state.activeUpdate,
+          genre: nextGenre
+        }
+      })
+    }
   }
 
   handleSave = () => {
+    console.log('handleSave')
     const { draftId, version } = this.props.match.params
-    this.props.saveProof(draftId, version, this.state.activeUpdate)
+    const originalGenre = this.props.proof.genre || []
+    const updatedGenre = this.state.activeUpdate.genre || []
+    const genreChanges = {
+      toAssign: updatedGenre.filter(code => !originalGenre.includes(code)),
+      toUnassign: originalGenre.filter(code => !updatedGenre.includes(code))
+    }
+    const update = {
+      ...this.state.activeUpdate,
+      genre: genreChanges
+    }
+    console.log('update to save', update)
+    this.props.saveProof(draftId, version, update)
   }
 
   handlePublish = () => {
@@ -63,26 +92,55 @@ export default class EditPublishingInfo extends Component {
   }
 
   playStory = () => {
-    console.alert('Someday this may actually do something.')
+    alert('Someday this may actually do something.')
   }
 
   componentDidMount() {
+    console.log('componentDidMount')
     const { draftId, version } = this.props.match.params
-    if (!this.props.draft) {
-      this.props.loadDraft(draftId)
+    const { draft, proof, loadDraft, loadProof, loadRatingCodes, loadGenreCodes } = this.props
+    if (!draft) {
+      loadDraft(draftId)
     }
-    this.props.getProof(draftId, version)
+    loadProof(draftId, version)
+    loadRatingCodes()
+    loadGenreCodes()
+    if (draft && proof) {
+      this.establishInitialState(draft, proof)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps')
+    if (nextProps.draft && nextProps.proof) {
+      this.establishInitialState(nextProps.draft, nextProps.proof)
+    }
+  }
+
+  renderGenreSelections() {
+    const { genreCodes } = this.props
+    return genreCodes.map(code => (
+      <div key={code.code} className="col-3">
+        <div className="form-check">
+          <input className="form-check-input" type="checkbox" id={`genre.${code.code}`} onChange={this.handleChangeGenre}/>
+          <label className="form-check-label" htmlFor={`genre.${code.code}`}>{code.displayName}</label>
+        </div>
+      </div>
+    ))
   }
 
   render() {
-    const { draft, proof } = this.props
-    if (!draft || !proof) {
+    console.log(this.state.activeUpdate)
+    const { draft, proof, ratingCodes, genreCodes } = this.props
+    if (!draft || !proof || !ratingCodes || !genreCodes) {
       return (
         <h1>Loading...</h1>
       )
     }
     const { draftId, title } = draft.summary
-    const { activeProof } = this.state
+    const { activeUpdate } = this.state
+    const ratingOptions = ratingCodes.map(code => <option key={code.code} value={code.code}>{code.displayName}</option>)
+    const genreSelections = this.renderGenreSelections()
 
     return (
       <div id="publishing">
@@ -103,13 +161,12 @@ export default class EditPublishingInfo extends Component {
                   <div className="col-6">
                     <div className="form-group">
                       <label>Story Unique Key</label>
-                      <small className="form-text text-muted">For now, use the random key your story was assigned.</small>
-                      <small className="form-text text-muted">In the future, you can change to something more fun.</small>
+                      <small className="form-text text-muted">For now, use the random key your story was assigned. In the future, you can change to something more fun.</small>
                       <input
                         className="form-control"
                         type="text"
                         id="storyKey"
-                        value={activeProof.storyKey}
+                        value={activeUpdate.storyKey}
                         onChange={this.handleChange}
                         disabled={true}
                       />
@@ -117,17 +174,27 @@ export default class EditPublishingInfo extends Component {
                   </div>
                   <div className="col-6">
                     <div className="form-group">
+                      <label>Pen Name</label>
+                      <small className="form-text text-muted">Who you want to be known as. Use your own name or something more elusive.</small>
+                      <input
+                        className="form-control"
+                        type="text"
+                        id="penName"
+                        value={activeUpdate.penName}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="col-6">
+                    <div className="form-group">
                       <label>Content Rating</label>
                       <small className="form-text text-muted">Age group for whom your story-game is appropriate.</small>
                       <small className="form-text text-muted">Take your best guess. We might adjust this after review.</small>
-                      <select className="form-control" id="rating" value={this.state.rating} onChange={this.handleChange}>
+                      <select className="form-control" id="rating" value={activeUpdate.rating} onChange={this.handleChange}>
                         <option value="">--Not Rated--</option>
-                        <option value="Y">Youth</option>
-                        <option value="Y7">Youth Age 7+</option>
-                        <option value="14">Teen</option>
-                        <option value="G">General (G)</option>
-                        <option value="PG">Parental Guidance (PG)</option>
-                        <option value="MA">Mature</option>
+                        {ratingOptions}
                       </select>
                     </div>
                   </div>
@@ -136,64 +203,7 @@ export default class EditPublishingInfo extends Component {
                   <label>Genre</label>
                   <small className="form-text text-muted">What kind of story is this? Choose from 1 to 3 of the following options.</small>
                   <div className="form-row">
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-adventure" />
-                        <label className="form-check-label" htmlFor="genre-adventure">Adventure</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-fantasy" />
-                        <label className="form-check-label" htmlFor="genre-fantasy">Fantasy</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" checked="" id="genre-scifi" />
-                        <label className="form-check-label" htmlFor="genre-scifi">Science Fiction</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-romance" />
-                        <label className="form-check-label" htmlFor="genre-romance">Romance</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-row">
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-drama" />
-                        <label className="form-check-label" htmlFor="genre-drama">Drama</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-mystery" />
-                        <label className="form-check-label" htmlFor="genre-mystery">Mystery</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-satire" />
-                        <label className="form-check-label" htmlFor="genre-satire">Satire</label>
-                      </div>
-                    </div>
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-historical" />
-                        <label className="form-check-label" htmlFor="genre-historical">Historical</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-row">
-                    <div className="col-3">
-                      <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="genre-biography" />
-                        <label className="form-check-label" htmlFor="genre-biography">Biographical</label>
-                      </div>
-                    </div>
+                    {genreSelections}
                   </div>
                 </div>
                 <button className="btn btn-primary" type="button" onClick={this.save}>Save</button>
