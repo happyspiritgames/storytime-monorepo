@@ -103,3 +103,21 @@ export const testProofUpdate = {
   rating: 'MA',
   genre: ['fantasy']
 }
+
+export const testCodes = [
+  {
+    code: 'blargy',
+    displayName: 'Blargy',
+    sortOrder: 1
+  },
+  {
+    code: 'blargy-boo',
+    displayName: 'Blargy Boo',
+    sortOrder: 2
+  },
+  {
+    code: 'blargy-do',
+    displayName: 'Blargy Do',
+    sortOrder: 3
+  },
+]

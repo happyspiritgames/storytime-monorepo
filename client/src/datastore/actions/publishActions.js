@@ -29,7 +29,7 @@ export const prepareToPublish = (draftId) => {
     publishApi.prepareToPublish(
       draftId,
       proof => dispatch(startedToPublish(proof)),
-      error=> dispatch(startToPublishFailed(error))
+      error => dispatch(startToPublishFailed(error))
     )
   }
 }
