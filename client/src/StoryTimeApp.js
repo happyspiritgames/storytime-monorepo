@@ -15,11 +15,9 @@ import Footer from './components/footer'
 import Navigation from './components/navigation'
 import Publishing from './components/publishing'
 import WritingDesk from './components/writingdesk'
-// import EditStory from './components/writingdesk/EditStory'
 import './StoryTimeApp.css'
 
 export default class StoryTimeApp extends Component {
-
   render() {
     return (
       <Provider store={store}>

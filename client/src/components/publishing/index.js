@@ -9,22 +9,26 @@ import {
 } from '../../datastore/actions'
 
 const mapStateToProps = state => {
+  let draftSummary
   let activeProof
   let proofs
   if (state.writingDesk) {
+    draftSummary = state.writingDesk.activeDraft.summary
     activeProof = (state.writingDesk.activeProof)
       ? state.writingDesk.proofs[state.writingDesk.activeProof]
       : undefined
-    proofs = state.writingDesk.proofs
+    if (state.writingDesk.proofs) {
+      proofs = Object.values(state.writingDesk.proofs)
+    }
   }
   return {
+    draftSummary,
     activeProof,
     proofs
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  // TODO find a way to extract draftId so wrapped component does not have to pass it back -- ownProps.match.params?
   return {
     prepareToPublish: (draftId) => dispatch(prepareToPublish(draftId)),
     getProofs: (draftId) => dispatch(getProofs(draftId)),
