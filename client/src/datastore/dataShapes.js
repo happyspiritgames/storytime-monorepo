@@ -141,7 +141,7 @@ export const reduxStoreDataShape = {
       }
     },
   },
-  codeLookup: {
+  codes: {
     genre: [],
     rating: [],
     'player-status': [],
