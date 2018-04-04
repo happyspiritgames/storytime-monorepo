@@ -1,35 +1,69 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { proofShape, draftSummaryShape } from '../../datastore/dataShapes'
+import { proofShape, draftShape } from '../../datastore/dataShapes'
 
 export default class EditPublishingInfo extends Component {
   static propTypes = {
-    draftSummary: draftSummaryShape,
+    draft: draftShape,
     proof: proofShape,
     getProof: PropTypes.func,
     saveProof: PropTypes.func,
     publish: PropTypes.func
   }
 
-  state = { storyKey: 'blargy', rating: '14' }
+  state = {
+    activeUpdate: {
+      storyKey: '',
+      penName: '',
+      rating: '',
+      genre: {
+        toAssign: [],
+        toUnassign: []
+      }
+    },
+    isLoading: false
+  }
+
+  establishInitialState = (draft, proof) => {
+    const activeUpdate = this.state.activeUpdate
+    if (proof.storyKey) {
+      activeUpdate.storyKey = proof.storyKey
+    }
+    if (proof.penName) {
+      activeUpdate.penName = proof.penName
+    }
+    if (proof.rating) {
+      activeUpdate.rating = proof.rating
+    }
+  }
 
   handleChange = (event) => {
-    this.setState({
-      [event.target.id]: event.target.value
-    })
+    const target = event.target
+    let updateValue = target.value
+    let activeUpdate = {
+      ...this.state.activeUpdate,
+      [target.id]: updateValue
+    }
+    this.setState({ activeUpdate })
   }
 
-  save = () => {
-    console.log('clicked save')
+  handleChangeGenre = (event) => {
+    console.log('handleChangeGenre')
   }
 
-  publish = () => {
-    console.log('clicked publish')
+  handleSave = () => {
+    const { draftId, version } = this.props.match.params
+    this.props.saveProof(draftId, version, this.state.activeUpdate)
+  }
+
+  handlePublish = () => {
+    const { draftId, version } = this.props.match.params
+    this.props.publish(draftId, version)
   }
 
   playStory = () => {
-    console.log('clicked play story')
+    console.alert('Someday this may actually do something.')
   }
 
   componentDidMount() {
@@ -47,8 +81,8 @@ export default class EditPublishingInfo extends Component {
         <h1>Loading...</h1>
       )
     }
-    const { draftId } = this.props.match.params
-    const title = proof ? proof.title : 'Loading...'
+    const { draftId, title } = draft.summary
+    const { activeProof } = this.state
 
     return (
       <div id="publishing">
@@ -62,10 +96,9 @@ export default class EditPublishingInfo extends Component {
           <div className="col">
             <h3 className="text-center">Publishing</h3>
             <p>You are three steps away from publishing your story-game. The only thing you have to do is step 3, publish. Check out the other steps on your way down the page.</p>
-            <h4 className="text-center">1. Categorize</h4>
+            <h4 className="text-center">1. Classify your story-game</h4>
             <form>
               <fieldset>
-                <legend className="text-info">Classify your story-game</legend>
                 <div className="form-row">
                   <div className="col-6">
                     <div className="form-group">
@@ -76,7 +109,7 @@ export default class EditPublishingInfo extends Component {
                         className="form-control"
                         type="text"
                         id="storyKey"
-                        value={this.state.storyKey}
+                        value={activeProof.storyKey}
                         onChange={this.handleChange}
                         disabled={true}
                       />

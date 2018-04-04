@@ -72,6 +72,11 @@ export const proofShape = PropTypes.shape({
   publishedAt: PropTypes.string
 })
 
+export const codeLookupShape = PropTypes.shape({
+  code: PropTypes.string,
+  displayName: PropTypes.string,
+  sortOrder: PropTypes.integer
+})
 
 // for reference
 export const reduxStoreDataShape = {
@@ -135,6 +140,11 @@ export const reduxStoreDataShape = {
         }
       }
     },
+  },
+  codeLookup: {
+    genre: [],
+    rating: [],
+    'player-status': [],
   },
   drafts: {
     'abc': {},
