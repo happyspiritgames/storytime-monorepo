@@ -3,19 +3,11 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { proofShape, draftSummaryShape } from '../../datastore/dataShapes'
 
-const sampleProof = {
-  title: 'My First Story',
-  penName: 'Bubba Gump',
-  tagLine: 'This is gonna be great, I can tell.',
-  about: 'Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.',
-  publishedAt: 'March 31, 2018 at 4:30 PM'
-}
-
 export default class EditProof extends Component {
   static propTypes = {
     draftSummary: draftSummaryShape,
     proof: proofShape,
-    loadProof: PropTypes.func,
+    getProof: PropTypes.func,
     saveProof: PropTypes.func,
     publish: PropTypes.func
   }
@@ -42,13 +34,19 @@ export default class EditProof extends Component {
 
   componentDidMount() {
     const { draftId, version } = this.props.match.params
-    this.props.loadDraft(draftId)
-    this.props.loadProof(draftId, version)
+    if (!this.props.draft) {
+      this.props.loadDraft(draftId)
+    }
+    this.props.getProof(draftId, version)
   }
 
   render() {
-    // const { proof } = this.props
-    const proof = sampleProof
+    const { draft, proof } = this.props
+    if (!draft || !proof) {
+      return (
+        <h1>Loading...</h1>
+      )
+    }
     const { draftId } = this.props.match.params
     const title = proof ? proof.title : 'Loading...'
 

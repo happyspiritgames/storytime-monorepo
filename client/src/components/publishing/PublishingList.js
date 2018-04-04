@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { proofShape, draftSummaryShape } from '../../datastore/dataShapes'
+import { proofShape, draftShape } from '../../datastore/dataShapes'
 
 export default class PublishingList extends Component {
   static propTypes = {
-    draftSummary: draftSummaryShape,
+    draft: draftShape,
     proofs: PropTypes.arrayOf(proofShape),
     loadProofs: PropTypes.func,
     begin: PropTypes.func
@@ -17,7 +17,11 @@ export default class PublishingList extends Component {
 
   componentDidMount() {
     console.log('componentDidMount', this.props)
-    this.refreshProofs(this.props.match.params.draftId)
+    const { draftId } = this.props.match.params
+    if (!this.props.draft) {
+      this.props.loadDraft(draftId)
+    }
+    this.refreshProofs(draftId)
   }
 
   componentWillReceiveProps(newProps) {
@@ -28,6 +32,7 @@ export default class PublishingList extends Component {
   }
 
   renderVersionList() {
+    const { draftId } = this.props.match.params
     let rows
     let foundUnpublished
     let buttonMessage
@@ -60,14 +65,19 @@ export default class PublishingList extends Component {
           {rows}
         </ul>
       { !foundUnpublished &&
-        <button onClick={this.props.begin}>Create new unpublished version</button>
+        <button onClick={() => this.props.begin(draftId)}>Create new unpublished version</button>
       }
       </div>
     )
   }
   render() {
-    const { draftSummary } = this.props
-    const { storyId, title } = draftSummary
+    const { draft } = this.props
+    if (!draft) {
+      return (
+        <h1>Loading...</h1>
+      )
+    }
+    const { storyId, title } = draft.summary
     const versions = this.renderVersionList()
     return (
       <div id="publishing">

@@ -13,7 +13,6 @@ import Admin from './components/admin'
 import Contact from './components/contact'
 import Footer from './components/footer'
 import Navigation from './components/navigation'
-import Publishing from './components/publishing'
 import WritingDesk from './components/writingdesk'
 import './StoryTimeApp.css'
 
@@ -35,8 +34,7 @@ export default class StoryTimeApp extends Component {
                   <Route path="/contact" component={Contact} />
                   <Route path="/reader/:storyId" component={ReaderPage} />
                   <Route path="/writingdesk" component={WritingDesk} />
-                  <Route exact path="/publish/:draftId" component={Publishing} />
-                  <Route exact path="/publish/:draftId/:version" component={Publishing} />
+                  <Route path="/publish" component={WritingDesk} />
                 </Switch>
               </main>
               <Footer />
