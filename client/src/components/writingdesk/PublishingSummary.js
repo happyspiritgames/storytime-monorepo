@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { proofShape, draftShape } from '../../datastore/dataShapes'
 
-export default class PublishingList extends Component {
+export default class PublishingSummary extends Component {
   static propTypes = {
     draft: draftShape,
     proofs: PropTypes.arrayOf(proofShape),

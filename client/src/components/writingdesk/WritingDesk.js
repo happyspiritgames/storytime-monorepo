@@ -3,11 +3,11 @@ import { Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { draftShape, proofShape } from '../../datastore/dataShapes'
 import Desktop from './Desktop'
+import EditPublishingInfo from './EditPublishingInfo'
 import EditStory from './EditStory'
 import EditScene from './EditScene'
 import EditSignpost from './EditSignpost'
-import PublishingList from '../publishing/PublishingList'
-import EditProof from '../publishing/EditProof'
+import PublishingSummary from './PublishingSummary'
 
 export default class WritingDesk extends Component {
   static propTypes = {
@@ -91,7 +91,7 @@ export default class WritingDesk extends Component {
         />
         <Route exact path="/publish/:draftId"
           render={
-            (props) => <PublishingList
+            (props) => <PublishingSummary
               draft={activeDraft}
               proofs={proofs}
               loadDraft={loadDraftForEdit}
@@ -104,7 +104,7 @@ export default class WritingDesk extends Component {
         />
         <Route exact path="/publish/:draftId/:version"
           render={
-            (props) => <EditProof
+            (props) => <EditPublishingInfo
               draft={activeDraft}
               proof={activeProof}
               loadDraft={loadDraftForEdit}
