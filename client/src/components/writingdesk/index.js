@@ -12,7 +12,7 @@ import {
   prepareToPublish,
   getProofs,
   getProof,
-  updateProof,
+  saveProof,
   publish,
   loadRatingCodes,
   loadGenreCodes
@@ -48,7 +48,7 @@ const mapDispatchToProps = dispatch => {
     prepareToPublish: (draftId) => dispatch(prepareToPublish(draftId)),
     getProofs: (draftId) => dispatch(getProofs(draftId)),
     getProof: (draftId, version) => dispatch(getProof(draftId, version)),
-    updateProof: (draftId, version, proofUpdate) => dispatch(updateProof(draftId, version, proofUpdate)),
+    updateProof: (draftId, version, proofUpdate) => dispatch(saveProof(draftId, version, proofUpdate)),
     publish: (draftId, version) => dispatch(publish(draftId, version)),
     loadRatingCodes: () => dispatch(loadRatingCodes()),
     loadGenreCodes: () => dispatch(loadGenreCodes())

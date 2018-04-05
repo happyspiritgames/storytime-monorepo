@@ -123,6 +123,7 @@ export const updateProofFailed = (error) => ({
 })
 
 export const saveProof = (draftId, version, proofUpdate) => {
+  console.log('publishActions.saveProof', draftId, version, proofUpdate)
   return (dispatch) => {
     dispatch(updateProof())
     publishApi.updateProof(

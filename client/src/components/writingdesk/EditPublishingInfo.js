@@ -17,69 +17,55 @@ export default class EditPublishingInfo extends Component {
   }
 
   state = {
-    activeUpdate: {
-      storyKey: '',
-      penName: '',
-      rating: '',
-      genre: []
-    }
+    storyKey: '',
+    penName: '',
+    rating: '',
+    genre: []
   }
 
-  establishInitialState = (draft, proof) => {
-    const activeUpdate = { ...this.state.activeUpdate }
-    if (proof.storyKey) {
-      activeUpdate.storyKey = proof.storyKey
-    }
-    if (proof.penName) {
-      activeUpdate.penName = proof.penName
-    }
-    if (proof.rating) {
-      activeUpdate.rating = proof.rating
-    }
-    this.setState({ activeUpdate })
+  establishInitialState = (proof) => {
+    this.setState({
+      storyKey: proof.storyKey,
+      penName: proof.penName || '',
+      rating: proof.rating || '',
+      genre: proof.genre ? [...proof.genre] : []
+    })
   }
 
   handleChange = (event) => {
-    const target = event.target
-    let updateValue = target.value
-    let activeUpdate = {
-      ...this.state.activeUpdate,
-      [target.id]: updateValue
-    }
-    this.setState({ activeUpdate })
+    const { id, value } = event.target
+    this.setState({ [id]: value })
   }
 
   handleChangeGenre = (event) => {
     console.log('handleChangeGenre')
     const { id, checked } = event.target
     const code = id.split('.')[1]
-    let nextGenre
+    let nextGenre = this.state.genre
     if (checked && !nextGenre.includes(code)) {
-      nextGenre = [...this.state.activeUpdate.genre].push(code)
+      nextGenre.push(code)
     } else if (!checked && nextGenre.includes(code)) {
-      nextGenre = this.state.activeUpdate.genre.filter(existingCode => existingCode !== code)
+      nextGenre = nextGenre.filter(existingCode => existingCode !== code)
     }
-    if (nextGenre) {
-      this.setState({
-        activeUpdate: {
-          ...this.state.activeUpdate,
-          genre: nextGenre
-        }
-      })
-    }
+    console.log('nextGenre', nextGenre)
+    this.setState({
+      genre: nextGenre
+    })
   }
 
   handleSave = () => {
     console.log('handleSave')
     const { draftId, version } = this.props.match.params
     const originalGenre = this.props.proof.genre || []
-    const updatedGenre = this.state.activeUpdate.genre || []
+    const updatedGenre = this.state.genre || []
+    console.log('original genre', originalGenre)
+    console.log('updated genre', updatedGenre)
     const genreChanges = {
       toAssign: updatedGenre.filter(code => !originalGenre.includes(code)),
       toUnassign: originalGenre.filter(code => !updatedGenre.includes(code))
     }
     const update = {
-      ...this.state.activeUpdate,
+      ...this.state,
       genre: genreChanges
     }
     console.log('update to save', update)
@@ -106,31 +92,43 @@ export default class EditPublishingInfo extends Component {
     loadRatingCodes()
     loadGenreCodes()
     if (draft && proof) {
-      this.establishInitialState(draft, proof)
+      this.establishInitialState(proof)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps')
     if (nextProps.draft && nextProps.proof) {
-      this.establishInitialState(nextProps.draft, nextProps.proof)
+      this.establishInitialState(nextProps.proof)
     }
   }
 
   renderGenreSelections() {
     const { genreCodes } = this.props
-    return genreCodes.map(code => (
-      <div key={code.code} className="col-3">
-        <div className="form-check">
-          <input className="form-check-input" type="checkbox" id={`genre.${code.code}`} onChange={this.handleChangeGenre}/>
-          <label className="form-check-label" htmlFor={`genre.${code.code}`}>{code.displayName}</label>
+    const selectedGenre = this.state.genre
+    console.log('selected', selectedGenre)
+    return genreCodes.map(code => {
+      return (
+        <div key={code.code} className="col-3">
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id={`genre.${code.code}`}
+              onChange={this.handleChangeGenre}
+              checked={selectedGenre.includes(code.code)}
+            />
+            <label className="form-check-label" htmlFor={`genre.${code.code}`}>
+              {code.displayName}
+            </label>
+          </div>
         </div>
-      </div>
-    ))
+      )
+    })
   }
 
   render() {
-    console.log(this.state.activeUpdate)
+    console.log(this.state)
     const { draft, proof, ratingCodes, genreCodes } = this.props
     if (!draft || !proof || !ratingCodes || !genreCodes) {
       return (
@@ -138,7 +136,7 @@ export default class EditPublishingInfo extends Component {
       )
     }
     const { draftId, title } = draft.summary
-    const { activeUpdate } = this.state
+    const activeUpdate = this.state
     const ratingOptions = ratingCodes.map(code => <option key={code.code} value={code.code}>{code.displayName}</option>)
     const genreSelections = this.renderGenreSelections()
 
@@ -206,7 +204,7 @@ export default class EditPublishingInfo extends Component {
                     {genreSelections}
                   </div>
                 </div>
-                <button className="btn btn-primary" type="button" onClick={this.save}>Save</button>
+                <button className="btn btn-primary" type="button" onClick={this.handleSave}>Save</button>
               </fieldset>
             </form>
             <h4 className="text-center">2. Proof</h4>

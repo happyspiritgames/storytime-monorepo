@@ -120,7 +120,7 @@ export default class WritingDesk extends Component {
               loadProof={getProof}
               loadRatingCodes={loadRatingCodes}
               loadGenreCodes={loadGenreCodes}
-              updateProof={updateProof}
+              saveProof={updateProof}
               publish={publish}
               {...props}
             />
