@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { proofShape, draftShape } from '../../datastore/dataShapes'
+import { formatDateTime } from '../../util/formatter'
 
 export default class PublishingSummary extends Component {
   static propTypes = {
@@ -43,7 +44,7 @@ export default class PublishingSummary extends Component {
         let rating = proof.rating ? proof.rating : 'unknown'
         let genre = proof.genre && proof.genre.length ? proof.genre.join(', ') : 'unknown'
         if (proof.publishedAt) {
-          published = `Published: ${proof.publishedAt}`
+          published = `Published: ${formatDateTime(proof.publishedAt)}`
           buttonMessage = 'Reclassify'
         } else {
           foundUnpublished = true

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { proofShape, draftShape, codeLookupShape } from '../../datastore/dataShapes'
+import { formatDateTime } from '../../util/formatter'
 
 export default class EditPublishingInfo extends Component {
   static propTypes = {
@@ -135,17 +136,20 @@ export default class EditPublishingInfo extends Component {
         <h1>Loading...</h1>
       )
     }
-    const { draftId, title } = draft.summary
+    const { storyId, title } = draft.summary
     const activeUpdate = this.state
     const ratingOptions = ratingCodes.map(code => <option key={code.code} value={code.code}>{code.displayName}</option>)
     const genreSelections = this.renderGenreSelections()
+    const publishedMessage = proof.publishedAt
+      ? `Congratulations! Your story was published on ${formatDateTime(proof.publishedAt)}.`
+      : 'Your story has not been published.'
 
     return (
       <div id="publishing">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
-          <li className="breadcrumb-item"><Link to={`/writingdesk/${draftId}`}>{title}</Link></li>
+          <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
           <li className="breadcrumb-item">Publishing</li>
         </ol>
         <div className="row section">
@@ -212,7 +216,7 @@ export default class EditPublishingInfo extends Component {
               <div className="col">
                 <p>This is how your story-game will appear in the catalog. If it looks good, you are all set.</p>
                 <p>To make changes, you have to return to the draft.</p>
-                <p><Link to={`/writingdesk/${draftId}`}>Return to story editor.</Link></p>
+                <p><Link to={`/writingdesk/${storyId}`}>Return to story editor.</Link></p>
               </div>
               <div className="col">
                 <div className="card">
@@ -220,6 +224,7 @@ export default class EditPublishingInfo extends Component {
                   <div className="card-body">
                     <h4 className="card-title"><em>{proof.title}</em></h4>
                     <h6 className="card-subtitle">by {proof.penName}</h6>
+                    <p className="card-text">{proof.tagLine}</p>
                     <p className="card-text">{proof.about}</p>
                     <button className="btn btn-primary" type="button" onClick={this.playStory}>Play</button>
                   </div>
@@ -229,13 +234,14 @@ export default class EditPublishingInfo extends Component {
             <div className="row">
               <div className="col">
                 <h4 className="text-center">3. Publish</h4>
-                <p>Your story has not been published.</p>
-                <p>Your story was published on {proof.publishedAt}.</p>
+                <p>{publishedMessage}</p>
+              { !proof.publishedAt &&
                 <button
                   className="btn btn-primary"
                   type="button"
-                  onClick={this.publish}
+                  onClick={this.handlePublish}
                 >Publish Now - Do It - Make it so!</button>
+              }
                 <p>(Note: publishing happens once. After that, classifications can change, but you cannot re-publish. Can always go through the publishing cycle again and publish a new version. Should make it easy to delete non-current published versions.)</p>
               </div>
             </div>
