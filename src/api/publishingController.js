@@ -79,6 +79,10 @@ exports.getProofMetadata = async (req, res) => {
   }
 }
 
+const takeNap = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 exports.updateProofMetadata = async (req, res) => {
   const { playerId } = req.user
   const { draftId, version } = req.params
@@ -91,6 +95,10 @@ exports.updateProofMetadata = async (req, res) => {
       return
     }
     await publishingModel.updateProof(draftId, version, metadataUpdate)
+
+    // TODO might be horrible; just a work-around until I can troubleshoot async problems
+    await takeNap(200)
+
     const result = await publishingModel.getProof(draftId, version)
     res.status(202).json(result)
   } catch (e) {

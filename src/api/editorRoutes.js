@@ -39,10 +39,10 @@ router.route('/:storyId/scenes/:sceneId/signpost')
 .put(draftController.updateSignpost);
 
 // publishing methods
-router.route('/:draftId/proof')
+router.route('/:draftId/proofs')
 .get(publishingController.getProofs)
 .post(publishingController.createProof)
-router.route('/:draftId/proof/:version')
+router.route('/:draftId/proofs/:version')
 .get(publishingController.getProofMetadata)
 .put(publishingController.updateProofMetadata)
 .post(publishingController.publish)

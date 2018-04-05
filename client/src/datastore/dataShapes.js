@@ -57,6 +57,26 @@ export const draftShape = PropTypes.shape({
   scenes: PropTypes.object
 })
 
+export const proofShape = PropTypes.shape({
+  draftId: PropTypes.string,
+  version: PropTypes.string,
+  storyKey: PropTypes.string,
+  authorId: PropTypes.string,
+  penName: PropTypes.string,
+  title: PropTypes.string,
+  tagLine: PropTypes.string,
+  about: PropTypes.string,
+  rating: PropTypes.string,
+  genre: PropTypes.arrayOf(PropTypes.string),
+  firstSceneId: PropTypes.string,
+  publishedAt: PropTypes.string
+})
+
+export const codeLookupShape = PropTypes.shape({
+  code: PropTypes.string,
+  displayName: PropTypes.string,
+  sortOrder: PropTypes.integer
+})
 
 // for reference
 export const reduxStoreDataShape = {
@@ -101,8 +121,30 @@ export const reduxStoreDataShape = {
           },
           '42': {}
         }
+      },
+      activeProof: 'abcdef-1',
+      proofs: {
+        'abcdef-1': {
+          draftId: 'abcdef',
+          version: '1',
+          storyKey: 'abcdef',
+          author: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
+          penName: 'bubba',
+          title: 'Blargy',
+          tagLine: 'Blargy blargy.',
+          about: 'Blargy blargy, blargy blargy',
+          rating: 'PG',
+          genre: ['scifi'],
+          firstSceneId: 'jhu3248',
+          publishedAt: '2018-01-26T00:02:21.635Z'
+        }
       }
-    }
+    },
+  },
+  codes: {
+    genre: [],
+    rating: [],
+    'player-status': [],
   },
   drafts: {
     'abc': {},

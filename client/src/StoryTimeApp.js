@@ -14,17 +14,15 @@ import Contact from './components/contact'
 import Footer from './components/footer'
 import Navigation from './components/navigation'
 import WritingDesk from './components/writingdesk'
-// import EditStory from './components/writingdesk/EditStory'
 import './StoryTimeApp.css'
 
 export default class StoryTimeApp extends Component {
-
   render() {
     return (
       <Provider store={store}>
         <ErrorBoundaryContainer>
           <ConnectedRouter history={history}>
-            <div className="container-fluid desktop page">
+            <div className="container-fluid">
               <Navigation />
               <main className="main-content">
                 <Switch>
@@ -36,7 +34,7 @@ export default class StoryTimeApp extends Component {
                   <Route path="/contact" component={Contact} />
                   <Route path="/reader/:storyId" component={ReaderPage} />
                   <Route path="/writingdesk" component={WritingDesk} />
-                  {/* <Route exact path="/writingdesk/:draftId" component={EditStory} /> */}
+                  <Route path="/publish" component={WritingDesk} />
                 </Switch>
               </main>
               <Footer />

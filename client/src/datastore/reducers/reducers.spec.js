@@ -1,6 +1,7 @@
 import reducers from './index'
 import { fetchedSummary, fetchedScene, updatedProfile } from '../actions'
 import { initialState as accountInitState } from './account'
+import { initialState as codesInitState } from './codes'
 import { initialState as draftsInitState } from './drafts'
 import { initialState as libraryInitState } from './library'
 import { initialState as playerInitState } from './player'
@@ -23,6 +24,7 @@ describe('root reducer', () => {
   it('produces initial state by default', () => {
     const combinedInitialState = {
       account: accountInitState,
+      codes: codesInitState,
       drafts: draftsInitState,
       library: libraryInitState,
       player: playerInitState,

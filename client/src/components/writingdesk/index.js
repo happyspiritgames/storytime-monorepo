@@ -8,15 +8,30 @@ import {
   retrieveDraftScene,
   updateDraftScene,
   retrieveDraftSignpost,
-  updateDraftSignpost
+  updateDraftSignpost,
+  prepareToPublish,
+  getProofs,
+  getProof,
+  saveProof,
+  publish,
+  loadRatingCodes,
+  loadGenreCodes
 } from '../../datastore/actions'
 
 const mapStateToProps = state => {
   const writingDesk = state.writingDesk
   const draftProjects = writingDesk.draftProjects.map(storyId => state.drafts[storyId])
+  const activeProof = state.writingDesk.activeProof
+    ? state.writingDesk.proofs[state.writingDesk.activeProof]
+    : undefined
+  const proofs = writingDesk.proofs ? Object.values(state.writingDesk.proofs) : undefined
   return {
     draftProjects,
-    activeDraft: writingDesk.activeDraft
+    activeDraft: writingDesk.activeDraft,
+    proofs,
+    activeProof,
+    ratingCodes: state.codes.rating,
+    genreCodes: state.codes.genre
   }
 }
 
@@ -29,7 +44,14 @@ const mapDispatchToProps = dispatch => {
     loadDraftScene: (storyId, sceneId) => dispatch(retrieveDraftScene(storyId, sceneId)),
     saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
     loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
-    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, sceneId, signpostUpdates))
+    updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, sceneId, signpostUpdates)),
+    prepareToPublish: (draftId) => dispatch(prepareToPublish(draftId)),
+    getProofs: (draftId) => dispatch(getProofs(draftId)),
+    getProof: (draftId, version) => dispatch(getProof(draftId, version)),
+    updateProof: (draftId, version, proofUpdate) => dispatch(saveProof(draftId, version, proofUpdate)),
+    publish: (draftId, version) => dispatch(publish(draftId, version)),
+    loadRatingCodes: () => dispatch(loadRatingCodes()),
+    loadGenreCodes: () => dispatch(loadGenreCodes())
   }
 }
 
