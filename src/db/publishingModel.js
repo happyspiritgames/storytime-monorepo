@@ -11,17 +11,16 @@ const getStoryRating = async (ratingId) => {
 }
 
 /*
-select genre_codes.code from genre_codes, catalog_genre, catalog
-where catalog.draft_id='v7kv89xo'
-and catalog.id=catalog_genre.catalog_id
-and catalog_genre.genre_id=genre_codes.id;
+select genre_codes.code as code from genre_codes, edition_genre, edition
+where edition.edition_key='v7kv89xo-1'
+and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.id;
  */
-const getStoryGenre = async (draftId, version) => {
+const getStoryGenre = async (editionKey) => {
   console.log('publishingModel.getStoryGenre')
-  const SELECT = 'select genre_codes.code as code from genre_codes, catalog_genre, catalog '
-    + 'where catalog.draft_id=$1 and catalog.version=$2 '
-    + 'and catalog.id=catalog_genre.catalog_id and catalog_genre.genre_id=genre_codes.id'
-  const dbResult = await db.query(SELECT, [draftId, version])
+  const SELECT = 'select genre_codes.code as code from genre_codes, edition_genre, edition '
+    + 'where edition.edition_key=$1 '
+    + 'and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.id'
+  const dbResult = await db.query(SELECT, [editionKey])
   if (dbResult.rowCount) {
     return dbResult.rows.map(row => row.code)
   } else {
@@ -29,42 +28,40 @@ const getStoryGenre = async (draftId, version) => {
   }
 }
 
-const patchEdition = async (metadata) => {
+/**
+ * Turn primary keys into codes. Tack on genre codes.
+ */
+const patchEdition = async (editionToPatch) => {
   console.log('publishingModel.patchEdition')
-  if (metadata.rating) {
-    const ratingCode = await getStoryRating(metadata.rating)
-    metadata['rating'] = ratingCode
+  if (editionToPatch.rating) {
+    const ratingCode = await getStoryRating(editionToPatch.rating)
+    editionToPatch['rating'] = ratingCode
   }
   // merge in associated genres
-  const genre = await getStoryGenre(metadata.draftId, metadata.version)
-  metadata['genre'] = genre
-  return metadata
+  const genre = await getStoryGenre(editionToPatch.storyId, editionToPatch.version)
+  editionToPatch['genre'] = genre
+  return editionToPatch
 }
 
-const mapCatalogRowToApi = async (catalogRow) => {
-  const metadata = {
-    draftId: catalogRow.draft_id,
-    version: catalogRow.version,
-    storyKey: catalogRow.story_key,
-    authorId: catalogRow.author_id,
-    penName: catalogRow.pen_name,
-    title: catalogRow.title,
-    tagLine: catalogRow.tag_line,
-    about: catalogRow.about,
-    rating: catalogRow.rating,
-    firstSceneId: catalogRow.first_scene_id,
-    publishedAt: catalogRow.published_at
+const mapEditionRowToApi = async (editionRow) => {
+  const roughEdition = {
+    editionKey: editionRow.edition_key,
+    storyId: editionRow.story_id,
+    version: editionRow.version,
+    summary: editionRow.summary,
+    rating: editionRow.rating,
+    publishedAt: editionRow.published_at
   }
-  return await patchEdition(metadata)
+  return await patchEdition(roughEdition)
 }
 
 /*
-select version from catalog where draft_id='abcdefg' and published_at is null;
+select version from edition where story_id='abcdefg' and published_at is null;
 */
-exports.findUnpublishedVersion = async (draftId) => {
+exports.findUnpublishedVersion = async (storyId) => {
   console.log('publishingModel.findUnpublishedVersion')
-  const SEL_STORY = 'select version from catalog where draft_id=$1 and published_at is null'
-  const dbResult = await db.query(SEL_STORY, [draftId])
+  const SEL_STORY = 'select version from edition where story_id=$1 and published_at is null'
+  const dbResult = await db.query(SEL_STORY, [storyId])
   if (dbResult.rowCount > 0) {
     return dbResult.rows[0].version
   } else {
@@ -73,31 +70,31 @@ exports.findUnpublishedVersion = async (draftId) => {
 }
 
 /*
-select version from catalog
-where draft_id='979jafrz' and published_at is not null
+select version from edition
+where story_id='979jafrz' and published_at is not null
 order by published_at desc nulls last limit 1;
 */
-exports.getLatestPublishedVersion = async (draftId) => {
+exports.getLatestPublishedVersion = async (storyId) => {
   console.log('publishingModel.getLatestPublishedVersion')
-  const SELECT = 'select version from catalog '
-    + 'where draft_id=$1 and published_at is not null '
+  const SELECT = 'select version from edition '
+    + 'where story_id=$1 and published_at is not null '
     + 'order by published_at desc nulls last limit 1'
-  const dbResult = await db.query(SELECT, [draftId])
+  const dbResult = await db.query(SELECT, [storyId])
   if (dbResult.rowCount) {
     return dbResult.rows[0].version
   }
 }
 
 /*
-select * from catalog where draft_id='abcde'
+select * from edition where story_id='abcde'
 */
-exports.getEditions = async (draftId) => {
+exports.getEditions = async (storyId) => {
   console.log('publishingModel.getEditions')
   let result
   try {
-    const SEL_STORY = 'select * from catalog WHERE draft_id=$1'
-    const dbResult = await db.query(SEL_STORY, [draftId])
-    result = await Promise.all(dbResult.rows.map(row => mapCatalogRowToApi(row)))
+    const SEL_STORY = 'select * from edition WHERE story_id=$1'
+    const dbResult = await db.query(SEL_STORY, [storyId])
+    result = await Promise.all(dbResult.rows.map(row => mapEditionRowToApi(row)))
   } catch (err) {
     console.error(err)
   }
@@ -105,137 +102,122 @@ exports.getEditions = async (draftId) => {
 }
 
 /*
-insert into catalog
-(draft_id, version, story_key, author_id, pen_name, title, tag_line, about, first_scene_id)
-select story.id, '1', story.id, author_id, player.pen_name, title, tag_line, about, first_scene_id
-from story, player
-where story.id='979jafrz';
+insert into edition
+(edition_key, story_id, version, summary)
+values ('v7kv89xo-1', 'v7kv89xo', '1', 'serialized-json-doc')
+returning *;
 */
-exports.createNewEdition = async (draftId, version) => {
+exports.createNewEdition = async (edition_key, storyId, version, summary) => {
   console.log('publishingModel.createNewEdition')
-  const INSERT = 'INSERT INTO catalog '
-    + '(draft_id, version, story_key, author_id, pen_name, title, tag_line, about, first_scene_id) '
-    + 'select story.id, $2, story.id, author_id, player.pen_name, title, tag_line, about, first_scene_id '
-    + 'from story, player where story.id=$1 and player.id=story.author_id '
-    + 'returning *'
-  let dbResult = await db.query(INSERT, [draftId, version])
-  return await mapCatalogRowToApi(dbResult.rows[0])
+  const INSERT = 'INSERT INTO edition '
+    + '(edition_key, story_id, version, summary) '
+    + 'values ($1, $2, $3, $4) '
+    + 'returning * '
+  let dbResult = await db.query(INSERT, [edition_key, storyId, version, summary])
+  return await mapEditionRowToApi(dbResult.rows[0])
 }
 
-exports.getEdition = async (draftId, version) => {
+/*
+select * from edition where edition_key='v7kv89xo-1';
+*/
+exports.getEdition = async (editionKey) => {
   console.log('publishingModel.getEdition')
   let result
-  const SEL_STORY = 'SELECT * FROM catalog WHERE draft_id=$1 and version=$2'
-  const dbResult = await db.query(SEL_STORY, [draftId, version])
+  const SEL_STORY = 'SELECT * FROM edition WHERE edition_key=$1'
+  const dbResult = await db.query(SEL_STORY, [editionKey])
   if (dbResult.rowCount === 1) {
-    result = await mapCatalogRowToApi(dbResult.rows[0])
+    result = await mapEditionRowToApi(dbResult.rows[0])
   }
   return result
 }
 
 /*
-insert into catalog_genre (catalog_id, genre_id)
-select catalog.id, genre_codes.id from catalog, genre_codes
-where catalog.draft_id='v7kv89xo' and catalog.version='1' and genre_codes.code='mystery';
+insert into edition_genre (edition_id, genre_id)
+select edition.id, genre_codes.id from edition, genre_codes
+where edition.edition_key='v7kv89xo-1' and genre_codes.code='mystery';
 */
-const assignGenre = async (draftId, version, code) => {
+const assignGenre = async (editionKey, code) => {
   console.log('publishingModel.assignGenre')
-  const INSERT = 'insert into catalog_genre (catalog_id, genre_id) '
-    + 'select catalog.id, genre_codes.id from catalog, genre_codes '
-    + 'where catalog.draft_id=$1 and catalog.version=$2 and genre_codes.code=$3'
+  const INSERT = 'insert into edition_genre (edition_id, genre_id) '
+    + 'select edition.id, genre_codes.id from edition, genre_codes '
+    + 'where edition.edition_key=$1 and genre_codes.code=$2'
   try {
-    const dbResult = await db.query(INSERT, [draftId, version, code])
-    return await mapCatalogRowToApi(dbResult.rows[0])
+    const dbResult = await db.query(INSERT, [editionKey, code])
+    return await mapEditionRowToApi(dbResult.rows[0])
   } catch (error) {
-    // want to swallow dupes -- or only insert if not found
+    // TODO check error code for dupes, okay to swallow
     console.log(error)
   }
 }
 
 /*
-delete from catalog_genre
-where catalog_id=(select id from catalog where draft_id='v7kv89xo' and version='0-1')
-and genre_id=(select id from genre where code='mystery');
+delete from edition_genre
+where edition_id=(select id from edition where edition_key='v7kv89xo-1')
+and genre_id=(select id from genre_codes where code='mystery');
 */
-const unassignGenre = async (draftId, version, code) => {
+const unassignGenre = async (editionKey, code) => {
   console.log('publishingModel.unassignGenre')
-  const DELETE = 'delete from catalog_genre '
-    + 'where catalog_id=(select id from catalog where draft_id=$1 and version=$2) '
-    + 'and genre_id=(select id from genre_codes where code=$3)'
-  const dbResult = await db.query(DELETE, [draftId, version, code])
+  const DELETE = 'delete from edition_genre '
+    + 'where edition_id=(select id from edition where edition_key=$1) '
+    + 'and genre_id=(select id from genre_codes where code=$2)'
+  const dbResult = await db.query(DELETE, [editionKey, code])
 }
 
 /*
-update catalog
-set story_key='wumpus', pen_name='wumpus', title='wumpus', tag_line='wumpus', about='wumpus',
-rating=(select id from rating_codes where code=='Y')
-where draft_id='v7kv89xo' and version='0-1';
+update edition
+set rating=(select id from rating_codes where code='Y')
+where edition_key='v7kv89xo-1';
 */
-exports.updateEdition = async (draftId, version, metadataUpdate) => {
+exports.updateEdition = async (editionKey, editionUpdate) => {
   console.log('publishingModel.updateEdition')
   let updates = ''
-  const args = [draftId, version]
-  if (metadataUpdate.storyKey) {
-    args.push(metadataUpdate.storyKey)
-    updates = updates.concat(`, story_key=$${args.length}`)
-  }
-  if (metadataUpdate.penName) {
-    args.push(metadataUpdate.penName)
-    updates = updates.concat(`, pen_name=$${args.length}`)
-  }
-  if (metadataUpdate.title) {
-    args.push(metadataUpdate.title)
-    updates = updates.concat(`, title=$${args.length}`)
-  }
-  if (metadataUpdate.tagLine) {
-    args.push(metadataUpdate.tagLine)
-    updates = updates.concat(`, tag_line=$${args.length}`)
-  }
-  if (metadataUpdate.about) {
-    args.push(metadataUpdate.about)
-    updates = updates.concat(`, about=$${args.length}`)
-  }
-  if (metadataUpdate.rating) {
-    args.push(metadataUpdate.rating)
-    updates = updates.concat(`, rating=(select id from rating_codes where code=$${args.length})`)
-  }
-
-  // skip if no args added
-  if (args.length > 2) {
-    updates = updates.substring(2)
-    const UPDATE = `update catalog set ${updates} where draft_id=$1 and version=$2`
-    dbResult = await db.query(UPDATE, args)
+  const args = [editionKey]
+  if (editionUpdate.rating) {
+    const UPDATE = 'update edition '
+      + 'set rating=(select id from rating_codes where code=$2) '
+      + 'where edition_key=$1'
+    dbResult = await db.query(UPDATE, [editionKey, editionUpdate.rating])
   }
 
   // take care of genre changes
-  if (metadataUpdate.genre) {
-    const currentGenreList = await getStoryGenre(draftId, version)
-    if (metadataUpdate.genre.toAssign) {
-      metadataUpdate.genre.toAssign.forEach(code => {
+  if (editionUpdate.genre) {
+    const currentGenreList = await getStoryGenre(editionKey)
+    if (editionUpdate.genre.toAssign) {
+      editionUpdate.genre.toAssign.forEach(code => {
         if (!currentGenreList.includes(code)) {
           console.log('Assigning', code)
-          assignGenre(draftId, version, code)
+          assignGenre(storyId, version, code)
         }
       })
     }
-    if (metadataUpdate.genre.toUnassign) {
-      metadataUpdate.genre.toUnassign.forEach(code => {
+    if (editionUpdate.genre.toUnassign) {
+      editionUpdate.genre.toUnassign.forEach(code => {
         if (currentGenreList.includes(code)) {
           console.log('Unassigning', code)
-          unassignGenre(draftId, version, code)
+          unassignGenre(storyId, version, code)
         }
       })
     }
   }
 }
 
+const storeScene = async (editionKey, scene) => {
+  console.log('implement me')
+}
+
 /*
-update catalog set published_filename='979jafrz_0-1.json', published_at=current_timestamp
-where draft_id='979jafrz' and version='0-1';
+update edition set published_filename='979jafrz_0-1.json', published_at=current_timestamp
+where story_id='979jafrz' and version='0-1';
 */
-exports.finishPublishing = async (draftId, version, filename) => {
+exports.finishPublishing = async (editionKey, fullStory) => {
   console.log('publishingModel.removeGenre')
-  const UPDATE = 'update catalog set published_filename=$3, published_at=current_timestamp '
-    + 'where draft_id=$1 and version=$2'
-  const dbResult = await db.query(UPDATE, [draftId, version, filename])
+  let edition
+  const UPDATE = 'update edition set summary=$2, published_at=current_timestamp '
+    + 'where editor_key=$1 '
+    + 'returning * '
+  const dbResult = await db.query(UPDATE, [editionKey, fullStory.summary])
+  fullStory.scenes.values.forEach(scene => storeScene(editionKey, scene))
+  if (dbResult.rowCount === 1) {
+    edition = await mapEditionRowToApi(dbResult.rows[0])
+  }
 }
