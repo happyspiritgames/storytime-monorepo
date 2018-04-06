@@ -137,14 +137,11 @@ exports.publish = async (req, res) => {
       summary['about'] = proofMetadata.about
     }
 
-    // store story in S3
+    // save story
     const key = proofMetadata.storyKey ? proofMetadata.storyKey : draftId
     const filename = `${key}_${version}.json`
     const serializedStory = JSON.stringify(fullStory)
-    saveStory(filename, serializedStory)
-
-    // set published_at timestamp
-    await publishingModel.recordPublishingEvent(draftId, version, filename)
+    await publishingModel.recordPublishingEvent(draftId, version, serializedStory)
 
     // return updated metadata
     proofMetadata = await publishingModel.getProof(draftId, version)

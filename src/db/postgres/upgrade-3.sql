@@ -2,6 +2,8 @@
 
 drop table if exists catalog_genre;
 drop table if exists catalog;
+drop table if exists edition_genre;
+drop table if exists edition;
 drop view if exists player_status_codes;
 drop view if exists genre_codes;
 drop view if exists rating_codes;
@@ -79,7 +81,7 @@ create table catalog (
   about text,
   rating integer references system_codes (id),
   first_scene_id varchar(8),
-  published_filename varchar(100),
+  full_story text,
   published_at timestamp
 );
 
@@ -88,3 +90,26 @@ create table catalog_genre (
   genre_id integer not null references system_codes (id),
   primary key (catalog_id, genre_id)
 );
+
+create table edition (
+  id serial primary key,
+  story_id varchar(8) not null references story (id),
+  version varchar(8) not null,
+  edition_key varchar(20) not null unique,
+  summary text,
+  rating integer references system_codes (id)
+  published_at timestamp
+);
+
+create table edition_genre (
+  edition_id integer not null references edition (id),
+  genre_id integer not null references system_codes (id),
+  primary key (edition_id, genre_id)
+);
+
+create table edition_scene (
+  id serial primary key,
+  edition_id integer not null references edition (id),
+  scene_id varchar(8),
+  scene text
+)
