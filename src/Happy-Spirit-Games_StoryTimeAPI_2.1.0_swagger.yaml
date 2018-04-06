@@ -690,7 +690,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/editions:
+  /draft-stories/{storyId}/editions:
     get:
       tags:
         - author
@@ -698,7 +698,7 @@ paths:
       description: Retrieves list of editions of the story. Each time you publish, you are creating and releasing a new edition of the given story. Each new edition is expected to be different from the previous, though not entirely. Improvements, corrections, extentions of the original work are to be expected. It should be better in some way. Otherwise, do not re-publish.
       operationId: getEditions
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
           description: the story ID of the source of the editions
           required: true
@@ -720,7 +720,7 @@ paths:
       description: This starts the publishing process by creating an unpublished edition of the draft story.
       operationId: createEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
           description: ID of the story to publish
           required: true
@@ -741,7 +741,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/editions/{version}:
+  /draft-stories/{storyId}/editions/{version}:
     get:
       tags:
         - author
@@ -749,7 +749,7 @@ paths:
       description: Retrieves information about the edition.
       operationId: getEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
           description: ID of the edition's source story 
           required: true
@@ -781,7 +781,7 @@ paths:
       description: Publishes the edition of story only if it is still unpublished. This action makes a read-only copy of all story parts. Information about the story (i.e., metadata such as its rating) can still be modified after publishing. To publish changes to the story's content, create a new edition and go through the publishing cycle again.
       operationId: publish
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
           description: ID of the edition's source story
           required: true
@@ -815,7 +815,7 @@ paths:
       description: Updates information about the story edition. Includes only information that is not part of the story itself, such as the rating (age-appropriateness), genre, whether the story requires review, reader popularity, and so on.
       operationId: updateEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
           description: ID of the edition's source story
           required: true
@@ -947,11 +947,11 @@ components:
     Edition:
       type: object
       properties:
-        draftId:
+        editionKey:
+          type: string
+        storyId:
           type: string
         version:
-          type: string
-        storyKey:
           type: string
         summary:
           $ref: '#/components/schemas/StorySummary'

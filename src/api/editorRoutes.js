@@ -39,10 +39,10 @@ router.route('/:storyId/scenes/:sceneId/signpost')
 .put(draftController.updateSignpost);
 
 // publishing methods
-router.route('/:draftId/editions')
+router.route('/:storyId/editions')
 .get(publishingController.getEditions)
 .post(publishingController.createEdition)
-router.route('/:draftId/editions/:version')
+router.route('/:storyId/editions/:version')
 .get(publishingController.getEdition)
 .put(publishingController.updateEdition)
 .post(publishingController.publish)
