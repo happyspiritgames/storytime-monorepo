@@ -39,12 +39,12 @@ router.route('/:storyId/scenes/:sceneId/signpost')
 .put(draftController.updateSignpost);
 
 // publishing methods
-router.route('/:draftId/proofs')
-.get(publishingController.getProofs)
-.post(publishingController.createProof)
-router.route('/:draftId/proofs/:version')
-.get(publishingController.getProofMetadata)
-.put(publishingController.updateProofMetadata)
+router.route('/:draftId/editions')
+.get(publishingController.getEditions)
+.post(publishingController.createEdition)
+router.route('/:draftId/editions/:version')
+.get(publishingController.getEdition)
+.put(publishingController.updateEdition)
 .post(publishingController.publish)
 
 module.exports = router;

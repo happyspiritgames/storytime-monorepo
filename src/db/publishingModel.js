@@ -4,7 +4,7 @@ const db = require('./postgres')
 select code from rating_codes where id=19
 */
 const getStoryRating = async (ratingId) => {
-  console.log('publishingModel.getRatingCode')
+  console.log('publishingModel.getStoryRating')
   const SELECT = 'select code from rating_codes where id=$1'
   const dbResult = await db.query(SELECT, [ratingId])
   return dbResult.rows[0].code
@@ -29,7 +29,8 @@ const getStoryGenre = async (draftId, version) => {
   }
 }
 
-const patchProofRecord = async (metadata) => {
+const patchEdition = async (metadata) => {
+  console.log('publishingModel.patchEdition')
   if (metadata.rating) {
     const ratingCode = await getStoryRating(metadata.rating)
     metadata['rating'] = ratingCode
@@ -54,7 +55,7 @@ const mapCatalogRowToApi = async (catalogRow) => {
     firstSceneId: catalogRow.first_scene_id,
     publishedAt: catalogRow.published_at
   }
-  return await patchProofRecord(metadata)
+  return await patchEdition(metadata)
 }
 
 /*
@@ -90,8 +91,8 @@ exports.getLatestPublishedVersion = async (draftId) => {
 /*
 select * from catalog where draft_id='abcde'
 */
-exports.getProofs = async (draftId) => {
-  console.log('publishingModel.getProofs')
+exports.getEditions = async (draftId) => {
+  console.log('publishingModel.getEditions')
   let result
   try {
     const SEL_STORY = 'select * from catalog WHERE draft_id=$1'
@@ -110,8 +111,8 @@ select story.id, '1', story.id, author_id, player.pen_name, title, tag_line, abo
 from story, player
 where story.id='979jafrz';
 */
-exports.createProof = async (draftId, version) => {
-  console.log('publishingModel.createProof')
+exports.createNewEdition = async (draftId, version) => {
+  console.log('publishingModel.createNewEdition')
   const INSERT = 'INSERT INTO catalog '
     + '(draft_id, version, story_key, author_id, pen_name, title, tag_line, about, first_scene_id) '
     + 'select story.id, $2, story.id, author_id, player.pen_name, title, tag_line, about, first_scene_id '
@@ -121,8 +122,8 @@ exports.createProof = async (draftId, version) => {
   return await mapCatalogRowToApi(dbResult.rows[0])
 }
 
-exports.getProof = async (draftId, version) => {
-  console.log('publishingModel.getProof')
+exports.getEdition = async (draftId, version) => {
+  console.log('publishingModel.getEdition')
   let result
   const SEL_STORY = 'SELECT * FROM catalog WHERE draft_id=$1 and version=$2'
   const dbResult = await db.query(SEL_STORY, [draftId, version])
@@ -144,6 +145,7 @@ const assignGenre = async (draftId, version, code) => {
     + 'where catalog.draft_id=$1 and catalog.version=$2 and genre_codes.code=$3'
   try {
     const dbResult = await db.query(INSERT, [draftId, version, code])
+    return await mapCatalogRowToApi(dbResult.rows[0])
   } catch (error) {
     // want to swallow dupes -- or only insert if not found
     console.log(error)
@@ -169,8 +171,8 @@ set story_key='wumpus', pen_name='wumpus', title='wumpus', tag_line='wumpus', ab
 rating=(select id from rating_codes where code=='Y')
 where draft_id='v7kv89xo' and version='0-1';
 */
-exports.updateProof = async (draftId, version, metadataUpdate) => {
-  console.log('publishingModel.updateProof')
+exports.updateEdition = async (draftId, version, metadataUpdate) => {
+  console.log('publishingModel.updateEdition')
   let updates = ''
   const args = [draftId, version]
   if (metadataUpdate.storyKey) {
@@ -231,7 +233,7 @@ exports.updateProof = async (draftId, version, metadataUpdate) => {
 update catalog set published_filename='979jafrz_0-1.json', published_at=current_timestamp
 where draft_id='979jafrz' and version='0-1';
 */
-exports.recordPublishingEvent = async (draftId, version, filename) => {
+exports.finishPublishing = async (draftId, version, filename) => {
   console.log('publishingModel.removeGenre')
   const UPDATE = 'update catalog set published_filename=$3, published_at=current_timestamp '
     + 'where draft_id=$1 and version=$2'

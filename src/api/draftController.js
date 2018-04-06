@@ -1,4 +1,4 @@
-const { verifyStoryAuthorization, assembleFullStory } = require('./draftUtil')
+const { hasStoryAuthorAccess, assembleFullStory, takeNap } = require('./draftUtil')
 const { internalError, errorMessage, theEnd } = require('./errors')
 const draftModel = require('../db/draftModel')
 
@@ -41,7 +41,7 @@ exports.getStorySummary = async (req, res) => {
   const { playerId } = req.user
   const { storyId } = req.params
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return;
     }
     const summary = await draftModel.getStory(storyId)
@@ -58,7 +58,7 @@ exports.updateStorySummary = async (req, res) => {
   const { storyId } = req.params
   const { title, tagLine, about, firstSceneId } = req.body
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     await draftModel.updateStory(storyId, title, tagLine, about, firstSceneId)
@@ -75,7 +75,7 @@ exports.getFullStory = async (req, res) => {
   const { playerId } = req.user
   const { storyId } = req.params
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     const fullStory = await assembleFullStory(storyId)
@@ -92,7 +92,7 @@ exports.beginNewScene = async (req, res) => {
   const { title, prose, endPrompt } = req.body
   console.log('draftController.beginNewScene', storyId, title)
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     const sceneId = await draftModel.createScene(storyId, title, prose, endPrompt)
@@ -109,7 +109,7 @@ exports.getScene = async (req, res) => {
   const { storyId, sceneId } = req.params
   console.log('draftController.getScene', storyId, sceneId)
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     const scene = await draftModel.getScene(storyId, sceneId)
@@ -130,7 +130,7 @@ exports.updateScene = async (req, res) => {
   const { storyId, sceneId } = req.params
   const { title, prose, endPrompt } = req.body
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     await draftModel.updateScene(storyId, sceneId, title, prose, endPrompt)
@@ -147,7 +147,7 @@ exports.getSignpost = async (req, res) => {
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     const signpost = await draftModel.getSignpost(sceneId)
@@ -161,17 +161,13 @@ exports.getSignpost = async (req, res) => {
   }
 }
 
-const takeNap = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 exports.updateSignpost = async (req, res) => {
   console.log('draftController.updateSignpost')
   const { playerId } = req.user
   const { storyId, sceneId } = req.params
   const { toUpdate, toDelete } = req.body
   try {
-    if (!verifyStoryAuthorization(playerId, storyId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
     if (toDelete) {
