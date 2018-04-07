@@ -741,7 +741,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{storyId}/editions/{version}:
+  /draft-stories/{storyId}/editions/{editionKey}:
     get:
       tags:
         - author
@@ -755,9 +755,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version of the edition
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
@@ -787,9 +787,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version of the edition
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
@@ -821,9 +821,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version of the edition
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
@@ -1076,9 +1076,6 @@ components:
           type: string
         firstSceneId:
           type: string
-        publishedAt:
-          type: string
-          format: date-time
   securitySchemes:
     BearerAuth:
       type: http

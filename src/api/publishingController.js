@@ -59,13 +59,13 @@ exports.createEdition = async (req, res) => {
 
 exports.getEdition = async (req, res) => {
   const { playerId } = req.user
-  const { storyId, version } = req.params
-  console.log('publishingController.getEdition', storyId, version)
+  const { storyId, editionKey } = req.params
+  console.log('publishingController.getEdition', storyId, editionKey)
   try {
     if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    const edition = await publishingModel.getEdition(storyId, version)
+    const edition = await publishingModel.getEdition(editionKey)
     if (!edition) {
       res.status(404).send()
       return
@@ -79,16 +79,16 @@ exports.getEdition = async (req, res) => {
 
 exports.updateEdition = async (req, res) => {
   const { playerId } = req.user
-  const { storyId, version } = req.params
+  const { storyId, editionKey } = req.params
   const editionUpdate = req.body
-  console.log('publishingController.updateEdition', storyId, version, editionUpdate)
+  console.log('publishingController.updateEdition', storyId, editionKey, editionUpdate)
   try {
     if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    await publishingModel.updateEdition(storyId, version, editionUpdate)
+    await publishingModel.updateEdition(editionKey, editionUpdate)
     await takeNap(200)  // poor man's way to avoid async problems
-    const updatedEdition = await publishingModel.getEdition(storyId, version)
+    const updatedEdition = await publishingModel.getEdition(editionKey)
     res.status(202).json(updatedEdition)
   } catch (e) {
     console.error('Problem updating edition', e)
@@ -98,14 +98,14 @@ exports.updateEdition = async (req, res) => {
 
 exports.publish = async (req, res) => {
   const { playerId } = req.user
-  const { storyId, version } = req.params
-  console.log('publishingController.publish', storyId, version)
+  const { storyId, editionKey } = req.params
+  console.log('publishingController.publish', storyId, editionKey)
   const start = new Date()
   try {
     if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    let edition = await publishingModel.getEdition(storyId, version)
+    let edition = await publishingModel.getEdition(editionKey)
 
     // drop out if already published
     if (edition.publishedAt) {
@@ -118,8 +118,7 @@ exports.publish = async (req, res) => {
     // don't optimize yet; gather some timing metrics for now
 
     // build and save story JSON
-    const fullStory = await assembleFullStory(storyId)
-    await publishingModel.finishPublishing(storyId, version, fullStory)
+    await publishingModel.finishPublishing(editionKey)
     edition = await publishingModel.getEdition(storyId, version)
     res.status(201).json(edition)
     const elapsed = new Date().getTime() - start.getTime()

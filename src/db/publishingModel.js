@@ -5,8 +5,8 @@ select code from rating_codes where id=19
 */
 const getStoryRating = async (ratingId) => {
   console.log('publishingModel.getStoryRating')
-  const SELECT = 'select code from rating_codes where id=$1'
-  const dbResult = await db.query(SELECT, [ratingId])
+  const QUERY = 'select code from rating_codes where id=$1'
+  const dbResult = await db.query(QUERY, [ratingId])
   return dbResult.rows[0].code
 }
 
@@ -17,10 +17,10 @@ and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.i
  */
 const getStoryGenre = async (editionKey) => {
   console.log('publishingModel.getStoryGenre')
-  const SELECT = 'select genre_codes.code as code from genre_codes, edition_genre, edition '
+  const QUERY = 'select genre_codes.code as code from genre_codes, edition_genre, edition '
     + 'where edition.edition_key=$1 '
     + 'and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.id'
-  const dbResult = await db.query(SELECT, [editionKey])
+  const dbResult = await db.query(QUERY, [editionKey])
   if (dbResult.rowCount) {
     return dbResult.rows.map(row => row.code)
   } else {
@@ -60,8 +60,8 @@ select version from edition where story_id='abcdefg' and published_at is null;
 */
 exports.findUnpublishedVersion = async (storyId) => {
   console.log('publishingModel.findUnpublishedVersion')
-  const SEL_STORY = 'select version from edition where story_id=$1 and published_at is null'
-  const dbResult = await db.query(SEL_STORY, [storyId])
+  const QUERY = 'select version from edition where story_id=$1 and published_at is null'
+  const dbResult = await db.query(QUERY, [storyId])
   if (dbResult.rowCount > 0) {
     return dbResult.rows[0].version
   } else {
@@ -76,10 +76,10 @@ order by published_at desc nulls last limit 1;
 */
 exports.getLatestPublishedVersion = async (storyId) => {
   console.log('publishingModel.getLatestPublishedVersion')
-  const SELECT = 'select version from edition '
+  const QUERY = 'select version from edition '
     + 'where story_id=$1 and published_at is not null '
     + 'order by published_at desc nulls last limit 1'
-  const dbResult = await db.query(SELECT, [storyId])
+  const dbResult = await db.query(QUERY, [storyId])
   if (dbResult.rowCount) {
     return dbResult.rows[0].version
   }
@@ -92,8 +92,8 @@ exports.getEditions = async (storyId) => {
   console.log('publishingModel.getEditions')
   let result
   try {
-    const SEL_STORY = 'select * from edition WHERE story_id=$1'
-    const dbResult = await db.query(SEL_STORY, [storyId])
+    const QUERY = 'select * from edition where story_id=$1'
+    const dbResult = await db.query(QUERY, [storyId])
     result = await Promise.all(dbResult.rows.map(row => mapEditionRowToApi(row)))
   } catch (err) {
     console.error(err)
@@ -102,18 +102,30 @@ exports.getEditions = async (storyId) => {
 }
 
 /*
+select story.id, title, pen_name, tag_line, about, first_scene_id from story, player
+where story.id='v7kv89xo' and story.author_id=player.id
+
 insert into edition
 (edition_key, story_id, version, summary)
 values ('v7kv89xo-1', 'v7kv89xo', '1', 'serialized-json-doc')
 returning *;
 */
-exports.createNewEdition = async (edition_key, storyId, version, summary) => {
+exports.createNewEdition = async (storyId, version) => {
   console.log('publishingModel.createNewEdition')
-  const INSERT = 'INSERT INTO edition '
+
+  // summary
+  const SELECT_SUMMARY = 'select story.id, title, pen_name, tag_line, about, first_scene_id '
+    + 'from story, player '
+    + 'where story.id=$1 and story.author_id=player.id'
+  let dbResult = await db.query(SELECT_SUMMARY, [storyId])
+  const summary = JSON.stringify(dbResult.rows[0])
+
+  const editionKey = `${storyId}-${nextVersion.toString()}`
+  const INSERT_EDITION = 'insert into edition '
     + '(edition_key, story_id, version, summary) '
     + 'values ($1, $2, $3, $4) '
     + 'returning * '
-  let dbResult = await db.query(INSERT, [edition_key, storyId, version, summary])
+  let dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary])
   return await mapEditionRowToApi(dbResult.rows[0])
 }
 
@@ -123,8 +135,8 @@ select * from edition where edition_key='v7kv89xo-1';
 exports.getEdition = async (editionKey) => {
   console.log('publishingModel.getEdition')
   let result
-  const SEL_STORY = 'SELECT * FROM edition WHERE edition_key=$1'
-  const dbResult = await db.query(SEL_STORY, [editionKey])
+  const QUERY = 'SELECT * FROM edition WHERE edition_key=$1'
+  const dbResult = await db.query(QUERY, [editionKey])
   if (dbResult.rowCount === 1) {
     result = await mapEditionRowToApi(dbResult.rows[0])
   }
@@ -138,11 +150,11 @@ where edition.edition_key='v7kv89xo-1' and genre_codes.code='mystery';
 */
 const assignGenre = async (editionKey, code) => {
   console.log('publishingModel.assignGenre')
-  const INSERT = 'insert into edition_genre (edition_id, genre_id) '
+  const QUERY = 'insert into edition_genre (edition_id, genre_id) '
     + 'select edition.id, genre_codes.id from edition, genre_codes '
     + 'where edition.edition_key=$1 and genre_codes.code=$2'
   try {
-    const dbResult = await db.query(INSERT, [editionKey, code])
+    const dbResult = await db.query(QUERY, [editionKey, code])
     return await mapEditionRowToApi(dbResult.rows[0])
   } catch (error) {
     // TODO check error code for dupes, okay to swallow
@@ -157,10 +169,10 @@ and genre_id=(select id from genre_codes where code='mystery');
 */
 const unassignGenre = async (editionKey, code) => {
   console.log('publishingModel.unassignGenre')
-  const DELETE = 'delete from edition_genre '
+  const QUERY = 'delete from edition_genre '
     + 'where edition_id=(select id from edition where edition_key=$1) '
     + 'and genre_id=(select id from genre_codes where code=$2)'
-  const dbResult = await db.query(DELETE, [editionKey, code])
+  const dbResult = await db.query(QUERY, [editionKey, code])
 }
 
 /*
@@ -173,10 +185,10 @@ exports.updateEdition = async (editionKey, editionUpdate) => {
   let updates = ''
   const args = [editionKey]
   if (editionUpdate.rating) {
-    const UPDATE = 'update edition '
+    const QUERY = 'update edition '
       + 'set rating=(select id from rating_codes where code=$2) '
       + 'where edition_key=$1'
-    dbResult = await db.query(UPDATE, [editionKey, editionUpdate.rating])
+    dbResult = await db.query(QUERY, [editionKey, editionUpdate.rating])
   }
 
   // take care of genre changes
@@ -201,23 +213,90 @@ exports.updateEdition = async (editionKey, editionUpdate) => {
   }
 }
 
-const storeScene = async (editionKey, scene) => {
+/*
+select scene.id as scene_id, title, prose, end_of_scene_prompt
+from scene, edition
+where edition_key='v7kv89xo-1' and edition.story_id=scene.story_id;
+
+select destination_id, teaser
+from signpost
+where scene_id='6155tgph'
+order by sign_order;
+
+insert into edition_scene (edition_id, scene_id, scene)
+select edition.id, '6155tgph', 'serialized scene' from edition
+where edition.edition_key='v7kv89xo-1';
+*/
+exports.storeScenes = async (editionKey) => {
   console.log('implement me')
+
+  // gather scenes of story
+  let sceneRows
+  const SELECT_SCENES = 'select scene.id as scene_id, title, prose, end_of_scene_prompt '
+    + 'from scene, edition '
+    + 'where edition_key=$1 and edition.story_id=scene.story_id'
+  const dbResult = await db.query(SELECT_SCENES, [editionKey])
+  const sceneRows = dbResult.rows
+
+  // assemble scene to save, including signpost if any
+  let sceneToSave
+  sceneRows.forEach(sceneRow => {
+    sceneToSave = {
+      sceneId: sceneRow.scene_id,
+      title: sceneRow.title,
+      prose: sceneRow.prose,
+      endPrompt: sceneRow.end_of_scene_prompt
+    }
+
+    let signpostRows
+    const SELECT_SIGNS = 'select destination_id, teaser '
+      + 'from signpost '
+      + 'where scene_id=$1 '
+      + 'order by sign_order'
+    const dbResult = await db.query(SELECT_SIGNS, [sceneRow.scene_id])
+    const signpostRows = dbResult.rows
+    let signpost
+    if (signpostRows.length) {
+      signpost = signpostRows.map(sign => ({
+        sceneId: sign.destination_id,
+        teaser: sign.teaser
+      }))
+    }
+    if (signpost) {
+      sceneToSave.signpost = signpost
+    }
+
+    const serializedScene = JSON.stringify(sceneToSave)
+    const INSERT_SCENE = 'insert into edition_scene (edition_id, scene_id, scene) '
+      + 'select edition.id, $2, $3 from edition '
+      + 'where edition.edition_key=$1'
+    const dbResult = await db.query(QUERY, [editionKey, sceneRow.scene_id, serializedScene])
+  })
+
+  return true
 }
 
 /*
-update edition set published_filename='979jafrz_0-1.json', published_at=current_timestamp
-where story_id='979jafrz' and version='0-1';
+update edition set published_at=current_timestamp
+where edition_key='v7kv89xo-1'
+returning *;
 */
-exports.finishPublishing = async (editionKey, fullStory) => {
-  console.log('publishingModel.removeGenre')
+exports.finishPublishing = async (editionKey) => {
+  console.log('publishingModel.finishPublishing')
+
+  const savedScenes = this.storeScenes(editionKey)
+  if (!savedScenes) {
+    // TODO throw something if there's a problem
+    return
+  }
+
   let edition
-  const UPDATE = 'update edition set summary=$2, published_at=current_timestamp '
-    + 'where editor_key=$1 '
+  const QUERY = 'update edition set published_at=current_timestamp '
+    + 'where edition_key=$1 '
     + 'returning * '
-  const dbResult = await db.query(UPDATE, [editionKey, fullStory.summary])
-  fullStory.scenes.values.forEach(scene => storeScene(editionKey, scene))
+  const dbResult = await db.query(QUERY, [editionKey])
   if (dbResult.rowCount === 1) {
     edition = await mapEditionRowToApi(dbResult.rows[0])
   }
+  return edition
 }
