@@ -125,7 +125,7 @@ exports.createNewEdition = async (storyId, version) => {
     + '(edition_key, story_id, version, summary) '
     + 'values ($1, $2, $3, $4) '
     + 'returning * '
-  let dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary])
+  dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary])
   return await mapEditionRowToApi(dbResult.rows[0])
 }
 
@@ -213,6 +213,26 @@ exports.updateEdition = async (editionKey, editionUpdate) => {
   }
 }
 
+const attachSignpostToScene = async (sceneToSave) => {
+  const SELECT_SIGNS = 'select destination_id, teaser '
+    + 'from signpost '
+    + 'where scene_id=$1 '
+    + 'order by sign_order'
+  const dbResult = await db.query(SELECT_SIGNS, [sceneToSave.sceneId])
+  const signpostRows = dbResult.rows
+  let signpost
+  if (signpostRows.length) {
+    signpost = signpostRows.map(sign => ({
+      sceneId: sign.destination_id,
+      teaser: sign.teaser
+    }))
+  }
+  if (signpost) {
+    sceneToSave.signpost = signpost
+  }
+  return sceneToSave
+}
+
 /*
 select scene.id as scene_id, title, prose, end_of_scene_prompt
 from scene, edition
@@ -231,48 +251,36 @@ exports.storeScenes = async (editionKey) => {
   console.log('implement me')
 
   // gather scenes of story
-  let sceneRows
   const SELECT_SCENES = 'select scene.id as scene_id, title, prose, end_of_scene_prompt '
     + 'from scene, edition '
     + 'where edition_key=$1 and edition.story_id=scene.story_id'
-  const dbResult = await db.query(SELECT_SCENES, [editionKey])
+  let dbResult = await db.query(SELECT_SCENES, [editionKey])
   const sceneRows = dbResult.rows
 
   // assemble scene to save, including signpost if any
   let sceneToSave
-  sceneRows.forEach(sceneRow => {
-    sceneToSave = {
-      sceneId: sceneRow.scene_id,
-      title: sceneRow.title,
-      prose: sceneRow.prose,
-      endPrompt: sceneRow.end_of_scene_prompt
-    }
+  await Promise.all(
+    sceneRows.forEach(async sceneRow => {
+      sceneToSave = {
+        sceneId: sceneRow.scene_id,
+        title: sceneRow.title,
+        prose: sceneRow.prose,
+        endPrompt: sceneRow.end_of_scene_prompt
+      }
 
-    let signpostRows
-    const SELECT_SIGNS = 'select destination_id, teaser '
-      + 'from signpost '
-      + 'where scene_id=$1 '
-      + 'order by sign_order'
-    const dbResult = await db.query(SELECT_SIGNS, [sceneRow.scene_id])
-    const signpostRows = dbResult.rows
-    let signpost
-    if (signpostRows.length) {
-      signpost = signpostRows.map(sign => ({
-        sceneId: sign.destination_id,
-        teaser: sign.teaser
-      }))
-    }
-    if (signpost) {
-      sceneToSave.signpost = signpost
-    }
+      console.log('about to attach signpost')
+      await attachSignpostToScene(sceneToSave)
+      console.log('attached signpost')
 
-    const serializedScene = JSON.stringify(sceneToSave)
-    const INSERT_SCENE = 'insert into edition_scene (edition_id, scene_id, scene) '
+      console.log('about to save scene')
+      const serializedScene = JSON.stringify(sceneToSave)
+      const INSERT_SCENE = 'insert into edition_scene (edition_id, scene_id, scene) '
       + 'select edition.id, $2, $3 from edition '
       + 'where edition.edition_key=$1'
-    const dbResult = await db.query(QUERY, [editionKey, sceneRow.scene_id, serializedScene])
-  })
-
+      dbResult = await db.query(QUERY, [editionKey, sceneRow.scene_id, serializedScene])
+      console.log('saved scene')
+    })
+  )
   return true
 }
 
@@ -300,3 +308,11 @@ exports.finishPublishing = async (editionKey) => {
   }
   return edition
 }
+
+// TODO make it possible to redo store scenes --
+//   say the author proofs, finds mistakes and makes corrections.
+//   Want a way to throw out the previous proof and regenerate summary and scenes.
+
+// TODO make it possible to throw out old editions -- take them out of circulation, so to speak
+//   maybe write to file and store in S3 as loadable archive
+//   premium feature
