@@ -35,5 +35,6 @@ exports.assembleFullStory = async (draftId) => {
 
 // TODO might be horrible; just a work-around until I can troubleshoot async problems
 exports.takeNap = (ms) => {
+  console.log('sleeping for', ms, 'ms')
   return new Promise(resolve => setTimeout(resolve, ms))
 }

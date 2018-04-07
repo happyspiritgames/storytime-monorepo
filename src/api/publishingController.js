@@ -31,6 +31,7 @@ exports.createEdition = async (req, res) => {
   const { playerId } = req.user
   const { storyId } = req.params
   console.log('publishingController.createEdition', storyId)
+  const start = new Date()
   try {
     if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
@@ -50,7 +51,13 @@ exports.createEdition = async (req, res) => {
       nextVersion++
     }
     const edition = await publishingModel.createNewEdition(storyId, nextVersion.toString())
+
+    // save snapshot of scenes for proofing
+    await publishingModel.storeScenes(edition.editionKey)
+
     res.status(201).json(edition)
+    const elapsed = new Date().getTime() - start.getTime()
+    console.log('created in ', elapsed, 'ms', edition.editionKey)
   } catch (e) {
     console.error('Problem creating new edition', e)
     res.status(500).json(internalError)
@@ -87,7 +94,6 @@ exports.updateEdition = async (req, res) => {
       return
     }
     await publishingModel.updateEdition(editionKey, editionUpdate)
-    await takeNap(200)  // poor man's way to avoid async problems
     const updatedEdition = await publishingModel.getEdition(editionKey)
     res.status(202).json(updatedEdition)
   } catch (e) {
@@ -121,7 +127,7 @@ exports.publish = async (req, res) => {
     edition = await publishingModel.finishPublishing(editionKey)
     res.status(201).json(edition)
     const elapsed = new Date().getTime() - start.getTime()
-    console.log('published in ', elapsed, 'ms', storyId, version)
+    console.log('published in ', elapsed, 'ms', editionKey)
   } catch (e) {
     console.error('Problem publishing', e)
     res.status(500).json(internalError)

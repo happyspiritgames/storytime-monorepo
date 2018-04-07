@@ -38,11 +38,17 @@ const patchEdition = async (editionToPatch) => {
     editionToPatch['rating'] = ratingCode
   }
   // merge in associated genres
-  const genre = await getStoryGenre(editionToPatch.storyId, editionToPatch.version)
+  const genre = await getStoryGenre(editionToPatch.editionKey)
+  console.log('patching genre with', genre)
   editionToPatch['genre'] = genre
   return editionToPatch
 }
 
+/**
+ * Turns edition row from database into form expected by StoryTime authoring API.
+ * 
+ * @param {*} editionRow
+ */
 const mapEditionRowToApi = async (editionRow) => {
   const roughEdition = {
     editionKey: editionRow.edition_key,
@@ -120,7 +126,7 @@ exports.createNewEdition = async (storyId, version) => {
   let dbResult = await db.query(SELECT_SUMMARY, [storyId])
   const summary = JSON.stringify(dbResult.rows[0])
 
-  const editionKey = `${storyId}-${nextVersion.toString()}`
+  const editionKey = `${storyId}-${version}`
   const INSERT_EDITION = 'insert into edition '
     + '(edition_key, story_id, version, summary) '
     + 'values ($1, $2, $3, $4) '
@@ -155,7 +161,6 @@ const assignGenre = async (editionKey, code) => {
     + 'where edition.edition_key=$1 and genre_codes.code=$2'
   try {
     const dbResult = await db.query(QUERY, [editionKey, code])
-    return await mapEditionRowToApi(dbResult.rows[0])
   } catch (error) {
     // TODO check error code for dupes, okay to swallow
     console.log(error)
@@ -195,25 +200,46 @@ exports.updateEdition = async (editionKey, editionUpdate) => {
   if (editionUpdate.genre) {
     const currentGenreList = await getStoryGenre(editionKey)
     if (editionUpdate.genre.toAssign) {
-      editionUpdate.genre.toAssign.forEach(code => {
+      editionUpdate.genre.toAssign.forEach(async code => {
         if (!currentGenreList.includes(code)) {
           console.log('Assigning', code)
-          assignGenre(storyId, version, code)
+          await assignGenre(editionKey, code)
         }
       })
     }
     if (editionUpdate.genre.toUnassign) {
-      editionUpdate.genre.toUnassign.forEach(code => {
+      editionUpdate.genre.toUnassign.forEach(async code => {
         if (currentGenreList.includes(code)) {
           console.log('Unassigning', code)
-          unassignGenre(storyId, version, code)
+          await unassignGenre(editionKey, code)
         }
       })
     }
   }
 }
 
-const attachSignpostToScene = async (sceneToSave) => {
+/*
+insert into edition_scene (edition_id, scene_id, scene)
+select edition.id, '6155tgph', 'serialized scene' from edition
+where edition.edition_key='v7kv89xo-1';
+*/
+const saveScene = async (editionKey, sceneToSave) => {
+  console.log('publishingModel.saveScene', sceneToSave)
+  const serializedScene = JSON.stringify(sceneToSave)
+  const INSERT_SCENE = 'insert into edition_scene (edition_id, scene_id, scene) '
+    + 'select edition.id, $2, $3 from edition '
+    + 'where edition.edition_key=$1'
+  dbResult = await db.query(INSERT_SCENE, [editionKey, sceneToSave.sceneId, serializedScene])
+}
+
+/*
+select destination_id, teaser
+from signpost
+where scene_id='6155tgph'
+order by sign_order;
+*/
+const attachSignpostToScene = async (sceneToSave, saveCallback) => {
+  console.log('publishingModel.attachSignpostToScene', sceneToSave.sceneId)
   const SELECT_SIGNS = 'select destination_id, teaser '
     + 'from signpost '
     + 'where scene_id=$1 '
@@ -230,25 +256,16 @@ const attachSignpostToScene = async (sceneToSave) => {
   if (signpost) {
     sceneToSave.signpost = signpost
   }
-  return sceneToSave
+  saveCallback(sceneToSave)
 }
 
 /*
 select scene.id as scene_id, title, prose, end_of_scene_prompt
 from scene, edition
 where edition_key='v7kv89xo-1' and edition.story_id=scene.story_id;
-
-select destination_id, teaser
-from signpost
-where scene_id='6155tgph'
-order by sign_order;
-
-insert into edition_scene (edition_id, scene_id, scene)
-select edition.id, '6155tgph', 'serialized scene' from edition
-where edition.edition_key='v7kv89xo-1';
 */
 exports.storeScenes = async (editionKey) => {
-  console.log('implement me')
+  console.log('publishingModel.storeScenes')
 
   // gather scenes of story
   const SELECT_SCENES = 'select scene.id as scene_id, title, prose, end_of_scene_prompt '
@@ -259,28 +276,15 @@ exports.storeScenes = async (editionKey) => {
 
   // assemble scene to save, including signpost if any
   let sceneToSave
-  await Promise.all(
-    sceneRows.forEach(async sceneRow => {
-      sceneToSave = {
-        sceneId: sceneRow.scene_id,
-        title: sceneRow.title,
-        prose: sceneRow.prose,
-        endPrompt: sceneRow.end_of_scene_prompt
-      }
-
-      console.log('about to attach signpost')
-      await attachSignpostToScene(sceneToSave)
-      console.log('attached signpost')
-
-      console.log('about to save scene')
-      const serializedScene = JSON.stringify(sceneToSave)
-      const INSERT_SCENE = 'insert into edition_scene (edition_id, scene_id, scene) '
-      + 'select edition.id, $2, $3 from edition '
-      + 'where edition.edition_key=$1'
-      dbResult = await db.query(QUERY, [editionKey, sceneRow.scene_id, serializedScene])
-      console.log('saved scene')
-    })
-  )
+  sceneRows.forEach(async sceneRow => {
+    sceneToSave = {
+      sceneId: sceneRow.scene_id,
+      title: sceneRow.title,
+      prose: sceneRow.prose,
+      endPrompt: sceneRow.end_of_scene_prompt
+    }
+    attachSignpostToScene(sceneToSave, (scene) => saveScene(editionKey, scene))
+  })
   return true
 }
 
@@ -291,13 +295,6 @@ returning *;
 */
 exports.finishPublishing = async (editionKey) => {
   console.log('publishingModel.finishPublishing')
-
-  const savedScenes = this.storeScenes(editionKey)
-  if (!savedScenes) {
-    // TODO throw something if there's a problem
-    return
-  }
-
   let edition
   const QUERY = 'update edition set published_at=current_timestamp '
     + 'where edition_key=$1 '
