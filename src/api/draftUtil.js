@@ -1,7 +1,7 @@
 const { getStoryOwner, getStory, getScenes, getSignpost } = require('../db/draftModel')
 const { errorMessage } = require('./errors')
 
-exports.verifyStoryAuthorization = async (playerId, storyId, res) => {
+exports.hasStoryAuthorAccess = async (playerId, storyId, res) => {
   console.log('draftUtil.verifyStoryAuthorization')
   const authorId = await getStoryOwner(storyId)
   if (!authorId) {
@@ -31,4 +31,10 @@ exports.assembleFullStory = async (draftId) => {
     scenes: scenes
   }
   return fullStory
+}
+
+// TODO might be horrible; just a work-around until I can troubleshoot async problems
+exports.takeNap = (ms) => {
+  console.log('sleeping for', ms, 'ms')
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

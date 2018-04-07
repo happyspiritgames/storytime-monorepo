@@ -1,7 +1,8 @@
 -- DATABASE UPGRADES FOR STORYTIME 1.5, PUBLISHING
 
-drop table if exists catalog_genre;
-drop table if exists catalog;
+drop table if exists edition_scene;
+drop table if exists edition_genre;
+drop table if exists edition;
 drop view if exists player_status_codes;
 drop view if exists genre_codes;
 drop view if exists rating_codes;
@@ -67,24 +68,25 @@ values
   (3, '14', 'Unsuitable Under 14 ', 5),
   (3, 'MA', 'Mature Audiences', 6);
 
-create table catalog (
+create table edition (
   id serial primary key,
-  draft_id varchar(8) not null references story (id),
+  edition_key varchar(20) not null unique,
+  story_id varchar(8) not null references story (id),
   version varchar(8) not null,
-  story_key varchar(20) not null,
-  author_id uuid not null references player (id),
-  pen_name varchar(32),
-  title varchar(100),
-  tag_line varchar(256),
-  about text,
+  summary text,
   rating integer references system_codes (id),
-  first_scene_id varchar(8),
-  published_filename varchar(100),
   published_at timestamp
 );
 
-create table catalog_genre (
-  catalog_id integer not null references catalog (id),
+create table edition_genre (
+  edition_id integer not null references edition (id),
   genre_id integer not null references system_codes (id),
-  primary key (catalog_id, genre_id)
+  primary key (edition_id, genre_id)
+);
+
+create table edition_scene (
+  id serial primary key,
+  edition_id integer not null references edition (id),
+  scene_id varchar(8),
+  scene text
 );

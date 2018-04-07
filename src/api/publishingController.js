@@ -1,154 +1,133 @@
-const { verifyStoryAuthorization, assembleFullStory } = require('./draftUtil')
+const { hasStoryAuthorAccess, assembleFullStory, takeNap } = require('./draftUtil')
 const { internalError } = require('./errors')
 const publishingModel = require('../db/publishingModel')
-const { saveStory } = require('../db/storyRepo')
 
-exports.getProofs = async (req, res) => {
+exports.getEditions = async (req, res) => {
   const { playerId } = req.user
-  const { draftId } = req.params
-  console.log('publishingController.getProofs', draftId)
+  const { storyId } = req.params
+  console.log('publishingController.getEditions', storyId)
   try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    const proofs = await publishingModel.getProofs(draftId)
-    if (!proofs) {
+    const editions = await publishingModel.getEditions(storyId)
+    if (!editions) {
       res.status(404).send()
       return
     }
-    res.status(200).json(proofs)
+    res.status(200).json(editions)
   } catch (e) {
-    console.error('Problem creating metadata for publishing', e)
+    console.error('Problem finding editions for story', storyId, e)
     res.status(500).json(internalError)
   }
 }
 
 /**
-  Initiates a new published version. There can only be one unresolved published version at a time.
-  So if this is called a second time while a published version exists with a publishedAt timestamp, the existing
-  record will be returned.
+  Initiates a new publishing cycle. There can only be one unpublished version at a time,
+  along with any number of published versions. Nothing happens if this is called while a
+  unpublished version exists (publishedAt is null).
  */
-exports.createProof = async (req, res) => {
+exports.createEdition = async (req, res) => {
   const { playerId } = req.user
-  const { draftId } = req.params
-  console.log('publishingController.createProof', draftId)
+  const { storyId } = req.params
+  console.log('publishingController.createEdition', storyId)
+  const start = new Date()
   try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    const unpublishedVersion = await publishingModel.findUnpublishedVersion(draftId)
+    const unpublishedVersion = await publishingModel.findUnpublishedVersion(storyId)
     if (unpublishedVersion) {
-      // already exists; do nothing
-      console.log('proof already started; doing nothing')
+      console.log('proof already started; do nothing')
       res.status(304).end()
       return
     }
+
     // version numbering -- find the latest published and increment
     let nextVersion = 1
-    const latestVersion = await publishingModel.getLatestPublishedVersion(draftId)
+    const latestVersion = await publishingModel.getLatestPublishedVersion(storyId)
     if (latestVersion) {
       nextVersion = parseInt(latestVersion)
       nextVersion++
     }
-    console.log('next version', nextVersion)
-    const metadata = await publishingModel.createProof(draftId, nextVersion.toString())
-    res.status(201).json(metadata)
+    const edition = await publishingModel.createNewEdition(storyId, nextVersion.toString())
+
+    // save snapshot of scenes for proofing
+    await publishingModel.storeScenes(edition.editionKey)
+
+    res.status(201).json(edition)
+    const elapsed = new Date().getTime() - start.getTime()
+    console.log('created in ', elapsed, 'ms', edition.editionKey)
   } catch (e) {
-    console.error('Problem creating metadata for publishing', e)
+    console.error('Problem creating new edition', e)
     res.status(500).json(internalError)
   }
 }
 
-exports.getProofMetadata = async (req, res) => {
+exports.getEdition = async (req, res) => {
   const { playerId } = req.user
-  const { draftId, version } = req.params
-  console.log('publishingController.getProofMetadata', draftId, version)
+  const { storyId, editionKey } = req.params
+  console.log('publishingController.getEdition', storyId, editionKey)
   try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    const metadata = await publishingModel.getProof(draftId, version)
-    if (!metadata) {
+    const edition = await publishingModel.getEdition(editionKey)
+    if (!edition) {
       res.status(404).send()
       return
     }
-    res.status(200).json(metadata)
+    res.status(200).json(edition)
   } catch (e) {
-    console.error('Problem creating metadata for publishing', e)
+    console.error('Problem finding edition', e)
     res.status(500).json(internalError)
   }
 }
 
-const takeNap = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-exports.updateProofMetadata = async (req, res) => {
+exports.updateEdition = async (req, res) => {
   const { playerId } = req.user
-  const { draftId, version } = req.params
-  const metadataUpdate = req.body
-  console.log('publishingController.updateProofMetadata',
-    draftId, version, metadataUpdate)
-
+  const { storyId, editionKey } = req.params
+  const editionUpdate = req.body
+  console.log('publishingController.updateEdition', storyId, editionKey, editionUpdate)
   try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    await publishingModel.updateProof(draftId, version, metadataUpdate)
-
-    // TODO might be horrible; just a work-around until I can troubleshoot async problems
-    await takeNap(200)
-
-    const result = await publishingModel.getProof(draftId, version)
-    res.status(202).json(result)
+    await publishingModel.updateEdition(editionKey, editionUpdate)
+    const updatedEdition = await publishingModel.getEdition(editionKey)
+    res.status(202).json(updatedEdition)
   } catch (e) {
-    console.error('Problem updating metadata for publishing', e)
+    console.error('Problem updating edition', e)
     res.status(500).json(internalError)
   }
 }
 
 exports.publish = async (req, res) => {
   const { playerId } = req.user
-  const { draftId, version } = req.params
-  console.log('publishingController.publish')
+  const { storyId, editionKey } = req.params
+  console.log('publishingController.publish', storyId, editionKey)
+  const start = new Date()
   try {
-    if (!verifyStoryAuthorization(playerId, draftId, res)) {
+    if (!hasStoryAuthorAccess(playerId, storyId, res)) {
       return
     }
-    let proofMetadata = await publishingModel.getProof(draftId, version)
+    let edition = await publishingModel.getEdition(editionKey)
 
-    // TODO this might be better as batch job since there could be some lag
-
-    // build story JSON
-    const fullStory = await assembleFullStory(draftId)
-
-    // merge changes to summary from metadata
-    const summary = fullStory.summary
-    if (summary.storyId !== proofMetadata.storyKey) {
-      summary['storyId'] = proofMetadata.storyKey
-    }
-    if (summary.title !== proofMetadata.title) {
-      summary['title'] = proofMetadata.title
-    }
-    if (summary.tagLine !== proofMetadata.tagLine) {
-      summary['tagLine'] = proofMetadata.tagLine
-    }
-    if (summary.about !== proofMetadata.about) {
-      summary['about'] = proofMetadata.about
+    // drop out if already published
+    if (edition.publishedAt) {
+      console.log('already published; do nothing')
+      res.status(304).end()
+      return
     }
 
-    // store story in S3
-    const key = proofMetadata.storyKey ? proofMetadata.storyKey : draftId
-    const filename = `${key}_${version}.json`
-    const serializedStory = JSON.stringify(fullStory)
-    saveStory(filename, serializedStory)
+    // TODO this would be better as batch job, especially for large stories
+    // don't optimize yet; gather some timing metrics for now
 
-    // set published_at timestamp
-    await publishingModel.recordPublishingEvent(draftId, version, filename)
-
-    // return updated metadata
-    proofMetadata = await publishingModel.getProof(draftId, version)
-    res.status(201).json(proofMetadata)
+    // build and save story JSON
+    edition = await publishingModel.finishPublishing(editionKey)
+    res.status(201).json(edition)
+    const elapsed = new Date().getTime() - start.getTime()
+    console.log('published in ', elapsed, 'ms', editionKey)
   } catch (e) {
     console.error('Problem publishing', e)
     res.status(500).json(internalError)

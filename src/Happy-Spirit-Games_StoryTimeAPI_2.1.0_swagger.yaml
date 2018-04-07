@@ -223,7 +223,7 @@ paths:
       parameters:
         - name: type
           in: path
-          description: type of code to retrieve.
+          description: type of code to retrieve. 
           required: true
           schema:
             type: string
@@ -690,84 +690,84 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/proofs:
+  /draft-stories/{storyId}/editions:
     get:
       tags:
         - author
-      summary: Retrieves list of proofs for the given draft.
-      description: Retrieves list of proofs for the given draft.
-      operationId: getProofs
+      summary: Retrieves list of editions of the story.
+      description: Retrieves list of editions of the story. Each time you publish, you are creating and releasing a new edition of the given story. Each new edition is expected to be different from the previous, though not entirely. Improvements, corrections, extentions of the original work are to be expected. It should be better in some way. Otherwise, do not re-publish.
+      operationId: getEditions
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
-          description: draft story ID
+          description: the story ID of the source of the editions
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: List of proofs
+          description: List of editions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProofMetadata'
+                  $ref: '#/components/schemas/Edition'
     post:
       tags:
         - author
-      summary: Creates a new version of the story to be published.
-      description: Creates a record of the metadata for the draft story that is about to be published. This method gets the publishing process started. Changes to story metadata and even to the draft itself are allowed at this point.
-      operationId: createProof
+      summary: Creates a new edition of the story to be proofed and published.
+      description: This starts the publishing process by creating an unpublished edition of the draft story.
+      operationId: createEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
-          description: draft story ID
+          description: ID of the story to publish
           required: true
           schema:
             type: string
       responses:
         '201':
-          description: New metadata for unpublished story
+          description: Information about the story edition
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProofMetadata'
+                $ref: '#/components/schemas/Edition'
         '304':
-          description: Already exists, so no action
+          description: Already exists, so no action taken
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /draft-stories/{draftId}/proofs/{version}:
+  /draft-stories/{storyId}/editions/{editionKey}:
     get:
       tags:
         - author
-      summary: Returns story metadata.
-      description: Returns metadata about a published (or to be published) version of a story.
-      operationId: getProofMetadata
+      summary: Retrieves information about the edition.
+      description: Retrieves information about the edition.
+      operationId: getEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
-          description: draft story ID
+          description: ID of the edition's source story 
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version number
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Story metadata
+          description: Information about the story edition
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProofMetadata'
+                $ref: '#/components/schemas/Edition'
         default:
           description: Error
           content:
@@ -777,19 +777,19 @@ paths:
     post:
       tags:
         - author
-      summary: Creates a new published version of the story.
-      description: Publishes the story, creating a read-only copy of the story content that is available to players. Most of the metadata can still be modified, but not the version number. See the put method.
+      summary: Publishes the edition if it unpublished.
+      description: Publishes the edition of story only if it is still unpublished. This action makes a read-only copy of all story parts. Information about the story (i.e., metadata such as its rating) can still be modified after publishing. To publish changes to the story's content, create a new edition and go through the publishing cycle again.
       operationId: publish
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
-          description: draft story ID
+          description: ID of the edition's source story
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version number
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
@@ -799,7 +799,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProofMetadata'
+                $ref: '#/components/schemas/Edition'
+        '304':
+          description: Already exists, so no action taken
         default:
           description: Error
           content:
@@ -809,19 +811,19 @@ paths:
     put:
       tags:
         - author
-      summary: Updates the metadata for a story that is meant to be published.
-      description: Accepts changes to the metadata that is used to publish a story. Most of the metadata can be changed after publishing as well. There will be a single instance per story version, and changes to metadata go live immediately once the story has been published.
-      operationId: updateProofMetadata
+      summary: Updates information about the story edition.
+      description: Updates information about the story edition. Includes only information that is not part of the story itself, such as the rating (age-appropriateness), genre, whether the story requires review, reader popularity, and so on.
+      operationId: updateEdition
       parameters:
-        - name: draftId
+        - name: storyId
           in: path
-          description: draft story ID
+          description: ID of the edition's source story
           required: true
           schema:
             type: string
-        - name: version
+        - name: editionKey
           in: path
-          description: version number
+          description: uniquely identifies the edition
           required: true
           schema:
             type: string
@@ -830,14 +832,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProofMetadataUpdate'
+              $ref: '#/components/schemas/EditionUpdate'
       responses:
         '202':
-          description: Created published story
+          description: Updated information about the story edition
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProofMetadata'
+                $ref: '#/components/schemas/Edition'
         default:
           description: Error
           content:
@@ -942,6 +944,42 @@ components:
           type: string
         firstSceneId:
           type: string
+    Edition:
+      type: object
+      properties:
+        editionKey:
+          type: string
+        storyId:
+          type: string
+        version:
+          type: string
+        summary:
+          $ref: '#/components/schemas/StorySummary'
+        rating:
+          type: string
+        genre:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+          format: date-time
+    EditionUpdate:
+      type: object
+      properties:
+        rating:
+          type: string
+        genre:
+          type: object
+          properties:
+            toAssign:
+              type: array
+              items:
+                type: string
+            toUnassign:
+              type: array
+              items:
+                type: string
     ErrorResponse:
       type: object
       properties:
@@ -994,63 +1032,6 @@ components:
       properties:
         salutation:
           type: string
-    ProofMetadata:
-      type: object
-      properties:
-        draftId:
-          type: string
-        version:
-          type: string
-        storyKey:
-          type: string
-        author:
-          type: string
-          format: uuid
-        penName:
-          type: string
-        title:
-          type: string
-        tagLine:
-          type: string
-        about:
-          type: string
-        rating:
-          type: string
-        genre:
-          type: array
-          items:
-            type: string
-        firstSceneId:
-          type: string
-        publishedAt:
-          type: string
-          format: date-time
-    ProofMetadataUpdate:
-      type: object
-      properties:
-        storyKey:
-          type: string
-        penName:
-          type: string
-        title:
-          type: string
-        tagLine:
-          type: string
-        about:
-          type: string
-        rating:
-          type: string
-        genre:
-          type: object
-          properties:
-            toAssign:
-              type: array
-              items:
-                type: string
-            toUnassign:
-              type: array
-              items:
-                type: string
     Scene:
       type: object
       properties:
@@ -1095,14 +1076,11 @@ components:
           type: string
         firstSceneId:
           type: string
-        publishedAt:
-          type: string
-          format: date-time
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
-security:
+security: 
   - BearerAuth: []
 tags:
   - name: admin
