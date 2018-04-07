@@ -272,20 +272,20 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles FETCH_PROOFS', () => {
-    nextState = writingDesk(undefined, actions.fetchProofs())
+  it('handles FETCH_EDITIONS', () => {
+    nextState = writingDesk(undefined, actions.fetchEditions())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles FETCHED_PROOFS', () => {
+  it('handles FETCHED_EDITIONS', () => {
     const expectedKey1 = `${testProof.draftId}-${testProof.version}`
     const testProof2 = { ...testProof }
     testProof2.version = '2'
     const expectedKey2 = `${testProof2.draftId}-${testProof2.version}`
-    nextState = writingDesk(undefined, actions.fetchedProofs([testProof, testProof2]))
+    nextState = writingDesk(undefined, actions.fetchedEditions([testProof, testProof2]))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
@@ -296,26 +296,26 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles FETCH_PROOFS_FAILED', () => {
-    nextState = writingDesk(undefined, actions.fetchProofs())
-    nextState = writingDesk(nextState, actions.fetchProofsFailed(testError))
+  it('handles FETCH_EDITIONS_FAILED', () => {
+    nextState = writingDesk(undefined, actions.fetchEditions())
+    nextState = writingDesk(nextState, actions.fetchEditionsFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
     })
   })
 
-  it('handles FETCH_PROOF', () => {
-    nextState = writingDesk(undefined, actions.fetchProof())
+  it('handles FETCH_EDITION', () => {
+    nextState = writingDesk(undefined, actions.fetchEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles FETCHED_PROOF', () => {
+  it('handles FETCHED_EDITION', () => {
     const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.fetchedProof(testProof))
+    nextState = writingDesk(undefined, actions.fetchedEdition(testProof))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
@@ -326,26 +326,26 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles FETCH_PROOF_FAILED', () => {
-    nextState = writingDesk(undefined, actions.fetchProof())
-    nextState = writingDesk(nextState, actions.fetchProofFailed(testError))
+  it('handles FETCH_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.fetchEdition())
+    nextState = writingDesk(nextState, actions.fetchEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
     })
   })
 
-  it('handles UPDATE_PROOF', () => {
-    nextState = writingDesk(undefined, actions.updateProof())
+  it('handles SAVE_EDITION', () => {
+    nextState = writingDesk(undefined, actions.saveEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.SAVING
     })
   })
 
-  it('handles UPDATED_PROOF', () => {
+  it('handles SAVED_EDITION', () => {
     const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.updatedProof(testProof))
+    nextState = writingDesk(undefined, actions.savedEdition(testProof))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
@@ -356,9 +356,9 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles UPDATE_PROOF_FAILED', () => {
-    nextState = writingDesk(undefined, actions.updateProof())
-    nextState = writingDesk(nextState, actions.updateProofFailed(testError))
+  it('handles SAVE_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.saveEdition())
+    nextState = writingDesk(nextState, actions.saveEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY

@@ -21,8 +21,8 @@ export default (state = initialState, action) => {
     case actions.LOAD_DRAFT_SCENE:
     case actions.LOAD_DRAFT_SIGNPOST:
     case actions.START_TO_PUBLISH:
-    case actions.FETCH_PROOFS:
-    case actions.FETCH_PROOF:
+    case actions.FETCH_EDITIONS:
+    case actions.FETCH_EDITION:
       return {
         ...state,
         status: writingDeskStates.LOADING
@@ -48,7 +48,7 @@ export default (state = initialState, action) => {
         draftProjects: projectIds,
         status: writingDeskStates.READY
       }
-    case actions.FETCHED_PROOFS:
+    case actions.FETCHED_EDITIONS:
       const nextProofs = {}
       action.payload.proofs.forEach(proof => {
         const key = `${proof.draftId}-${proof.version}`
@@ -70,8 +70,8 @@ export default (state = initialState, action) => {
         status: writingDeskStates.READY
       }
     case actions.STARTED_TO_PUBLISH:
-    case actions.FETCHED_PROOF:
-    case actions.UPDATED_PROOF:
+    case actions.FETCHED_EDITION:
+    case actions.SAVED_EDITION:
     case actions.PUBLISHED:
       const proof = action.payload.proof
       const key = `${proof.draftId}-${proof.version}`
@@ -86,7 +86,7 @@ export default (state = initialState, action) => {
     case actions.SAVE_DRAFT:
     case actions.SAVE_DRAFT_SCENE:
     case actions.SAVE_DRAFT_SIGNPOST:
-    case actions.UPDATE_PROOF:
+    case actions.SAVE_EDITION:
       return {
         ...state,
         status: writingDeskStates.SAVING
@@ -99,9 +99,9 @@ export default (state = initialState, action) => {
     case actions.LOAD_DRAFT_SIGNPOST_FAILED:
     case actions.SAVE_DRAFT_SIGNPOST_FAILED:
     case actions.START_TO_PUBLISH_FAILED:
-    case actions.FETCH_PROOFS_FAILED:
-    case actions.FETCH_PROOF_FAILED:
-    case actions.UPDATE_PROOF_FAILED:
+    case actions.FETCH_EDITIONS_FAILED:
+    case actions.FETCH_EDITION_FAILED:
+    case actions.SAVE_EDITION_FAILED:
     case actions.PUBLISH_FAILED:
       return {
         ...state,

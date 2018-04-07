@@ -33,27 +33,27 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('should create FETCH_PROOFS action', () => {
-    expect(actions.fetchProofs())
+  it('should create FETCH_EDITIONS action', () => {
+    expect(actions.fetchEditions())
     .toEqual({
-      type: actions.FETCH_PROOFS
+      type: actions.FETCH_EDITIONS
     })
   })
 
-  it('should create FETCHED_PROOFS action', () => {
-    expect(actions.fetchedProofs([testProof]))
+  it('should create FETCHED_EDITIONS action', () => {
+    expect(actions.fetchedEditions([testProof]))
     .toEqual({
-      type: actions.FETCHED_PROOFS,
+      type: actions.FETCHED_EDITIONS,
       payload: {
         proofs: [testProof]
       }
     })
   })
 
-  it('should create FETCH_PROOFS_FAILED action', () => {
-    expect(actions.fetchProofsFailed(testError))
+  it('should create FETCH_EDITIONS_FAILED action', () => {
+    expect(actions.fetchEditionsFailed(testError))
     .toEqual({
-      type: actions.FETCH_PROOFS_FAILED,
+      type: actions.FETCH_EDITIONS_FAILED,
       payload: {
         error: testError
       },
@@ -61,27 +61,27 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('should create FETCH_PROOF action', () => {
-    expect(actions.fetchProof())
+  it('should create FETCH_EDITION action', () => {
+    expect(actions.fetchEdition())
     .toEqual({
-      type: actions.FETCH_PROOF
+      type: actions.FETCH_EDITION
     })
   })
 
-  it('should create FETCHED_PROOF action', () => {
-    expect(actions.fetchedProof(testProof))
+  it('should create FETCHED_EDITION action', () => {
+    expect(actions.fetchedEdition(testProof))
     .toEqual({
-      type: actions.FETCHED_PROOF,
+      type: actions.FETCHED_EDITION,
       payload: {
         proof: testProof
       }
     })
   })
 
-  it('should create FETCH_PROOF_FAILED action', () => {
-    expect(actions.fetchProofFailed(testError))
+  it('should create FETCH_EDITION_FAILED action', () => {
+    expect(actions.fetchEditionFailed(testError))
     .toEqual({
-      type: actions.FETCH_PROOF_FAILED,
+      type: actions.FETCH_EDITION_FAILED,
       payload: {
         error: testError
       },
@@ -89,27 +89,27 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('should create UPDATE_PROOF action', () => {
-    expect(actions.updateProof())
+  it('should create SAVE_EDITION action', () => {
+    expect(actions.saveEdition())
     .toEqual({
-      type: actions.UPDATE_PROOF
+      type: actions.SAVE_EDITION
     })
   })
 
-  it('should create UPDATED_PROOF action', () => {
-    expect(actions.updatedProof(testProof))
+  it('should create SAVED_EDITION action', () => {
+    expect(actions.savedEdition(testProof))
     .toEqual({
-      type: actions.UPDATED_PROOF,
+      type: actions.SAVED_EDITION,
       payload: {
         proof: testProof
       }
     })
   })
 
-  it('should create UPDATE_PROOF_FAILED action', () => {
-    expect(actions.updateProofFailed(testError))
+  it('should create SAVE_EDITION_FAILED action', () => {
+    expect(actions.saveEditionFailed(testError))
     .toEqual({
-      type: actions.UPDATE_PROOF_FAILED,
+      type: actions.SAVE_EDITION_FAILED,
       payload: {
         error: testError
       },
