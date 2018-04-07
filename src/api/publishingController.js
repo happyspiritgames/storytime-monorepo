@@ -118,8 +118,7 @@ exports.publish = async (req, res) => {
     // don't optimize yet; gather some timing metrics for now
 
     // build and save story JSON
-    await publishingModel.finishPublishing(editionKey)
-    edition = await publishingModel.getEdition(storyId, version)
+    edition = await publishingModel.finishPublishing(editionKey)
     res.status(201).json(edition)
     const elapsed = new Date().getTime() - start.getTime()
     console.log('published in ', elapsed, 'ms', storyId, version)
