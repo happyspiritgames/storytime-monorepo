@@ -46,15 +46,16 @@ const patchEdition = async (editionToPatch) => {
 
 /**
  * Turns edition row from database into form expected by StoryTime authoring API.
- * 
+ *
  * @param {*} editionRow
  */
 const mapEditionRowToApi = async (editionRow) => {
+  const deserializedSummary = JSON.parse(editionRow.summary)
   const roughEdition = {
     editionKey: editionRow.edition_key,
     storyId: editionRow.story_id,
     version: editionRow.version,
-    summary: editionRow.summary,
+    summary: deserializedSummary,
     rating: editionRow.rating,
     publishedAt: editionRow.published_at
   }

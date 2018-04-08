@@ -57,7 +57,7 @@ export default class PublishingSummary extends Component {
           <li key={edition.editionKey} className="list-group-item">
             <p>Version {edition.version} of story <em>{summary.title}</em> by {summary.penName} (key={edition.editionKey})</p>
             <p>Rating: {rating} Genre: {genre} {published}</p>
-            <p><Link to={`/publish/${edition.draftId}/${edition.editionKey}`}>{buttonMessage}</Link></p>
+            <p><Link to={`/publish/${edition.storyId}/${edition.editionKey}`}>{buttonMessage}</Link></p>
           </li>
         )
       })
@@ -73,7 +73,7 @@ export default class PublishingSummary extends Component {
       </div>
     )
   }
-  
+
   render() {
     const { draft } = this.props
     if (!draft) {
