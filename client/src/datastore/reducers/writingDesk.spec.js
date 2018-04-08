@@ -5,7 +5,7 @@ import {
   testFullDraft,
   testDraftScene,
   testSignpost,
-  testProof
+  testEdition
 } from '../testData'
 
 describe('writing desk reducer', () => {
@@ -251,14 +251,13 @@ describe('writing desk reducer', () => {
   })
 
   it('handles STARTED_TO_PUBLISH', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.startedToPublish(testProof))
+    nextState = writingDesk(undefined, actions.startedToPublish(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
+      activeEdition: testEdition.editionKey,
+      editions: {
+        [testEdition.editionKey]: testEdition
       }
     })
   })
@@ -281,17 +280,16 @@ describe('writing desk reducer', () => {
   })
 
   it('handles FETCHED_EDITIONS', () => {
-    const expectedKey1 = `${testProof.draftId}-${testProof.version}`
-    const testProof2 = { ...testProof }
-    testProof2.version = '2'
-    const expectedKey2 = `${testProof2.draftId}-${testProof2.version}`
-    nextState = writingDesk(undefined, actions.fetchedEditions([testProof, testProof2]))
+    const testEdition2 = { ...testEdition }
+    testEdition2.version = '2'
+    testEdition2.editionKey = `${testEdition2.storyId}-${testEdition2.version}`
+    nextState = writingDesk(undefined, actions.fetchedEditions([testEdition, testEdition2]))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      proofs: {
-        [expectedKey1]: testProof,
-        [expectedKey2]: testProof2
+      editions: {
+        [testEdition.editionKey]: testEdition,
+        [testEdition2.editionKey]: testEdition2
       }
     })
   })
@@ -314,14 +312,13 @@ describe('writing desk reducer', () => {
   })
 
   it('handles FETCHED_EDITION', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.fetchedEdition(testProof))
+    nextState = writingDesk(undefined, actions.fetchedEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
+      activeEdition: testEdition.editionKey,
+      editions: {
+        [testEdition.editionKey]: testEdition
       }
     })
   })
@@ -344,14 +341,13 @@ describe('writing desk reducer', () => {
   })
 
   it('handles SAVED_EDITION', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.savedEdition(testProof))
+    nextState = writingDesk(undefined, actions.savedEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
+      activeEdition: testEdition.editionKey,
+      editions: {
+        [testEdition.editionKey]: testEdition
       }
     })
   })
@@ -375,14 +371,13 @@ describe('writing desk reducer', () => {
 
   it('handles PUBLISHED', () => {
     nextState = writingDesk(undefined, actions.sendPublish())
-    nextState = writingDesk(nextState, actions.published(testProof))
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
+    nextState = writingDesk(nextState, actions.published(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
+      activeEdition: testEdition.editionKey,
+      editions: {
+        [testEdition.editionKey]: testEdition
       }
     })
   })

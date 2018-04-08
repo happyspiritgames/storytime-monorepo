@@ -79,29 +79,21 @@ export const testSignpost = [
   }
 ]
 
-export const testProof = {
-  draftId: 'abcdef',
+export const testEdition = {
+  editionKey: 'abcdef-1',
+  storyId: 'abcdef',
   version: '1',
-  storyKey: 'abcdef',
-  author: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-  penName: 'bubba',
-  title: 'Blargy',
-  tagLine: 'Blargy blargy.',
-  about: 'Blargy blargy, blargy blargy',
+  summary: {
+    storyId: 'abcdef',
+    title: 'Blargy',
+    penName: 'bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'Blargy blargy, blargy blargy',
+    firstSceneId: 'jhu3248'
+  },
   rating: 'PG',
   genre: ['scifi'],
-  firstSceneId: 'jhu3248',
   publishedAt: '2018-01-26T00:02:21.635Z'
-}
-
-export const testProofUpdate = {
-  storyKey: 'updated',
-  penName: 'Update',
-  title: 'Update this',
-  tagLine: 'Big-time update.',
-  about: 'Update me, baby.',
-  rating: 'MA',
-  genre: ['fantasy']
 }
 
 export const testCodes = [

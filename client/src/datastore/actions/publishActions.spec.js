@@ -1,7 +1,7 @@
 import * as actions from './index'
 import {
   testError,
-  testProof
+  testEdition
 } from '../testData'
 
 describe('writing desk actions', () => {
@@ -13,11 +13,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create STARTED_TO_PUBLISH action', () => {
-    expect(actions.startedToPublish(testProof))
+    expect(actions.startedToPublish(testEdition))
     .toEqual({
       type: actions.STARTED_TO_PUBLISH,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })
@@ -41,11 +41,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create FETCHED_EDITIONS action', () => {
-    expect(actions.fetchedEditions([testProof]))
+    expect(actions.fetchedEditions([testEdition]))
     .toEqual({
       type: actions.FETCHED_EDITIONS,
       payload: {
-        proofs: [testProof]
+        editions: [testEdition]
       }
     })
   })
@@ -69,11 +69,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create FETCHED_EDITION action', () => {
-    expect(actions.fetchedEdition(testProof))
+    expect(actions.fetchedEdition(testEdition))
     .toEqual({
       type: actions.FETCHED_EDITION,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })
@@ -97,11 +97,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create SAVED_EDITION action', () => {
-    expect(actions.savedEdition(testProof))
+    expect(actions.savedEdition(testEdition))
     .toEqual({
       type: actions.SAVED_EDITION,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })
@@ -125,11 +125,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create PUBLISHED action', () => {
-    expect(actions.published(testProof))
+    expect(actions.published(testEdition))
     .toEqual({
       type: actions.PUBLISHED,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })

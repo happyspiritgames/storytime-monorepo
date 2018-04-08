@@ -9,27 +9,29 @@ import {
   updateDraftScene,
   retrieveDraftSignpost,
   updateDraftSignpost,
-  prepareToPublish,
-  getProofs,
-  getProof,
-  saveProof,
+  createEdition,
+  getEditions,
+  getEdition,
+  updateEdition,
   publish,
   loadRatingCodes,
   loadGenreCodes
 } from '../../datastore/actions'
 
+// TODO ============== START HERE ==================
+
 const mapStateToProps = state => {
   const writingDesk = state.writingDesk
   const draftProjects = writingDesk.draftProjects.map(storyId => state.drafts[storyId])
-  const activeProof = state.writingDesk.activeProof
-    ? state.writingDesk.proofs[state.writingDesk.activeProof]
+  const activeEdition = state.writingDesk.activeEdition
+    ? state.writingDesk.editions[state.writingDesk.activeEdition]
     : undefined
-  const proofs = writingDesk.proofs ? Object.values(state.writingDesk.proofs) : undefined
+  const editions = writingDesk.editions ? Object.values(state.writingDesk.editions) : undefined
   return {
     draftProjects,
     activeDraft: writingDesk.activeDraft,
-    proofs,
-    activeProof,
+    editions,
+    activeEdition,
     ratingCodes: state.codes.rating,
     genreCodes: state.codes.genre
   }
@@ -45,11 +47,11 @@ const mapDispatchToProps = dispatch => {
     saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
     loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
     updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, sceneId, signpostUpdates)),
-    prepareToPublish: (draftId) => dispatch(prepareToPublish(draftId)),
-    getProofs: (draftId) => dispatch(getProofs(draftId)),
-    getProof: (draftId, version) => dispatch(getProof(draftId, version)),
-    updateProof: (draftId, version, proofUpdate) => dispatch(saveProof(draftId, version, proofUpdate)),
-    publish: (draftId, version) => dispatch(publish(draftId, version)),
+    createEdition: (storyId) => dispatch(createEdition(storyId)),
+    getEditions: (storyId) => dispatch(getEditions(storyId)),
+    getEdition: (storyId, editionKey) => dispatch(getEdition(storyId, editionKey)),
+    updateEdition: (storyId, editionKey, editionUpdate) => dispatch(updateEdition(storyId, editionKey, editionUpdate)),
+    publish: (storyId, editionKey) => dispatch(publish(storyId, editionKey)),
     loadRatingCodes: () => dispatch(loadRatingCodes()),
     loadGenreCodes: () => dispatch(loadGenreCodes())
   }

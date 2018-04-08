@@ -6,10 +6,10 @@ export const startToPublish = () => ({
 })
 
 export const STARTED_TO_PUBLISH = 'STARTED_TO_PUBLISH'
-export const startedToPublish = (proof) => ({
+export const startedToPublish = (edition) => ({
   type: STARTED_TO_PUBLISH,
   payload: {
-    proof
+    edition
   }
 })
 
@@ -28,7 +28,7 @@ export const createEdition = (storyId) => {
     dispatch(startToPublish())
     publishApi.createEdition(
       storyId,
-      proof => dispatch(startedToPublish(proof)),
+      edition => dispatch(startedToPublish(edition)),
       error => dispatch(startToPublishFailed(error))
     )
   }
@@ -40,10 +40,10 @@ export const fetchEditions = () => ({
 })
 
 export const FETCHED_EDITIONS = 'FETCHED_EDITIONS'
-export const fetchedEditions = (proofs) => ({
+export const fetchedEditions = (editions) => ({
   type: FETCHED_EDITIONS,
   payload: {
-    proofs
+    editions
   }
 })
 
@@ -61,7 +61,7 @@ export const getEditions = (storyId) => {
     dispatch(fetchEditions())
     publishApi.getEditions(
       storyId,
-      proofs => dispatch(fetchedEditions(proofs)),
+      editions => dispatch(fetchedEditions(editions)),
       error => dispatch(fetchEditionsFailed(error))
     )
   }
@@ -73,10 +73,10 @@ export const fetchEdition = () => ({
 })
 
 export const FETCHED_EDITION = 'FETCHED_EDITION'
-export const fetchedEdition = (proof) => ({
+export const fetchedEdition = (edition) => ({
   type: FETCHED_EDITION,
   payload: {
-    proof
+    edition
   }
 })
 
@@ -94,7 +94,7 @@ export const getEdition = (storyId, editionKey) => {
     dispatch(fetchEdition())
     publishApi.getEdition(
       storyId, editionKey,
-      proofs => dispatch(fetchedEdition(proofs)),
+      editions => dispatch(fetchedEdition(editions)),
       error => dispatch(fetchEditionFailed(error))
     )
   }
@@ -106,10 +106,10 @@ export const saveEdition = () => ({
 })
 
 export const SAVED_EDITION = 'SAVED_EDITION'
-export const savedEdition = (proof) => ({
+export const savedEdition = (edition) => ({
   type: SAVED_EDITION,
   payload: {
-    proof
+    edition
   }
 })
 
@@ -122,13 +122,13 @@ export const saveEditionFailed = (error) => ({
   error: true
 })
 
-export const updateEdition = (storyId, editionKey, proofUpdate) => {
-  console.log('publishActions.saveEdition', storyId, editionKey, proofUpdate)
+export const updateEdition = (storyId, editionKey, editionUpdate) => {
+  console.log('publishActions.saveEdition', storyId, editionKey, editionUpdate)
   return (dispatch) => {
     dispatch(saveEdition())
     publishApi.updateEdition(
-      storyId, editionKey, proofUpdate,
-      proof => dispatch(savedEdition(proof)),
+      storyId, editionKey, editionUpdate,
+      edition => dispatch(savedEdition(edition)),
       error => dispatch(saveEditionFailed(error))
     )
   }
@@ -140,10 +140,10 @@ export const sendPublish = () => ({
 })
 
 export const PUBLISHED = 'PUBLISHED'
-export const published = (proof) => ({
+export const published = (edition) => ({
   type: PUBLISHED,
   payload: {
-    proof
+    edition
   }
 })
 
@@ -161,7 +161,7 @@ export const publish = (storyId, editionKey) => {
     dispatch(sendPublish())
     publishApi.publish(
       storyId, editionKey,
-      proof => dispatch(published(proof)),
+      edition => dispatch(published(edition)),
       error => dispatch(sendPublishFailed(error))
     )
   }

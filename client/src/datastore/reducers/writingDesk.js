@@ -49,15 +49,14 @@ export default (state = initialState, action) => {
         status: writingDeskStates.READY
       }
     case actions.FETCHED_EDITIONS:
-      const nextProofs = {}
-      action.payload.proofs.forEach(proof => {
-        const key = `${proof.draftId}-${proof.version}`
-        nextProofs[key] = proof
+      const nextEditions = {}
+      action.payload.editions.forEach(edition => {
+        nextEditions[edition.editionKey] = edition
       })
       return {
         ...state,
         status: writingDeskStates.READY,
-        proofs: nextProofs
+        editions: nextEditions
       }
     case actions.LOADED_DRAFT:
     case actions.LOADED_DRAFT_SCENE:
@@ -73,14 +72,13 @@ export default (state = initialState, action) => {
     case actions.FETCHED_EDITION:
     case actions.SAVED_EDITION:
     case actions.PUBLISHED:
-      const proof = action.payload.proof
-      const key = `${proof.draftId}-${proof.version}`
-      const proofs = state.proofs ? { ...state.proofs } : {}
-      proofs[key] = proof
+      const edition = action.payload.edition
+      const editions = state.editions ? { ...state.editions } : {}
+      editions[edition.editionKey] = edition
       return {
         ...state,
-        activeProof: key,
-        proofs,
+        activeEdition: edition.editionKey,
+        editions,
         status: writingDeskStates.READY
       }
     case actions.SAVE_DRAFT:
