@@ -6,8 +6,7 @@ export const storySummaryShape = PropTypes.shape({
   penName: PropTypes.string,
   tagLine: PropTypes.string,
   about: PropTypes.string,
-  firstSceneId: PropTypes.string,
-  publishedAt: PropTypes.string
+  firstSceneId: PropTypes.string
 })
 
 export const sceneShape = PropTypes.shape({
@@ -57,18 +56,13 @@ export const draftShape = PropTypes.shape({
   scenes: PropTypes.object
 })
 
-export const proofShape = PropTypes.shape({
-  draftId: PropTypes.string,
+export const editionShape = PropTypes.shape({
+  editionKey: PropTypes.string,
+  storyId: PropTypes.string,
   version: PropTypes.string,
-  storyKey: PropTypes.string,
-  authorId: PropTypes.string,
-  penName: PropTypes.string,
-  title: PropTypes.string,
-  tagLine: PropTypes.string,
-  about: PropTypes.string,
+  summary: storySummaryShape,
   rating: PropTypes.string,
   genre: PropTypes.arrayOf(PropTypes.string),
-  firstSceneId: PropTypes.string,
   publishedAt: PropTypes.string
 })
 

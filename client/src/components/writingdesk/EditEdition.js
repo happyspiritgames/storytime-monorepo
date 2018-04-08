@@ -1,35 +1,32 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { proofShape, draftShape, codeLookupShape } from '../../datastore/dataShapes'
+import { editionShape, draftShape, codeLookupShape } from '../../datastore/dataShapes'
 import { formatDateTime } from '../../util/formatter'
 
-export default class EditPublishingInfo extends Component {
+export default class EditEdition extends Component {
   static propTypes = {
     draft: draftShape,
-    proof: proofShape,
+    edition: editionShape,
     ratingCodes: PropTypes.arrayOf(codeLookupShape),
     genreCodes: PropTypes.arrayOf(codeLookupShape),
-    loadProof: PropTypes.func,
+    loadDraft: PropTypes.func,
+    loadEdition: PropTypes.func,
     loadRatingCodes: PropTypes.func,
     loadGenreCodes: PropTypes.func,
-    saveProof: PropTypes.func,
+    saveEdition: PropTypes.func,
     publish: PropTypes.func
   }
 
   state = {
-    storyKey: '',
-    penName: '',
     rating: '',
     genre: []
   }
 
-  establishInitialState = (proof) => {
+  establishInitialState = (edition) => {
     this.setState({
-      storyKey: proof.storyKey,
-      penName: proof.penName || '',
-      rating: proof.rating || '',
-      genre: proof.genre ? [...proof.genre] : []
+      rating: edition.rating || '',
+      genre: edition.genre ? [...edition.genre] : []
     })
   }
 
@@ -56,8 +53,8 @@ export default class EditPublishingInfo extends Component {
 
   handleSave = () => {
     console.log('handleSave')
-    const { draftId, version } = this.props.match.params
-    const originalGenre = this.props.proof.genre || []
+    const { draftId, editionKey } = this.props.match.params
+    const originalGenre = this.props.edition.genre || []
     const updatedGenre = this.state.genre || []
     console.log('original genre', originalGenre)
     console.log('updated genre', updatedGenre)
@@ -70,37 +67,37 @@ export default class EditPublishingInfo extends Component {
       genre: genreChanges
     }
     console.log('update to save', update)
-    this.props.saveProof(draftId, version, update)
+    this.props.saveEdition(draftId, editionKey, update)
   }
 
   handlePublish = () => {
-    const { draftId, version } = this.props.match.params
-    this.props.publish(draftId, version)
+    const { draftId, editionKey } = this.props.match.params
+    this.props.publish(draftId, editionKey)
   }
 
   playStory = () => {
-    alert('Someday this may actually do something.')
+    alert('Someday this will launch the reader.')
   }
 
   componentDidMount() {
     console.log('componentDidMount')
-    const { draftId, version } = this.props.match.params
-    const { draft, proof, loadDraft, loadProof, loadRatingCodes, loadGenreCodes } = this.props
+    const { draftId, editionKey } = this.props.match.params
+    const { draft, edition, loadDraft, loadEdition, loadRatingCodes, loadGenreCodes } = this.props
     if (!draft) {
       loadDraft(draftId)
     }
-    loadProof(draftId, version)
+    loadEdition(draftId, editionKey)
     loadRatingCodes()
     loadGenreCodes()
-    if (draft && proof) {
-      this.establishInitialState(proof)
+    if (edition) {
+      this.establishInitialState(edition)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps')
-    if (nextProps.draft && nextProps.proof) {
-      this.establishInitialState(nextProps.proof)
+    if (nextProps.edition) {
+      this.establishInitialState(nextProps.edition)
     }
   }
 
@@ -108,19 +105,19 @@ export default class EditPublishingInfo extends Component {
     const { genreCodes } = this.props
     const selectedGenre = this.state.genre
     console.log('selected', selectedGenre)
-    return genreCodes.map(code => {
+    return genreCodes.map(lookup => {
       return (
-        <div key={code.code} className="col-3">
+        <div key={lookup.code} className="col-3">
           <div className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
-              id={`genre.${code.code}`}
+              id={`genre.${lookup.code}`}
               onChange={this.handleChangeGenre}
-              checked={selectedGenre.includes(code.code)}
+              checked={selectedGenre.includes(lookup.code)}
             />
-            <label className="form-check-label" htmlFor={`genre.${code.code}`}>
-              {code.displayName}
+            <label className="form-check-label" htmlFor={`genre.${lookup.code}`}>
+              {lookup.displayName}
             </label>
           </div>
         </div>
@@ -130,8 +127,8 @@ export default class EditPublishingInfo extends Component {
 
   render() {
     console.log(this.state)
-    const { draft, proof, ratingCodes, genreCodes } = this.props
-    if (!draft || !proof || !ratingCodes || !genreCodes) {
+    const { draft, edition, ratingCodes, genreCodes } = this.props
+    if (!draft || !edition || !ratingCodes || !genreCodes) {
       return (
         <h1>Loading...</h1>
       )
@@ -140,9 +137,10 @@ export default class EditPublishingInfo extends Component {
     const activeUpdate = this.state
     const ratingOptions = ratingCodes.map(code => <option key={code.code} value={code.code}>{code.displayName}</option>)
     const genreSelections = this.renderGenreSelections()
-    const publishedMessage = proof.publishedAt
-      ? `Congratulations! Your story was published on ${formatDateTime(proof.publishedAt)}.`
-      : 'Your story has not been published.'
+    const publishedMessage = edition.publishedAt
+      ? `Congratulations! This edition of your story was published on ${formatDateTime(edition.publishedAt)}.`
+      : 'This edition of your story has not been published.'
+    const editionSummary = edition.summary
 
     return (
       <div id="publishing">
@@ -155,39 +153,16 @@ export default class EditPublishingInfo extends Component {
         <div className="row section">
           <div className="col">
             <h3 className="text-center">Publishing</h3>
-            <p>You are three steps away from publishing your story-game. The only thing you have to do is step 3, publish. Check out the other steps on your way down the page.</p>
-            <h4 className="text-center">1. Classify your story-game</h4>
+            <p>You can publish in three steps.</p>
+            <ol>
+              <li>Classify your story.</li>
+              <li>Proof read everything and make sure it's ready.</li>
+              <li>Publish. This puts your story in the library, ready to play.</li>
+            </ol>
+            <p>You may also re-classify a published story (step 1) at any time.</p>
+            <h4 className="text-center">1. Classify</h4>
             <form>
               <fieldset>
-                <div className="form-row">
-                  <div className="col-6">
-                    <div className="form-group">
-                      <label>Story Unique Key</label>
-                      <small className="form-text text-muted">For now, use the random key your story was assigned. In the future, you can change to something more fun.</small>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="storyKey"
-                        value={activeUpdate.storyKey}
-                        onChange={this.handleChange}
-                        disabled={true}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="form-group">
-                      <label>Pen Name</label>
-                      <small className="form-text text-muted">Who you want to be known as. Use your own name or something more elusive.</small>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="penName"
-                        value={activeUpdate.penName}
-                        onChange={this.handleChange}
-                      />
-                    </div>
-                  </div>
-                </div>
                 <div className="form-row">
                   <div className="col-6">
                     <div className="form-group">
@@ -214,18 +189,17 @@ export default class EditPublishingInfo extends Component {
             <h4 className="text-center">2. Proof</h4>
             <div className="row">
               <div className="col">
-                <p>This is how your story-game will appear in the catalog. If it looks good, you are all set.</p>
-                <p>To make changes, you have to return to the draft.</p>
-                <p><Link to={`/writingdesk/${storyId}`}>Return to story editor.</Link></p>
+                <p>This is how your story-game will appear in the library. If it looks good, you are all set.</p>
+                <p>To make changes, you have to <Link to={`/writingdesk/${storyId}`}>return to the draft</Link>.</p>
+                <p>To change your pen name, <Link to="/account">go to your account</Link>.</p>
               </div>
               <div className="col">
                 <div className="card">
-                  <img className="card-img-top w-100 d-block" src="" alt="" />
                   <div className="card-body">
-                    <h4 className="card-title"><em>{proof.title}</em></h4>
-                    <h6 className="card-subtitle">by {proof.penName}</h6>
-                    <p className="card-text">{proof.tagLine}</p>
-                    <p className="card-text">{proof.about}</p>
+                    <h4 className="card-title"><em>{editionSummary.title}</em></h4>
+                    <h6 className="card-subtitle">by {editionSummary.penName}</h6>
+                    <p className="card-text">{editionSummary.tagLine}</p>
+                    <p className="card-text">{editionSummary.about}</p>
                     <button className="btn btn-primary" type="button" onClick={this.playStory}>Play</button>
                   </div>
                 </div>
@@ -235,7 +209,7 @@ export default class EditPublishingInfo extends Component {
               <div className="col">
                 <h4 className="text-center">3. Publish</h4>
                 <p>{publishedMessage}</p>
-              { !proof.publishedAt &&
+              { !edition.publishedAt &&
                 <button
                   className="btn btn-primary"
                   type="button"
@@ -244,6 +218,18 @@ export default class EditPublishingInfo extends Component {
               }
                 <p>(Note: publishing happens once. After that, classifications can change, but you cannot re-publish. Can always go through the publishing cycle again and publish a new version. Should make it easy to delete non-current published versions.)</p>
               </div>
+            </div>
+            <div>
+              <h3>Improvement Ideas</h3>
+              <ul>
+                <li>Need a way to refresh read-only summary and scenes when author makes updates during proofing.</li>
+                <li>Need a way to delete "out-of-print" editions.</li>
+                <li>Split this into more pages so that it's less confusing.</li>
+                <li>Only show first step (of the newly split pages) for published editions.</li>
+                <li>Would be nice to edit pen name in place.</li>
+                <li>Would be nice to change edition key.</li>
+                <li>Would be nice to copy rating, genre and edition key (with version number) from latest published version on creation of new edition.</li>
+              </ul>
             </div>
           </div>
         </div>

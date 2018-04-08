@@ -47,13 +47,13 @@ const mapDispatchToProps = dispatch => {
     saveDraftScene: (storyId, scene) => dispatch(updateDraftScene(storyId, scene)),
     loadDraftSignpost: (storyId, sceneId) => dispatch(retrieveDraftSignpost(storyId, sceneId)),
     updateDraftSignpost: (storyId, sceneId, signpostUpdates) => dispatch(updateDraftSignpost(storyId, sceneId, signpostUpdates)),
-    createEdition: (storyId) => dispatch(createEdition(storyId)),
-    getEditions: (storyId) => dispatch(getEditions(storyId)),
-    getEdition: (storyId, editionKey) => dispatch(getEdition(storyId, editionKey)),
-    updateEdition: (storyId, editionKey, editionUpdate) => dispatch(updateEdition(storyId, editionKey, editionUpdate)),
-    publish: (storyId, editionKey) => dispatch(publish(storyId, editionKey)),
+    startNewEdition: (storyId) => dispatch(createEdition(storyId)),
+    loadEditions: (storyId) => dispatch(getEditions(storyId)),
+    loadEdition: (storyId, editionKey) => dispatch(getEdition(storyId, editionKey)),
     loadRatingCodes: () => dispatch(loadRatingCodes()),
-    loadGenreCodes: () => dispatch(loadGenreCodes())
+    loadGenreCodes: () => dispatch(loadGenreCodes()),
+    saveEdition: (storyId, editionKey, editionUpdate) => dispatch(updateEdition(storyId, editionKey, editionUpdate)),
+    publish: (storyId, editionKey) => dispatch(publish(storyId, editionKey))
   }
 }
 
