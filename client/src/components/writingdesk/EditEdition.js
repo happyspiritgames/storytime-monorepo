@@ -148,11 +148,12 @@ export default class EditEdition extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
-          <li className="breadcrumb-item">Publishing</li>
+          <li className="breadcrumb-item"><Link to={`/publish/${storyId}`}>Publish</Link></li>
+          <li className="breadcrumb-item">Edition {edition.version}</li>
         </ol>
         <div className="row section">
           <div className="col">
-            <h3 className="text-center">Publishing</h3>
+            <h3 className="text-center">Edition {edition.version} of <em>{editionSummary.title}</em></h3>
             <p>You can publish in three steps.</p>
             <ol>
               <li>Classify your story.</li>

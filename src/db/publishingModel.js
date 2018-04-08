@@ -50,12 +50,19 @@ const patchEdition = async (editionToPatch) => {
  * @param {*} editionRow
  */
 const mapEditionRowToApi = async (editionRow) => {
-  const deserializedSummary = JSON.parse(editionRow.summary)
+  const summaryRow = JSON.parse(editionRow.summary)
+  const summary = {
+    title: summaryRow.title,
+    penName: summaryRow.pen_name,
+    tagLine: summaryRow.tag_line,
+    about: summaryRow.about,
+    firstSceneId: summaryRow.first_scene_id
+  }
   const roughEdition = {
     editionKey: editionRow.edition_key,
     storyId: editionRow.story_id,
     version: editionRow.version,
-    summary: deserializedSummary,
+    summary: summary,
     rating: editionRow.rating,
     publishedAt: editionRow.published_at
   }
@@ -109,7 +116,7 @@ exports.getEditions = async (storyId) => {
 }
 
 /*
-select story.id, title, pen_name, tag_line, about, first_scene_id from story, player
+select title, pen_name, tag_line, about, first_scene_id from story, player
 where story.id='v7kv89xo' and story.author_id=player.id
 
 insert into edition
@@ -121,7 +128,7 @@ exports.createNewEdition = async (storyId, version) => {
   console.log('publishingModel.createNewEdition')
 
   // summary
-  const SELECT_SUMMARY = 'select story.id, title, pen_name, tag_line, about, first_scene_id '
+  const SELECT_SUMMARY = 'select title, pen_name, tag_line, about, first_scene_id '
     + 'from story, player '
     + 'where story.id=$1 and story.author_id=player.id'
   let dbResult = await db.query(SELECT_SUMMARY, [storyId])

@@ -40,24 +40,25 @@ export default class PublishingSummary extends Component {
     let buttonMessage
     const { editions } = this.props
     if (editions && editions.length) {
-      rows = editions.map(edition => {
+      const sortedEditions = editions.sort((one, two) => {return two.version - one.version})
+      rows = sortedEditions.map(edition => {
         let published
-        let rating = edition.rating ? edition.rating : 'unknown'
-        let genre = edition.genre && edition.genre.length ? edition.genre.join(', ') : 'unknown'
+        let rating = edition.rating ? edition.rating : 'unrated'
+        let genre = edition.genre && edition.genre.length ? edition.genre.join(', ') : 'unclassified'
         if (edition.publishedAt) {
-          published = `Published: ${formatDateTime(edition.publishedAt)}`
+          published = formatDateTime(edition.publishedAt)
           buttonMessage = 'Reclassify'
         } else {
           foundUnpublished = true
-          published = 'Published: Not yet...'
+          published = 'Not yet...'
           buttonMessage = 'Classify, Review, and Publish'
         }
         const summary = edition.summary
         return (
           <li key={edition.editionKey} className="list-group-item">
-            <p>Version {edition.version} of story <em>{summary.title}</em> by {summary.penName} (key={edition.editionKey})</p>
-            <p>Rating: {rating} Genre: {genre} {published}</p>
-            <p><Link to={`/publish/${edition.storyId}/${edition.editionKey}`}>{buttonMessage}</Link></p>
+            <p>Version {edition.version} of story <em>{summary.title}</em> by {summary.penName} (key={edition.editionKey})<br/>
+              <b>Rating:</b> {rating} <b>Genre:</b> {genre} <b>Published:</b> {published}<br/>
+              <Link to={`/publish/${edition.storyId}/${edition.editionKey}`}>{buttonMessage}</Link></p>
           </li>
         )
       })
@@ -89,7 +90,7 @@ export default class PublishingSummary extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
-          <li className="breadcrumb-item">Publishing</li>
+          <li className="breadcrumb-item">Publish</li>
         </ol>
         <div className="row section">
           <div className="col">
