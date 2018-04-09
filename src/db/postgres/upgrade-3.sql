@@ -6,6 +6,7 @@ drop table if exists edition;
 drop view if exists player_status_codes;
 drop view if exists genre_codes;
 drop view if exists rating_codes;
+drop view if exists edition_status_codes;
 drop table if exists system_codes;
 
 create table system_codes (
@@ -22,7 +23,8 @@ insert into system_codes (code, display_name, sort_order)
 values
   ('player-status', 'Player Statuses', 1),
   ('genre', 'Genres', 2),
-  ('rating', 'Ratings', 3);
+  ('rating', 'Ratings', 3),
+  ('edition-status', 'Story Edition Status', 4);
 
 -- views, one per type
 create view player_status_codes
@@ -36,6 +38,10 @@ where parent_id=2;
 create view rating_codes
 as select id, code, display_name, sort_order from system_codes
 where parent_id=3;
+
+create view edition_status_codes
+as select id, code, display_name, sort_order from system_codes
+where parent_id=4;
 
 -- player-status
 insert into system_codes (parent_id, code, display_name, sort_order)
@@ -68,11 +74,22 @@ values
   (3, '14', 'Unsuitable Under 14 ', 5),
   (3, 'MA', 'Mature Audiences', 6);
 
+-- edition-status
+insert into system_codes (parent_id, code, display_name, sort_order)
+values
+  (4, 'proof', 'Proofing', 1),
+  (4, 'review', 'In Review', 2),
+  (4, 'available', 'Available', 3),
+  (4, 'hold', 'On Hold', 4),
+  (4, 'withdrawn', 'Out of Circulation', 5),
+  (4, 'removed', 'Gone', 6);
+
 create table edition (
   id serial primary key,
   edition_key varchar(20) not null unique,
   story_id varchar(8) not null references story (id),
   version varchar(8) not null,
+  status integer not null references system_codes (id),
   summary text,
   rating integer references system_codes (id),
   published_at timestamp

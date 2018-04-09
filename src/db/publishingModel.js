@@ -120,8 +120,9 @@ select title, pen_name, tag_line, about, first_scene_id from story, player
 where story.id='v7kv89xo' and story.author_id=player.id
 
 insert into edition
-(edition_key, story_id, version, summary)
-values ('v7kv89xo-1', 'v7kv89xo', '1', 'serialized-json-doc')
+(edition_key, story_id, version, status, summary)
+select 'v7kv89xo-1', 'v7kv89xo', '1', id, 'serialized-json-doc'
+from edition_status_codes where code='proof'
 returning *;
 */
 exports.createNewEdition = async (storyId, version) => {
@@ -136,10 +137,11 @@ exports.createNewEdition = async (storyId, version) => {
 
   const editionKey = `${storyId}-${version}`
   const INSERT_EDITION = 'insert into edition '
-    + '(edition_key, story_id, version, summary) '
-    + 'values ($1, $2, $3, $4) '
+    + '(edition_key, story_id, version, status, summary) '
+    + 'select $1, $2, $3, id, $4 '
+    + 'from edition_status_codes where code=$5 '
     + 'returning * '
-  dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary])
+  dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary, 'proof'])
   return await mapEditionRowToApi(dbResult.rows[0])
 }
 
@@ -297,17 +299,21 @@ exports.storeScenes = async (editionKey) => {
 }
 
 /*
-update edition set published_at=current_timestamp
+update edition set
+status=(select id from edition_status_codes where code='available'),
+published_at=current_timestamp
 where edition_key='v7kv89xo-1'
 returning *;
 */
 exports.finishPublishing = async (editionKey) => {
   console.log('publishingModel.finishPublishing')
   let edition
-  const QUERY = 'update edition set published_at=current_timestamp '
+  const QUERY = 'update edition set '
+    + 'status=(select id from edition_status_codes where code=$2), '
+    + 'published_at=current_timestamp '
     + 'where edition_key=$1 '
     + 'returning * '
-  const dbResult = await db.query(QUERY, [editionKey])
+  const dbResult = await db.query(QUERY, [editionKey, 'available'])
   if (dbResult.rowCount === 1) {
     edition = await mapEditionRowToApi(dbResult.rows[0])
   }

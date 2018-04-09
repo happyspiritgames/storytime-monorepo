@@ -25,6 +25,7 @@ paths:
       tags:
       - admin
       summary: Checks that service is responsive
+      description: Returns a fun little message to prove that it is still responding to requests.
       operationId: ping
       responses:
         '200':
@@ -40,16 +41,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
   /stories:
-    description: To access published stories that are available for general consumption.  See '/author' endpoints for working with in-progress drafts.
+    description: Methods that deal with stories that are published, which means that they are available for review or general consumption by others, not just the author. A published story is called an edition. To write, edit and publish stories, see '/draft-stories' endpoints.
     get:
       tags:
         - player
-      summary: Returns the catalog of published stories
-      description: Method that returns all published stories, to be extended with search criteria once there are too many stories.
+      summary: Returns the catalog of available published editions.
+      description: Returns a list of published editions. By default, this returns all of the latest published stories that are generally available (i.e., not under review or otherwise unavailable). At some point, say when there are more than a few dozen stories, this method will be extended to handle search criteria.
       operationId: searchStories
       responses:
         '200':
-          description: All published stories
+          description: All published editions that are generally available.
           content:
             application/json:
               schema:
@@ -60,17 +61,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  '/stories/{storyId}':
+  '/stories/{editionKey}':
     get:
       tags:
         - player
-      summary: Gets published story
-      description: Get published story for the given story ID
-      operationId: getPublishedStorySummary
+      summary: Retrieves a specific edition of a story.
+      description: Retrieves a specific edition of a story. The edition includes information about the story (metadata) as well as a read-only copy of the story summary (title, pen name, etc.).
+      operationId: getStoryEdition
       parameters:
-        - name: storyId
+        - name: editionKey
           in: path
-          description: story ID
+          description: uniquely identifies an edition of the story to read
           required: true
           schema:
             type: string
@@ -87,17 +88,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  '/stories/{storyId}/scenes/{sceneId}':
+  '/stories/{editionKey}/scenes/{sceneId}':
     get:
       tags:
         - player
-      summary: Gets a scene of a story.
-      description: Gets a scene of a story.
-      operationId: getStoryScene
+      summary: Gets a scene of a specific edition of a story.
+      description: Gets a scene of a specific edition of a story.
+      operationId: getEditionScene
       parameters:
-        - name: storyId
+        - name: editionKey
           in: path
-          description: story ID
+          description: uniquely identifies an edition of the story to read
           required: true
           schema:
             type: string
@@ -1060,12 +1061,10 @@ components:
         stories:
           type: array
           items:
-            $ref: '#/components/schemas/StorySummary'
+            $ref: '#/components/schemas/Edition'
     StorySummary:
       type: object
       properties:
-        storyId:
-          type: string
         title:
           type: string
         penName:
