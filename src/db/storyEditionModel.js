@@ -39,7 +39,6 @@ const patchEdition = async (editionToPatch) => {
   }
   // merge in associated genres
   const genre = await this.getStoryGenre(editionToPatch.editionKey)
-  console.log('patching genre with', genre)
   editionToPatch['genre'] = genre
   return editionToPatch
 }
@@ -81,10 +80,26 @@ exports.getLatestEditions = async () => {
     + 'and edition.status=edition_status_codes.id '
   const dbResult = await db.query(QUERY, ['available'])
   if (dbResult.rowCount) {
-    const latest = Promise.all(dbResult.rows.map(async (editionRow) => this.mapEditionRowToApi(editionRow)))
-    return latest
+    return Promise.all(dbResult.rows.map(async (editionRow) =>
+      this.mapEditionRowToApi(editionRow)))
   } else {
     return []
+  }
+}
+
+/*
+select summary from edition where edition_key='v7kv89xo-1';
+*/
+exports.getEdition = async (editionKey) => {
+  console.log('storyEditionModel.getSummary')
+  const QUERY = 'select * from edition where edition_key=$1'
+  const dbResult = await db.query(QUERY, [editionKey])
+  if (dbResult.rowCount) {
+    const edition = await this.mapEditionRowToApi(dbResult.rows[0])
+    console.log('found edition', edition)
+    return edition
+  } else {
+    console.log('did not find edition')
   }
 }
 

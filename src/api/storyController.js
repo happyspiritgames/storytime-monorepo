@@ -25,7 +25,6 @@ exports.ping = (req, res) => {
 exports.searchStories = (req, res) => {
   console.log('storyController.searchStories')
   try {
-    // res.json(await editionModel.getLatestEditions())
     editionModel.getLatestEditions().then((latest) => {
       res.json(latest)
     })
@@ -45,15 +44,15 @@ exports.getStoryEdition = (req, res) => {
   const { editionKey } = req.params
   console.log('storyController.getStoryEdition', editionKey)
   try {
-    editionModel.getSummary(editionKey).then((summary) => {
-      if (summary) {
-        res.json(summary)
+    editionModel.getEdition(editionKey).then((edition) => {
+      if (edition) {
+        res.json(edition)
       } else {
-        res.status(404).json(errorMessage('Story not found'))
+        res.status(404).json(errorMessage('Story edition not found'))
       }
     })
   } catch (e) {
-    console.error('Problem getting story summary', e)
+    console.error('Problem getting story edition', e)
     res.status(500).send(internalError)
   }
 }
