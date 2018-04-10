@@ -1,101 +1,58 @@
 import * as publishApi from '../../apis/publishApi'
+import * as editionActions from './editionActions'
 
-export const START_TO_PUBLISH = 'START_TO_PUBLISH'
-export const startToPublish = () => ({
-  type: START_TO_PUBLISH
+export const CREATE_EDITION = 'CREATE_EDITION'
+export const createEdition = () => ({
+  type: CREATE_EDITION
 })
 
-export const STARTED_TO_PUBLISH = 'STARTED_TO_PUBLISH'
-export const startedToPublish = (edition) => ({
-  type: STARTED_TO_PUBLISH,
+export const CREATED_EDITION = 'CREATED_EDITION'
+export const createdEdition = (edition) => ({
+  type: CREATED_EDITION,
   payload: {
     edition
   }
 })
 
-export const START_TO_PUBLISH_FAILED = 'START_TO_PUBLISH_FAILED'
-export const startToPublishFailed = (error) => ({
-  type: START_TO_PUBLISH_FAILED,
+export const CREATE_EDITION_FAILED = 'CREATE_EDITION_FAILED'
+export const createEditionFailed = (error) => ({
+  type: CREATE_EDITION_FAILED,
   payload: {
     error
   },
   error: true
 })
 
-export const createEdition = (storyId) => {
+export const createNewEdition = (storyId) => {
   // TODO implement custom handler for case where publishing already started
   return (dispatch) => {
-    dispatch(startToPublish())
+    dispatch(createEdition())
     publishApi.createEdition(
       storyId,
-      edition => dispatch(startedToPublish(edition)),
-      error => dispatch(startToPublishFailed(error))
+      edition => dispatch(createdEdition(edition)),
+      error => dispatch(createEditionFailed(error))
     )
   }
 }
-
-export const FETCH_EDITIONS = 'FETCH_EDITIONS'
-export const fetchEditions = () => ({
-  type: FETCH_EDITIONS
-})
-
-export const FETCHED_EDITIONS = 'FETCHED_EDITIONS'
-export const fetchedEditions = (editions) => ({
-  type: FETCHED_EDITIONS,
-  payload: {
-    editions
-  }
-})
-
-export const FETCH_EDITIONS_FAILED = 'FETCH_EDITIONS_FAILED'
-export const fetchEditionsFailed = (error) => ({
-  type: FETCH_EDITIONS_FAILED,
-  payload: {
-    error
-  },
-  error: true
-})
 
 export const getEditions = (storyId) => {
   return (dispatch) => {
-    dispatch(fetchEditions())
+    dispatch(editionActions.fetchEditions())
     publishApi.getEditions(
       storyId,
-      editions => dispatch(fetchedEditions(editions)),
-      error => dispatch(fetchEditionsFailed(error))
+      editions => dispatch(editionActions.fetchedEditions(editions)),
+      error => dispatch(editionActions.fetchEditionsFailed(error))
     )
   }
 }
 
-export const FETCH_EDITION = 'FETCH_EDITION'
-export const fetchEdition = () => ({
-  type: FETCH_EDITION
-})
-
-export const FETCHED_EDITION = 'FETCHED_EDITION'
-export const fetchedEdition = (edition) => ({
-  type: FETCHED_EDITION,
-  payload: {
-    edition
-  }
-})
-
-export const FETCH_EDITION_FAILED = 'FETCH_EDITION_FAILED'
-export const fetchEditionFailed = (error) => ({
-  type: FETCH_EDITION_FAILED,
-  payload: {
-    error
-  },
-  error: true
-})
-
 export const getEdition = (storyId, editionKey) => {
   return (dispatch) => {
-    dispatch(fetchEdition())
+    dispatch(editionActions.fetchEdition())
     publishApi.getEdition(
       storyId, editionKey,
-      editions => dispatch(fetchedEdition(editions)),
-      error => dispatch(fetchEditionFailed(error))
+      editions => dispatch(editionActions.fetchedEdition(editions)),
+      error => dispatch(editionActions.fetchEditionFailed(error))
     )
   }
 }

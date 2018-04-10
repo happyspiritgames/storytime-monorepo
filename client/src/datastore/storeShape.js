@@ -16,13 +16,9 @@ export const reduxStoreDataShape = {
     rating: [],
     'player-status': []
   },
-  drafts: {
-    'abc': {},
-    'blargy': {}
-  },
   editions: {
     'abe-1': {
-      editionKey: 'abe-1',
+      editionKey: 'dkwij3jk-1',
       storyId: 'dkwij3jk',
       version: '1',
       status: 'available',
@@ -35,8 +31,23 @@ export const reduxStoreDataShape = {
       },
       rating: 'Y',
       genre: ['adventure', 'fantasy'],
+      publishedAt: '2018-01-26T00:02:21.635Z',
       scenes: {
-        'a0wupmus': {},
+        'a0wupmus': {
+          title: 'Off to a good start',
+          prose: 'Stuff happens',
+          endPrompt: 'Now what?',
+          signpost: [
+            {
+              destinationId: 'b1wumpus',
+              teaser: 'Do this'
+            },
+            {
+              destinationId: 'c2wumpus',
+              teaser: 'Do that'
+            },
+          ]
+        },
         'b1wumpus': {},
         'c2wumpus': {}
       }
@@ -80,10 +91,14 @@ export const reduxStoreDataShape = {
     roles: ['player', 'author', 'admin', 'slacker'],
     userLoggedOut: false
   },
+  projects: {
+    'abc': {},
+    'blargy': {}
+  },
   reader: {
     status: 'READY',  // READY, FETCHING
-    editionKey: 'abcdefgh-1',
-    sceneId: 'fkj2ijji',
+    activeEdition: 'abcdefgh-1',
+    activeScene: 'kii23i34',
     history: {
       start: '2018-02-09T17:56:30.176Z',
       moves: [
@@ -131,24 +146,6 @@ export const reduxStoreDataShape = {
         '42': {}
       }
     },
-    activeEdition: 'abcdef-1',
-    editions: {
-      'abcdef-1': {
-        editionKey: 'abcdef-1',
-        storyId: 'abcdef',
-        version: '1',
-        summary: {
-          storyId: 'abcdef',
-          title: 'Blargy',
-          penName: 'bubba',
-          tagLine: 'Blargy blargy.',
-          about: 'Blargy blargy, blargy blargy',
-          firstSceneId: 'jhu3248'
-        },
-        rating: 'PG',
-        genre: ['scifi'],
-        publishedAt: '2018-01-26T00:02:21.635Z'
-      }
-    }
+    activeEdition: 'abcdef-1'
   },
 }

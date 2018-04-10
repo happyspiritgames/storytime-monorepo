@@ -4,84 +4,28 @@ import {
   testEdition
 } from '../testData'
 
-describe('writing desk actions', () => {
-  it('should create START_TO_PUBLISH action', () => {
-    expect(actions.startToPublish())
+describe('publish actions', () => {
+  it('should create CREATE_EDITION action', () => {
+    expect(actions.createEdition())
     .toEqual({
-      type: actions.START_TO_PUBLISH
+      type: actions.CREATE_EDITION
     })
   })
 
-  it('should create STARTED_TO_PUBLISH action', () => {
-    expect(actions.startedToPublish(testEdition))
+  it('should create CREATED_EDITION action', () => {
+    expect(actions.createdEdition(testEdition))
     .toEqual({
-      type: actions.STARTED_TO_PUBLISH,
+      type: actions.CREATED_EDITION,
       payload: {
         edition: testEdition
       }
     })
   })
 
-  it('should create START_TO_PUBLISH_FAILED action', () => {
-    expect(actions.startToPublishFailed(testError))
+  it('should create CREATE_EDITION_FAILED action', () => {
+    expect(actions.createEditionFailed(testError))
     .toEqual({
-      type: actions.START_TO_PUBLISH_FAILED,
-      payload: {
-        error: testError
-      },
-      error: true
-    })
-  })
-
-  it('should create FETCH_EDITIONS action', () => {
-    expect(actions.fetchEditions())
-    .toEqual({
-      type: actions.FETCH_EDITIONS
-    })
-  })
-
-  it('should create FETCHED_EDITIONS action', () => {
-    expect(actions.fetchedEditions([testEdition]))
-    .toEqual({
-      type: actions.FETCHED_EDITIONS,
-      payload: {
-        editions: [testEdition]
-      }
-    })
-  })
-
-  it('should create FETCH_EDITIONS_FAILED action', () => {
-    expect(actions.fetchEditionsFailed(testError))
-    .toEqual({
-      type: actions.FETCH_EDITIONS_FAILED,
-      payload: {
-        error: testError
-      },
-      error: true
-    })
-  })
-
-  it('should create FETCH_EDITION action', () => {
-    expect(actions.fetchEdition())
-    .toEqual({
-      type: actions.FETCH_EDITION
-    })
-  })
-
-  it('should create FETCHED_EDITION action', () => {
-    expect(actions.fetchedEdition(testEdition))
-    .toEqual({
-      type: actions.FETCHED_EDITION,
-      payload: {
-        edition: testEdition
-      }
-    })
-  })
-
-  it('should create FETCH_EDITION_FAILED action', () => {
-    expect(actions.fetchEditionFailed(testError))
-    .toEqual({
-      type: actions.FETCH_EDITION_FAILED,
+      type: actions.CREATE_EDITION_FAILED,
       payload: {
         error: testError
       },

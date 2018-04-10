@@ -8,7 +8,7 @@ import {
   testEdition
 } from '../testData'
 
-describe('writing desk reducer', () => {
+xdescribe('writing desk reducer', () => {
   let nextState
   let testError = new Error('blah')
 

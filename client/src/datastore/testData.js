@@ -96,6 +96,16 @@ export const testEdition = {
   publishedAt: '2018-01-26T00:02:21.635Z'
 }
 
+export const testEditions = [ testEdition ]
+
+export const testEditionScene = {
+  sceneId: 'blargy',
+  title: 'Where Big Things Happen',
+  prose: 'This is the scene where everything goes down.',
+  endPrompt: 'Now you decide how this ends.',
+  signpost: []
+}
+
 export const testCodes = [
   {
     code: 'blargy',

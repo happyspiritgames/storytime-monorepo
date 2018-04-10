@@ -7,14 +7,14 @@ export const getPublishedEditions = (handleResponse, handleError) => {
     .catch(err => handleError(err))
 }
 
-export const getSummary = (editionKey, handleResponse, handleError) => {
+export const getEdition = (editionKey, handleResponse, handleError) => {
   fetch(`/api/stories/${editionKey}`)
     .then(res => res.json())
-    .then(summary => handleResponse(summary))
+    .then(edition => handleResponse(edition))
     .catch(err => handleError(err))
 }
 
-export const getScene = (editionKey, sceneKey, handleResponse, handleError) => {
+export const getEditionScene = (editionKey, sceneKey, handleResponse, handleError) => {
   fetch(`/api/stories/${editionKey}/scenes/${sceneKey}`)
     .then(res => res.json())
     .then(scene => handleResponse(scene))
