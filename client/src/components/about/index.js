@@ -7,8 +7,9 @@ export default class About extends Component {
     return (
       <div id="about">
         <div className="message">
+          <h1>About StoryTime</h1>
           <p>Greetings! <img className="float-right headshot" src="/img/HappySpirit.png" width="150" alt="The Happy Spirit" /></p>
-          <p>You have found StoryTime, the first game produced by Happy Spirit Games. If you are new to
+          <p>You have found StoryTime, the first game produced by <a href="https://happyspiritgames.blog/about/">Happy Spirit Games</a>. If you are new to
             StoryTime, give <Link to="/reader/1-themission"><em>The Mission</em></Link> a try.  Go
             through a few times, making different choices each time. That will keep you entertained
             for anywhere from 15 to 30 minutes.</p>
@@ -18,8 +19,7 @@ export default class About extends Component {
           <p>If you think this isn't much, I don't blame you.  I am just getting warmed up.  Have fun with
             what you see, and be sure to <a href="http://eepurl.com/c9mZIr">register for my
             Insider Newsletter</a> to stay in the loop about improvements throughout the year.</p>
-          <p>You can
-            also <a href="https://happyspiritgames.blog/">follow the Happy Spirit Games
+          <p>You can also <a href="https://happyspiritgames.blog/">follow the Happy Spirit Games
             blog</a>.</p>
           <p>Have a blast!<br/><em>Dave Mount, a.k.a. The Happy Spirit</em></p>
         </div>
