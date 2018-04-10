@@ -1,24 +1,24 @@
 import { getHeaders } from '../util/authentication'
 
-export const getStorySummaries = (processResponse) => {
+export const getPublishedEditions = (handleResponse, handleError) => {
   fetch('/api/stories')
     .then(res => res.json())
-    .then(summaries => processResponse(summaries))
-    .catch(err => console.log('Failed to find stories.', err))
+    .then(editions => handleResponse(editions))
+    .catch(err => handleError(err))
 }
 
-export const getSummary = (storyKey, processResponse) => {
-  fetch(`/api/stories/${storyKey}`)
+export const getSummary = (editionKey, handleResponse, handleError) => {
+  fetch(`/api/stories/${editionKey}`)
     .then(res => res.json())
-    .then(summaries => processResponse(summaries))
-    .catch(err => console.log('Failed to find story with key:', storyKey, err))
+    .then(summary => handleResponse(summary))
+    .catch(err => handleError(err))
 }
 
-export const getScene = (storyKey, sceneKey, processResponse) => {
-  fetch(`/api/stories/${storyKey}/scenes/${sceneKey}`)
+export const getScene = (editionKey, sceneKey, handleResponse, handleError) => {
+  fetch(`/api/stories/${editionKey}/scenes/${sceneKey}`)
     .then(res => res.json())
-    .then(scene => processResponse(scene))
-    .catch(err => console.log('Failed to find story with key:', storyKey, err))
+    .then(scene => handleResponse(scene))
+    .catch(err => handleError(err))
 }
 
 export const getRoles = (handleResponse, handleError) => {
