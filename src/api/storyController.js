@@ -1,48 +1,80 @@
 const storyModel = require('../db/storyModel')
+const editionModel = require('../db/storyEditionModel')
 const systemModel = require('../db/systemModel')
 const { errorMessage, internalError } = require('./errors')
 
+/**
+ * Returns a sign of life.
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 exports.ping = (req, res) => {
-  console.log('ping')
+  console.log('storyController.ping')
   res.send({ salutation: 'pong' })
 }
 
+/**
+ * Returns a list of stories that match the given criteria. For now,
+ * there are no criteria, so this simply returns the latest editions
+ * of all published stories.
+ *
+ * @param {*} req the request object
+ * @param {*} res the response object
+ */
 exports.searchStories = (req, res) => {
   console.log('storyController.searchStories')
   try {
-    res.send(storyModel.getRecommendedStories())
+    // res.json(await editionModel.getLatestEditions())
+    editionModel.getLatestEditions().then((latest) => {
+      res.json(latest)
+    })
   } catch (e) {
-    console.error('Problem getting published stories', e)
+    console.error('Problem finding published stories', e)
     res.status(500).send(internalError)
   }
 }
 
-exports.getPublishedStorySummary = (req, res) => {
-  const { storyId } = req.params
-  console.log('storyController.getPublishedStorySummary', storyId)
+/**
+ * Returns the summary of the given story edition.
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+exports.getStoryEdition = (req, res) => {
+  const { editionKey } = req.params
+  console.log('storyController.getStoryEdition', editionKey)
   try {
-    const story = storyModel.getPublishedStorySummary(storyId)
-    if (story) {
-      res.json(story)
-    } else {
-      res.status(404).json(errorMessage('Story not found'))
-    }
+    editionModel.getSummary(editionKey).then((summary) => {
+      if (summary) {
+        res.json(summary)
+      } else {
+        res.status(404).json(errorMessage('Story not found'))
+      }
+    })
   } catch (e) {
     console.error('Problem getting story summary', e)
     res.status(500).send(internalError)
   }
 }
 
-exports.getStoryScene = (req, res) => {
-  const { storyId, sceneId } = req.params
-  console.log('storyController.getStoryScene', storyId, sceneId)
+/**
+ * Returns the given scene of the given story edition.
+ *
+ * @param {*} req
+ * @param {*} res
+ */
+exports.getEditionScene = (req, res) => {
+  const { editionKey, sceneId } = req.params
+  console.log('storyController.getEditionScene', editionKey, sceneId)
   try {
-    const scene = storyModel.getStoryScene(storyId, sceneId)
-    if (scene) {
-      res.json(scene)
-    } else {
-      res.status(404).json(errorMessage('Scene not found'))
-    }
+    editionModel.getScene(editionKey, sceneId).then((scene) => {
+      if (scene) {
+        res.json(scene)
+      } else {
+        res.status(404).json(errorMessage('Scene not found'))
+      }
+    })
   } catch (e) {
     console.error('Problem getting scene for story', e)
     res.status(500).send(internalError)
@@ -50,7 +82,11 @@ exports.getStoryScene = (req, res) => {
 }
 
 /**
- * Supports the following types: player-status, genre, rating.
+ * Retrieves lookups for the following supported types:
+ * player-status, genre, rating, edition-status.
+ *
+ * @param {*} req the request object
+ * @param {*} res the response object
  */
 exports.getCodes = async (req, res) => {
   const { type } = req.params
@@ -65,7 +101,7 @@ exports.getCodes = async (req, res) => {
       }
     }
   } catch (e) {
-    console.error('Problem getting codes of given type', type, e)
+    console.error('Problem getting lookups for type', type, e)
     res.status(500).send(internalError)
   }
 }

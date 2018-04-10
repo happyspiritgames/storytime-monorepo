@@ -8,8 +8,8 @@ module.exports = function (app, authCheck) {
   const apiRouter = express.Router()
   apiRouter.route('/ping').get(storyController.ping)
   apiRouter.route('/stories').get(storyController.searchStories)
-  apiRouter.route('/stories/:storyId').get(storyController.getPublishedStorySummary)
-  apiRouter.route('/stories/:storyId/scenes/:sceneId').get(storyController.getStoryScene)
+  apiRouter.route('/stories/:editionKey').get(storyController.getStoryEdition)
+  apiRouter.route('/stories/:editionKey/scenes/:sceneId').get(storyController.getEditionScene)
   apiRouter.route('/codes/:type').get(storyController.getCodes)
 
   const authRouter = express.Router()
