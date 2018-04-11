@@ -5,16 +5,21 @@ import Library from './Library'
 
 const mapStateToProps = (state) => {
   const isLoaded = state.library.isLoaded
-  let catalog = isLoaded ? state.library.catalog : undefined
+  let catalog
+  let featured
   let editions
   if (isLoaded) {
-    catalog = state.library.catalog
     editions = state.editions
+    catalog = state.library.catalog
+    if (catalog.editions.length) {
+      featured = editions[catalog.editions[0]]
+    }
   }
   return {
     isLoaded,
+    editions,
     catalog,
-    editions
+    featured
   }
 }
 

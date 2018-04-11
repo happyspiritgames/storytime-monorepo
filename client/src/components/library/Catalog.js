@@ -5,11 +5,11 @@ import { storySummaryShape } from '../../datastore/dataShapes'
 export default class Catalog extends Component {
   static propTypes = {
     summaries: PropTypes.arrayOf(storySummaryShape),
-    onPlay: PropTypes.func.isRequired
+    play: PropTypes.func.isRequired
   }
 
   renderCard(summary) {
-    const { onPlay } = this.props
+    const { play } = this.props
     const { storyId, title, penName, tagLine, about } = summary
       /*
         Put this under card, above card-body when story cover image is supported.
@@ -22,7 +22,7 @@ export default class Catalog extends Component {
           <h6 className="text-muted card-subtitle">by {penName}</h6>
           <p><em>{tagLine}</em></p>
           <p className="card-text">{about}</p>
-          <p><button className="btn btn-primary" onClick={ () => {onPlay(storyId)} }>Play</button></p>
+          <p><button className="btn btn-primary" onClick={ () => {play(storyId)} }>Play</button></p>
         </div>
       </div>
     )
