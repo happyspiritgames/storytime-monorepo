@@ -20,15 +20,15 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    onPlay: storyId => {
-      dispatch(play(storyId))
-    },
-    onGoToScene: sceneId => {
-      dispatch(goToScene(sceneId))
-    },
-    dispatch
-  }
+  // return {
+  //   onPlay: storyId => {
+  //     dispatch(play(storyId))
+  //   },
+  //   onGoToScene: sceneId => {
+  //     dispatch(goToScene(sceneId))
+  //   },
+  //   dispatch
+  // }
 }
 
 const ReaderPage = connect(

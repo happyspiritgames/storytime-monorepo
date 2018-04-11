@@ -27,7 +27,7 @@ class Navigation extends Component {
   }
 
   loadRolesIfMissing(roles) {
-    if (!roles || !roles.length) {
+    if (isLoggedIn() && (!roles || !roles.length)) {
       this.props.loadRoles()
     }
   }

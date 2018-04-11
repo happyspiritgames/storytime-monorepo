@@ -1,86 +1,10 @@
 import catalogReducer, { initialState } from './catalog'
 import * as actions from '../../actions'
-
-export const testEditionsForCatalog = [
-  {
-    editionKey: 'aaaaaaaa-1',
-    storyId: 'aaaaaaaa',
-    version: '1',
-    status: 'available',
-    summary: {
-      title: 'Ramona\'s Big Adventure',
-      penName: 'Bubba',
-      tagLine: 'Blargy blargy.',
-      about: 'An adventure to watch with your parents.',
-      firstSceneId: 'a1111111'
-    },
-    rating: 'PG',
-    genre: ['adventure'],
-    publishedAt: '2018-01-26T00:02:21.635Z'
-  }, {
-    editionKey: 'bbbbbbbb-1',
-    storyId: 'bbbbbbbb',
-    version: '1',
-    status: 'available',
-    summary: {
-      title: 'The Portal to Mars',
-      penName: 'Bubba',
-      tagLine: 'Blargy blargy.',
-      about: 'A sci-fi, adventure, fantasy to watch with your parents.',
-      firstSceneId: 'b1111111'
-    },
-    rating: 'PG',
-    genre: ['scifi', 'adventure', 'fantasy'],
-    publishedAt: '2018-01-26T00:02:21.635Z'
-  }, {
-    editionKey: 'cccccccc-3',
-    storyId: 'cccccccc',
-    version: '3',
-    status: 'available',
-    summary: {
-      title: 'The Hijinx of Mystery Man',
-      penName: 'Bubba',
-      tagLine: 'Blargy blargy.',
-      about: 'A mystery for mature audiences.',
-      firstSceneId: 'c3333333'
-    },
-    rating: 'MA',
-    genre: ['mystery'],
-    publishedAt: '2018-01-26T00:02:21.635Z'
-  }
-]
-
-const testEditionVariant1 = {
-  editionKey: 'dddddddd-13',
-  storyId: 'dddddddd',
-  version: '13',
-  status: 'available',
-  summary: {
-    title: 'A Walk Through History',
-    penName: 'Bubba',
-    tagLine: 'Blargy blargy.',
-    about: 'An historical tale for all.',
-    firstSceneId: 'd1313131'
-  },
-  rating: 'G',
-  genre: ['historical'],
-  publishedAt: '2018-01-26T00:02:21.635Z'
-}
-
-const testEditionVariant2NoRatingNoGenre = {
-  editionKey: 'eeeeeeee-14',
-  storyId: 'eeeeeeee',
-  version: '13',
-  status: 'available',
-  summary: {
-    title: 'Unknown Country',
-    penName: 'Bubba',
-    tagLine: 'Blargy blargy.',
-    about: 'Who knows what this is about or who it\'s for?',
-    firstSceneId: 'e1414141'
-  },
-  publishedAt: '2018-01-26T00:02:21.635Z'
-}
+import {
+  testEditionsForCatalog,
+  testEditionVariant1,
+  testEditionVariant2NoRatingNoGenre
+} from '../../testData'
 
 describe('catalog reducer', () => {
   let nextState

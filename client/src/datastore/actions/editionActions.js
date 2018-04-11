@@ -113,8 +113,6 @@ export const play = (storyId) => {
     const { stories } = getState()
     // story not cached
     if (!stories[storyId]) {
-      console.log('play ==> story not in state', storyId)
-      dispatch(readerFetching())
       dispatch(retrieveSummary(storyId))
         .then(() => {
           const sceneId = getState().stories[storyId].summary.firstSceneId

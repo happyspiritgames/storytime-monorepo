@@ -80,19 +80,19 @@ export const testSignpost = [
 ]
 
 export const testEdition = {
-  editionKey: 'abcdef-1',
-  storyId: 'abcdef',
+  editionKey: 'aaaaaaaa-1',
+  storyId: 'aaaaaaaa',
   version: '1',
+  status: 'available',
   summary: {
-    storyId: 'abcdef',
-    title: 'Blargy',
-    penName: 'bubba',
+    title: 'Ramona\'s Big Adventure',
+    penName: 'Bubba',
     tagLine: 'Blargy blargy.',
-    about: 'Blargy blargy, blargy blargy',
-    firstSceneId: 'jhu3248'
+    about: 'An adventure to watch with your parents.',
+    firstSceneId: 'a1111111'
   },
   rating: 'PG',
-  genre: ['scifi'],
+  genre: ['adventure'],
   publishedAt: '2018-01-26T00:02:21.635Z'
 }
 
@@ -107,22 +107,8 @@ export const testEditionScene = {
 }
 
 export const testEditionsForCatalog = [
+  testEdition,
   {
-    editionKey: 'aaaaaaaa-1',
-    storyId: 'aaaaaaaa',
-    version: '1',
-    status: 'available',
-    summary: {
-      title: 'Ramona\'s Big Adventure',
-      penName: 'Bubba',
-      tagLine: 'Blargy blargy.',
-      about: 'An adventure to watch with your parents.',
-      firstSceneId: 'a1111111'
-    },
-    rating: 'PG',
-    genre: ['adventure'],
-    publishedAt: '2018-01-26T00:02:21.635Z'
-  }, {
     editionKey: 'bbbbbbbb-1',
     storyId: 'bbbbbbbb',
     version: '1',
@@ -154,6 +140,38 @@ export const testEditionsForCatalog = [
     publishedAt: '2018-01-26T00:02:21.635Z'
   }
 ]
+
+export const testEditionVariant1 = {
+  editionKey: 'dddddddd-13',
+  storyId: 'dddddddd',
+  version: '13',
+  status: 'available',
+  summary: {
+    title: 'A Walk Through History',
+    penName: 'Bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'An historical tale for all.',
+    firstSceneId: 'd1313131'
+  },
+  rating: 'G',
+  genre: ['historical'],
+  publishedAt: '2018-01-26T00:02:21.635Z'
+}
+
+export const testEditionVariant2NoRatingNoGenre = {
+  editionKey: 'eeeeeeee-14',
+  storyId: 'eeeeeeee',
+  version: '13',
+  status: 'available',
+  summary: {
+    title: 'Unknown Country',
+    penName: 'Bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'Who knows what this is about or who it\'s for?',
+    firstSceneId: 'e1414141'
+  },
+  publishedAt: '2018-01-26T00:02:21.635Z'
+}
 
 export const testCodes = [
   {

@@ -60,9 +60,10 @@ export const reduxStoreDataShape = {
     // and so on
   },
   library: {
-    status: 'FETCHING',  // READY, FETCHING
+    status: 'FETCHING',  // READY, FETCHING,
+    isLoaded: true,
     catalog: {
-      published: ['abc-1', 'abd-2', 'abe-1', 'abf-4', 'abg-2', 'abh-13'],
+      editions: ['abc-1', 'abd-2', 'abe-1', 'abf-4', 'abg-2', 'abh-13'],
       byGenre: {
         'adventure': ['abe-1', 'abf-4'],
         'fantasy': ['abe-1', 'abg-2'],

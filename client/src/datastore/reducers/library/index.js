@@ -8,7 +8,8 @@ export const libraryStates = {
 
 export const initialState = {
   status: libraryStates.READY,
-  catalog: []
+  isLoaded: false,
+  catalog: catalogReducer(undefined, {})
 }
 
 export default (state = initialState, action) => {
@@ -16,7 +17,7 @@ export default (state = initialState, action) => {
     case LIBRARY_FETCHING:
       return {
         ...state,
-        status: libraryStates.FETCHING
+        status: libraryStates.FETCHING,
       }
     case LIBRARY_READY:
       return {
@@ -24,10 +25,16 @@ export default (state = initialState, action) => {
         status: libraryStates.READY
       }
     case FETCHED_EDITIONS:
+      return {
+        ...state,
+        catalog: catalogReducer(state.catalog, action),
+        isLoaded: true
+      }
     case FETCHED_EDITION:
       return {
         ...state,
-        catalog: catalogReducer(state.catalog, action)
+        catalog: catalogReducer(state.catalog, action),
+        isLoaded: true
       }
     default:
       return state

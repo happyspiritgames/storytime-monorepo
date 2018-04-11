@@ -1,25 +1,20 @@
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { refreshCatalog } from '../../datastore/actions'
+import { loadCatalog } from '../../datastore/actions'
 import Library from './Library'
 
 const mapStateToProps = (state) => {
-  const catalog = state.library.catalog.map(storyId => state.stories[storyId].summary).splice(1)
-  const featured = (catalog.length > 0) ? state.stories[state.library.catalog[0]].summary : undefined
+  let editionKeys = (state.library.isLoaded) ? state.library.catalog.editions : []
+  const catalog = editionKeys.map(editionKey => state.editions[editionKey])
   return {
-    catalog,
-    featured
+    catalog
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlay: storyId => {
-      dispatch(push(`/reader/${storyId}`))
-    },
-    onLoadCatalog: () => {
-      dispatch(refreshCatalog())
-    }
+    onLoadCatalog: () => dispatch(loadCatalog()),
+    onPlay: storyId => dispatch(push(`/reader/${storyId}`))
   }
 }
 
