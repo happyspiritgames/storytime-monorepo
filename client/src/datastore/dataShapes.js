@@ -56,6 +56,12 @@ export const draftShape = PropTypes.shape({
   scenes: PropTypes.object
 })
 
+export const catalogShape = PropTypes.shape({
+  editions: PropTypes.arrayOf(PropTypes.string),
+  byRating: PropTypes.object,
+  byGenre: PropTypes.object
+})
+
 export const editionShape = PropTypes.shape({
   editionKey: PropTypes.string,
   storyId: PropTypes.string,

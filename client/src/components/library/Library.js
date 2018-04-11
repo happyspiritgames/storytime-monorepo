@@ -1,35 +1,46 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { storySummaryShape } from '../../datastore/dataShapes'
+import { catalogShape } from '../../datastore/dataShapes'
 import FeaturedStory from './FeaturedStory'
 import Catalog from './Catalog'
 
 export default class Library extends Component {
   static propTypes = {
-    catalog: PropTypes.arrayOf(storySummaryShape),
-    featured: storySummaryShape,
-    onPlay: PropTypes.func.isRequired,
-    onLoadCatalog: PropTypes.func.isRequired
+    isLoaded: PropTypes.bool,
+    catalog: catalogShape,
+    featured: PropTypes.string,
+    editions: PropTypes.object,
+    loadCatalog: PropTypes.func.isRequired,
+    play: PropTypes.func.isRequired
   }
 
   componentDidMount() {
-    if (!this.props.catalog || this.props.catalog.length === 0) {
-      this.props.onLoadCatalog()
+    if (!this.props.isLoaded) {
+      this.props.loadCatalog()
     }
   }
 
-  render() {
-    const { catalog, featured, onPlay } = this.props
-    const content = (!featured || catalog.length === 0)
-      ? <h3>Loading...</h3>
-      : [
-        <FeaturedStory key='featured' storySummary={featured} onPlay={onPlay} />,
-        <Catalog key='catalog' summaries={catalog} onPlay={onPlay} />
-      ]
-
+  renderEmpty() {
     return (
       <div id="library">
-        { content }
+        <h3>Loading...</h3>
+        <p>Hold tight while I figure out what is available.</p>
+        <p>If you see this message for more than a few seconds, maybe something is wrong. Lost your connection, perhaps? Or maybe it's us. Sorry about that.</p>
+      </div>
+    )
+  }
+
+  render() {
+    const { isLoaded, catalog, editions, onPlay } = this.props
+    if (!isLoaded) {
+      return this.renderEmpty()
+    }
+
+    const catalogSummaries = catalog.editions.map(key => editions[key].summary)
+    return (
+      <div id="library">
+        <FeaturedStory key='featured' edition={catalog[0]} onPlay={onPlay} />
+        <Catalog key='catalog' summaries={catalogSummaries} onPlay={onPlay} />
       </div>
     )
   }

@@ -4,17 +4,24 @@ import { loadCatalog } from '../../datastore/actions'
 import Library from './Library'
 
 const mapStateToProps = (state) => {
-  let editionKeys = (state.library.isLoaded) ? state.library.catalog.editions : []
-  const catalog = editionKeys.map(editionKey => state.editions[editionKey])
+  const isLoaded = state.library.isLoaded
+  let catalog = isLoaded ? state.library.catalog : undefined
+  let editions
+  if (isLoaded) {
+    catalog = state.library.catalog
+    editions = state.editions
+  }
   return {
-    catalog
+    isLoaded,
+    catalog,
+    editions
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadCatalog: () => dispatch(loadCatalog()),
-    onPlay: storyId => dispatch(push(`/reader/${storyId}`))
+    loadCatalog: () => dispatch(loadCatalog()),
+    play: (editionKey) => { dispatch(push(`/reader/${editionKey}`)) }
   }
 }
 
