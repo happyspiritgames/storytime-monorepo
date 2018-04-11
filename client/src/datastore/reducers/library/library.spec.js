@@ -23,12 +23,4 @@ describe('library reducer', () => {
       status: libraryStates.READY
     })
   })
-
-  it('handle FETCHED_EDITIONS', () => {
-    expect(true).toEqual(false)
-  })
-
-  it('handle FETCHED_EDITIONS', () => {
-    expect(true).toEqual(false)
-  })
 })
