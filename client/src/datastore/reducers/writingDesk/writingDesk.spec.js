@@ -309,10 +309,7 @@ describe('writing desk reducer', () => {
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeEdition: testEdition.editionKey,
-      editions: {
-        [testEdition.editionKey]: testEdition
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
@@ -338,10 +335,7 @@ describe('writing desk reducer', () => {
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeEdition: testEdition.editionKey,
-      editions: {
-        [testEdition.editionKey]: testEdition
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
@@ -368,10 +362,7 @@ describe('writing desk reducer', () => {
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeEdition: testEdition.editionKey,
-      editions: {
-        [testEdition.editionKey]: testEdition
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 

@@ -1,4 +1,5 @@
-import { LIBRARY_FETCHING, LIBRARY_READY, FETCHED_CATALOG } from '../actions'
+import { LIBRARY_FETCHING, LIBRARY_READY, FETCHED_EDITIONS, FETCHED_EDITION } from '../../actions'
+import catalogReducer from './catalog'
 
 export const libraryStates = {
   READY: 'READY',
@@ -22,7 +23,12 @@ export default (state = initialState, action) => {
         ...state,
         status: libraryStates.READY
       }
-    case FETCHED_CATALOG:
+    case FETCHED_EDITIONS:
+    case FETCHED_EDITION:
+      return {
+        ...state,
+        catalog: catalogReducer(state.catalog, action)
+      }
     default:
       return state
   }
