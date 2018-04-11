@@ -1,7 +1,7 @@
 import library, { initialState, libraryStates } from './library'
 import * as actions from '../actions'
 
-describe('library reducer', () => {
+xdescribe('library reducer', () => {
   const summaries = [
     { storyId: 'blah', title: 'Alice in Wonderland' },
     { storyId: 'blargy', title: 'Beetleguise' }

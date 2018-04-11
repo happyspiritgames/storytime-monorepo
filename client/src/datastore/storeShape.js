@@ -16,6 +16,10 @@ export const reduxStoreDataShape = {
     rating: [],
     'player-status': []
   },
+  drafts: {
+    'abc': {},
+    'blargy': {}
+  },
   editions: {
     'abe-1': {
       editionKey: 'dkwij3jk-1',
@@ -90,10 +94,6 @@ export const reduxStoreDataShape = {
     },
     roles: ['player', 'author', 'admin', 'slacker'],
     userLoggedOut: false
-  },
-  projects: {
-    'abc': {},
-    'blargy': {}
   },
   reader: {
     status: 'READY',  // READY, FETCHING

@@ -7,7 +7,6 @@ import editions from './editions'
 import library from './library'
 import player from './player'
 import reader from './reader'
-import stories from './stories'
 import writingDesk from './writingDesk'
 
 const storyTimeApp = combineReducers({
@@ -19,7 +18,6 @@ const storyTimeApp = combineReducers({
   library,
   player,
   reader,
-  stories,
   writingDesk
 })
 

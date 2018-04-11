@@ -23,12 +23,6 @@ export default (state = initialState, action) => {
         status: libraryStates.READY
       }
     case FETCHED_CATALOG:
-      const catalogStoryIds = (!action.payload.summaries) ? []
-        : action.payload.summaries.map(summary => (summary.storyId))
-      return {
-        ...state,
-        catalog: catalogStoryIds
-      }
     default:
       return state
   }
