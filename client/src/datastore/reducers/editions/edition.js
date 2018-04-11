@@ -1,5 +1,5 @@
 import { FETCHED_EDITION_SCENE } from '../../actions'
-import scenesReducer from './scenes'
+import editionScenesReducer from './editionScenes'
 
 export const initialState = {}
 
@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
     case FETCHED_EDITION_SCENE:
       return {
         ...state,
-        scenes: scenesReducer(state.scenes, action)
+        scenes: editionScenesReducer(state.scenes, action)
       }
     default:
       return state

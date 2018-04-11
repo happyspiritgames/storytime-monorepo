@@ -1,6 +1,6 @@
 import activeDraft, { initialState } from './activeDraft'
-import * as actions from '../actions'
-import { testFullDraft, testDraftScene, testSignpost } from '../testData'
+import * as actions from '../../actions'
+import { testFullDraft, testDraftScene, testSignpost } from '../../testData'
 
 describe('activeDraft reducer', () => {
   let nextState

@@ -6,13 +6,13 @@ export const initialState = {}
 export default (state = initialState, action) => {
   switch (action.type) {
     case FETCHED_EDITIONS:
-      const flattened = {}
+      const nextEditions = {}
       action.payload.editions.forEach(edition => {
-        flattened[edition.editionKey] = edition
+        nextEditions[edition.editionKey] = edition
       })
       return {
         ...state,
-        ...flattened
+        ...nextEditions
       }
     case FETCHED_EDITION:
       const { edition } = action.payload

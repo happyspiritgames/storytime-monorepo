@@ -1,16 +1,16 @@
-import writingDesk, { initialState, writingDeskStates } from './writingDesk'
-import * as actions from '../actions'
+import writingDesk, { initialState, writingDeskStates } from './index'
+import * as actions from '../../actions'
 import {
   testDraftSummaries,
   testFullDraft,
   testDraftScene,
   testSignpost,
-  testEdition
-} from '../testData'
+  testEdition,
+  testError
+} from '../../testData'
 
-xdescribe('writing desk reducer', () => {
+describe('writing desk reducer', () => {
   let nextState
-  let testError = new Error('blah')
 
   it('should provide initial state', () => {
     expect(writingDesk(undefined, {})).toEqual(initialState)
@@ -242,29 +242,26 @@ xdescribe('writing desk reducer', () => {
     })
   })
 
-  it('handles START_TO_PUBLISH', () => {
-    nextState = writingDesk(undefined, actions.startToPublish())
+  it('handles CREATE_EDITION', () => {
+    nextState = writingDesk(undefined, actions.createEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles STARTED_TO_PUBLISH', () => {
-    nextState = writingDesk(undefined, actions.startedToPublish(testEdition))
+  it('handles CREATED_EDITION', () => {
+    nextState = writingDesk(undefined, actions.createdEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeEdition: testEdition.editionKey,
-      editions: {
-        [testEdition.editionKey]: testEdition
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
-  it('handles START_TO_PUBLISH_FAILED', () => {
-    nextState = writingDesk(undefined, actions.startToPublish())
-    nextState = writingDesk(nextState, actions.startToPublishFailed(testError))
+  it('handles CREATE_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.createEdition())
+    nextState = writingDesk(nextState, actions.createEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
@@ -286,11 +283,7 @@ xdescribe('writing desk reducer', () => {
     nextState = writingDesk(undefined, actions.fetchedEditions([testEdition, testEdition2]))
     expect(nextState).toEqual({
       ...initialState,
-      status: writingDeskStates.READY,
-      editions: {
-        [testEdition.editionKey]: testEdition,
-        [testEdition2.editionKey]: testEdition2
-      }
+      status: writingDeskStates.READY
     })
   })
 
