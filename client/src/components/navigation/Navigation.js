@@ -47,7 +47,7 @@ class Navigation extends Component {
   }
 
   render() {
-    const isSignedIn = !this.props.userLoggedOut && isLoggedIn();
+    const isSignedIn = !this.props.userLoggedOut && isLoggedIn()
     const isAdmin = this.hasRole('admin')
     const isAuthor = this.hasRole('author')
 

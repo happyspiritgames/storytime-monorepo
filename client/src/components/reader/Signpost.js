@@ -32,16 +32,16 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => 
         icon='refresh'
       />,
       <Sign
-        key='feedback'
-        onClick={() => { goToContact() }}
-        text='Give feedback'
-        icon='email'
-      />,
-      <Sign
         key='library'
         onClick={() => { goToLibrary() }}
         text='Find another'
         icon='search'
+      />,
+      <Sign
+        key='feedback'
+        onClick={() => { goToContact() }}
+        text='Give feedback'
+        icon='email'
       />
     ]
   }
