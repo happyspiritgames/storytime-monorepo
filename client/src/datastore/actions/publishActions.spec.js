@@ -1,31 +1,31 @@
 import * as actions from './index'
 import {
   testError,
-  testProof
+  testEdition
 } from '../testData'
 
-describe('writing desk actions', () => {
-  it('should create START_TO_PUBLISH action', () => {
-    expect(actions.startToPublish())
+describe('publish actions', () => {
+  it('should create CREATE_EDITION action', () => {
+    expect(actions.createEdition())
     .toEqual({
-      type: actions.START_TO_PUBLISH
+      type: actions.CREATE_EDITION
     })
   })
 
-  it('should create STARTED_TO_PUBLISH action', () => {
-    expect(actions.startedToPublish(testProof))
+  it('should create CREATED_EDITION action', () => {
+    expect(actions.createdEdition(testEdition))
     .toEqual({
-      type: actions.STARTED_TO_PUBLISH,
+      type: actions.CREATED_EDITION,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })
 
-  it('should create START_TO_PUBLISH_FAILED action', () => {
-    expect(actions.startToPublishFailed(testError))
+  it('should create CREATE_EDITION_FAILED action', () => {
+    expect(actions.createEditionFailed(testError))
     .toEqual({
-      type: actions.START_TO_PUBLISH_FAILED,
+      type: actions.CREATE_EDITION_FAILED,
       payload: {
         error: testError
       },
@@ -33,83 +33,27 @@ describe('writing desk actions', () => {
     })
   })
 
-  it('should create FETCH_PROOFS action', () => {
-    expect(actions.fetchProofs())
+  it('should create SAVE_EDITION action', () => {
+    expect(actions.saveEdition())
     .toEqual({
-      type: actions.FETCH_PROOFS
+      type: actions.SAVE_EDITION
     })
   })
 
-  it('should create FETCHED_PROOFS action', () => {
-    expect(actions.fetchedProofs([testProof]))
+  it('should create SAVED_EDITION action', () => {
+    expect(actions.savedEdition(testEdition))
     .toEqual({
-      type: actions.FETCHED_PROOFS,
+      type: actions.SAVED_EDITION,
       payload: {
-        proofs: [testProof]
+        edition: testEdition
       }
     })
   })
 
-  it('should create FETCH_PROOFS_FAILED action', () => {
-    expect(actions.fetchProofsFailed(testError))
+  it('should create SAVE_EDITION_FAILED action', () => {
+    expect(actions.saveEditionFailed(testError))
     .toEqual({
-      type: actions.FETCH_PROOFS_FAILED,
-      payload: {
-        error: testError
-      },
-      error: true
-    })
-  })
-
-  it('should create FETCH_PROOF action', () => {
-    expect(actions.fetchProof())
-    .toEqual({
-      type: actions.FETCH_PROOF
-    })
-  })
-
-  it('should create FETCHED_PROOF action', () => {
-    expect(actions.fetchedProof(testProof))
-    .toEqual({
-      type: actions.FETCHED_PROOF,
-      payload: {
-        proof: testProof
-      }
-    })
-  })
-
-  it('should create FETCH_PROOF_FAILED action', () => {
-    expect(actions.fetchProofFailed(testError))
-    .toEqual({
-      type: actions.FETCH_PROOF_FAILED,
-      payload: {
-        error: testError
-      },
-      error: true
-    })
-  })
-
-  it('should create UPDATE_PROOF action', () => {
-    expect(actions.updateProof())
-    .toEqual({
-      type: actions.UPDATE_PROOF
-    })
-  })
-
-  it('should create UPDATED_PROOF action', () => {
-    expect(actions.updatedProof(testProof))
-    .toEqual({
-      type: actions.UPDATED_PROOF,
-      payload: {
-        proof: testProof
-      }
-    })
-  })
-
-  it('should create UPDATE_PROOF_FAILED action', () => {
-    expect(actions.updateProofFailed(testError))
-    .toEqual({
-      type: actions.UPDATE_PROOF_FAILED,
+      type: actions.SAVE_EDITION_FAILED,
       payload: {
         error: testError
       },
@@ -125,11 +69,11 @@ describe('writing desk actions', () => {
   })
 
   it('should create PUBLISHED action', () => {
-    expect(actions.published(testProof))
+    expect(actions.published(testEdition))
     .toEqual({
       type: actions.PUBLISHED,
       payload: {
-        proof: testProof
+        edition: testEdition
       }
     })
   })

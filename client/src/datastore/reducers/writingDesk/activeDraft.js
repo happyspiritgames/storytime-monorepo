@@ -5,8 +5,8 @@ import {
   SAVED_DRAFT_SCENE,
   LOADED_DRAFT_SIGNPOST,
   SAVED_DRAFT_SIGNPOST
-} from '../actions'
-import scenes from './scenes'
+} from '../../actions'
+import scenesReducer from './scenes'
 
 export const initialState = {
   summary: {},
@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
     case LOADED_DRAFT:
       return {
         summary: action.payload.draft.summary,
-        scenes: scenes(state.scenes, action)
+        scenes: scenesReducer(state.scenes, action)
       }
     case LOADED_DRAFT_SCENE:
     case SAVED_DRAFT_SCENE:
@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
     case SAVED_DRAFT_SIGNPOST:
       return {
         ...state,
-        scenes: scenes(state.scenes, action)
+        scenes: scenesReducer(state.scenes, action)
       }
     default:
       return state

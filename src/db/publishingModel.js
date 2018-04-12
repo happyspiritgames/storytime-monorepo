@@ -1,65 +1,5 @@
 const db = require('./postgres')
-
-/*
-select code from rating_codes where id=19
-*/
-const getStoryRating = async (ratingId) => {
-  console.log('publishingModel.getStoryRating')
-  const QUERY = 'select code from rating_codes where id=$1'
-  const dbResult = await db.query(QUERY, [ratingId])
-  return dbResult.rows[0].code
-}
-
-/*
-select genre_codes.code as code from genre_codes, edition_genre, edition
-where edition.edition_key='v7kv89xo-1'
-and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.id;
- */
-const getStoryGenre = async (editionKey) => {
-  console.log('publishingModel.getStoryGenre')
-  const QUERY = 'select genre_codes.code as code from genre_codes, edition_genre, edition '
-    + 'where edition.edition_key=$1 '
-    + 'and edition.id=edition_genre.edition_id and edition_genre.genre_id=genre_codes.id'
-  const dbResult = await db.query(QUERY, [editionKey])
-  if (dbResult.rowCount) {
-    return dbResult.rows.map(row => row.code)
-  } else {
-    return []
-  }
-}
-
-/**
- * Turn primary keys into codes. Tack on genre codes.
- */
-const patchEdition = async (editionToPatch) => {
-  console.log('publishingModel.patchEdition')
-  if (editionToPatch.rating) {
-    const ratingCode = await getStoryRating(editionToPatch.rating)
-    editionToPatch['rating'] = ratingCode
-  }
-  // merge in associated genres
-  const genre = await getStoryGenre(editionToPatch.editionKey)
-  console.log('patching genre with', genre)
-  editionToPatch['genre'] = genre
-  return editionToPatch
-}
-
-/**
- * Turns edition row from database into form expected by StoryTime authoring API.
- * 
- * @param {*} editionRow
- */
-const mapEditionRowToApi = async (editionRow) => {
-  const roughEdition = {
-    editionKey: editionRow.edition_key,
-    storyId: editionRow.story_id,
-    version: editionRow.version,
-    summary: editionRow.summary,
-    rating: editionRow.rating,
-    publishedAt: editionRow.published_at
-  }
-  return await patchEdition(roughEdition)
-}
+const { getStoryGenre, mapEditionRowToApi } = require('./storyEditionModel')
 
 /*
 select version from edition where story_id='abcdefg' and published_at is null;
@@ -108,19 +48,20 @@ exports.getEditions = async (storyId) => {
 }
 
 /*
-select story.id, title, pen_name, tag_line, about, first_scene_id from story, player
+select title, pen_name, tag_line, about, first_scene_id from story, player
 where story.id='v7kv89xo' and story.author_id=player.id
 
 insert into edition
-(edition_key, story_id, version, summary)
-values ('v7kv89xo-1', 'v7kv89xo', '1', 'serialized-json-doc')
+(edition_key, story_id, version, status, summary)
+select 'v7kv89xo-1', 'v7kv89xo', '1', id, 'serialized-json-doc'
+from edition_status_codes where code='proof'
 returning *;
 */
 exports.createNewEdition = async (storyId, version) => {
   console.log('publishingModel.createNewEdition')
 
   // summary
-  const SELECT_SUMMARY = 'select story.id, title, pen_name, tag_line, about, first_scene_id '
+  const SELECT_SUMMARY = 'select title, pen_name, tag_line, about, first_scene_id '
     + 'from story, player '
     + 'where story.id=$1 and story.author_id=player.id'
   let dbResult = await db.query(SELECT_SUMMARY, [storyId])
@@ -128,10 +69,11 @@ exports.createNewEdition = async (storyId, version) => {
 
   const editionKey = `${storyId}-${version}`
   const INSERT_EDITION = 'insert into edition '
-    + '(edition_key, story_id, version, summary) '
-    + 'values ($1, $2, $3, $4) '
+    + '(edition_key, story_id, version, status, summary) '
+    + 'select $1, $2, $3, id, $4 '
+    + 'from edition_status_codes where code=$5 '
     + 'returning * '
-  dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary])
+  dbResult = await db.query(INSERT_EDITION, [editionKey, storyId, version, summary, 'proof'])
   return await mapEditionRowToApi(dbResult.rows[0])
 }
 
@@ -289,17 +231,21 @@ exports.storeScenes = async (editionKey) => {
 }
 
 /*
-update edition set published_at=current_timestamp
+update edition set
+status=(select id from edition_status_codes where code='available'),
+published_at=current_timestamp
 where edition_key='v7kv89xo-1'
 returning *;
 */
 exports.finishPublishing = async (editionKey) => {
   console.log('publishingModel.finishPublishing')
   let edition
-  const QUERY = 'update edition set published_at=current_timestamp '
+  const QUERY = 'update edition set '
+    + 'status=(select id from edition_status_codes where code=$2), '
+    + 'published_at=current_timestamp '
     + 'where edition_key=$1 '
     + 'returning * '
-  const dbResult = await db.query(QUERY, [editionKey])
+  const dbResult = await db.query(QUERY, [editionKey, 'available'])
   if (dbResult.rowCount === 1) {
     edition = await mapEditionRowToApi(dbResult.rows[0])
   }

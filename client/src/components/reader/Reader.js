@@ -1,44 +1,27 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { push } from 'react-router-redux'
 import FormattedProse from './FormattedProse'
 import Signpost from './Signpost'
-import { readerStates } from '../../datastore/reducers/reader'
-import { storySummaryShape, sceneShape } from '../../datastore/dataShapes'
+import { sceneShape, editionShape } from '../../datastore/dataShapes'
 import './reader.css'
 
 export default class Reader extends Component {
   static propTypes = {
-    status: PropTypes.string,
-    summary: storySummaryShape,
+    edition: editionShape,
     scene: sceneShape,
-    onPlay: PropTypes.func.isRequired,
-    onGoToScene: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired
-  }
-
-  constructor() {
-    super()
-    this.state = {
-      internalState: readerStates.READY
-    }
-  }
-
-  isFetching() {
-    return this.props.status === readerStates.FETCHING
-  }
-
-  isReady() {
-    return this.props.storyId === this.props.match.params.storyId &&
-      this.props.status === readerStates.READY
+    playGame: PropTypes.func.isRequired,
+    goToScene: PropTypes.func.isRequired
   }
 
   componentDidMount() {
-    const { storyId } = this.props.match.params
-    if (!storyId) {
-      throw new Error('route did not include storyId')
+    console.log('Reader.componentDidMount', this.props)
+    if (!this.props.edition) {
+      this.props.playGame(this.props.match.params.editionKey)
     }
-    this.props.onPlay(storyId)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('Reader.componentWillReceiveProps', nextProps, this.props)
   }
 
   renderNotReady(message) {
@@ -50,21 +33,19 @@ export default class Reader extends Component {
   }
 
   render() {
-    const { summary, scene, onGoToScene, onPlay, dispatch } = this.props
+    const { edition, scene, goToScene, playGame } = this.props
 
-    if (this.isFetching()) {
+    if (!edition) {
       return this.renderNotReady('Loading...one moment please.')
-    } else if (!this.isReady()) {
+    } else if (!scene) {
       return this.renderNotReady('Please wait while we set the scene...this should only take a second or two.')
     }
 
-    if (!scene) {
-      throw new Error('Whoops!  The Reader thinks it is ready, but there is nothing to read.')
-    }
-
-    const playAgain = () => { onPlay(summary.storyId) }
-    const goToLibrary = () => { dispatch(push('/')) }
-    const goToContact = () => { dispatch(push('/contact')) }
+    const summary = edition.summary
+    const push = this.props.history.push
+    const playAgain = () => playGame(edition.editionKey)
+    const goToLibrary = () => { push('/') }
+    const goToContact = () => { push('/contact') }
 
     return (
       <div id="reader">
@@ -80,7 +61,7 @@ export default class Reader extends Component {
         </div>
         <Signpost
           scene={scene}
-          goToScene={onGoToScene}
+          goToScene={goToScene}
           playAgain={playAgain}
           goToContact={goToContact}
           goToLibrary={goToLibrary}

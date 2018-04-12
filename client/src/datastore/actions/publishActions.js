@@ -1,135 +1,92 @@
 import * as publishApi from '../../apis/publishApi'
+import * as editionActions from './editionActions'
 
-export const START_TO_PUBLISH = 'START_TO_PUBLISH'
-export const startToPublish = () => ({
-  type: START_TO_PUBLISH
+export const CREATE_EDITION = 'CREATE_EDITION'
+export const createEdition = () => ({
+  type: CREATE_EDITION
 })
 
-export const STARTED_TO_PUBLISH = 'STARTED_TO_PUBLISH'
-export const startedToPublish = (proof) => ({
-  type: STARTED_TO_PUBLISH,
+export const CREATED_EDITION = 'CREATED_EDITION'
+export const createdEdition = (edition) => ({
+  type: CREATED_EDITION,
   payload: {
-    proof
+    edition
   }
 })
 
-export const START_TO_PUBLISH_FAILED = 'START_TO_PUBLISH_FAILED'
-export const startToPublishFailed = (error) => ({
-  type: START_TO_PUBLISH_FAILED,
+export const CREATE_EDITION_FAILED = 'CREATE_EDITION_FAILED'
+export const createEditionFailed = (error) => ({
+  type: CREATE_EDITION_FAILED,
   payload: {
     error
   },
   error: true
 })
 
-export const prepareToPublish = (draftId) => {
+export const createNewEdition = (storyId) => {
   // TODO implement custom handler for case where publishing already started
   return (dispatch) => {
-    dispatch(startToPublish())
-    publishApi.prepareToPublish(
-      draftId,
-      proof => dispatch(startedToPublish(proof)),
-      error => dispatch(startToPublishFailed(error))
+    dispatch(createEdition())
+    publishApi.createEdition(
+      storyId,
+      edition => dispatch(createdEdition(edition)),
+      error => dispatch(createEditionFailed(error))
     )
   }
 }
 
-export const FETCH_PROOFS = 'FETCH_PROOFS'
-export const fetchProofs = () => ({
-  type: FETCH_PROOFS
+export const getEditions = (storyId) => {
+  return (dispatch) => {
+    dispatch(editionActions.fetchEditions())
+    publishApi.getEditions(
+      storyId,
+      editions => dispatch(editionActions.fetchedEditions(editions)),
+      error => dispatch(editionActions.fetchEditionsFailed(error))
+    )
+  }
+}
+
+export const getEdition = (storyId, editionKey) => {
+  return (dispatch) => {
+    dispatch(editionActions.fetchEdition())
+    publishApi.getEdition(
+      storyId, editionKey,
+      editions => dispatch(editionActions.fetchedEdition(editions)),
+      error => dispatch(editionActions.fetchEditionFailed(error))
+    )
+  }
+}
+
+export const SAVE_EDITION = 'SAVE_EDITION'
+export const saveEdition = () => ({
+  type: SAVE_EDITION
 })
 
-export const FETCHED_PROOFS = 'FETCHED_PROOFS'
-export const fetchedProofs = (proofs) => ({
-  type: FETCHED_PROOFS,
+export const SAVED_EDITION = 'SAVED_EDITION'
+export const savedEdition = (edition) => ({
+  type: SAVED_EDITION,
   payload: {
-    proofs
+    edition
   }
 })
 
-export const FETCH_PROOFS_FAILED = 'FETCH_PROOFS_FAILED'
-export const fetchProofsFailed = (error) => ({
-  type: FETCH_PROOFS_FAILED,
+export const SAVE_EDITION_FAILED = 'SAVE_EDITION_FAILED'
+export const saveEditionFailed = (error) => ({
+  type: SAVE_EDITION_FAILED,
   payload: {
     error
   },
   error: true
 })
 
-export const getProofs = (draftId) => {
+export const updateEdition = (storyId, editionKey, editionUpdate) => {
+  console.log('publishActions.saveEdition', storyId, editionKey, editionUpdate)
   return (dispatch) => {
-    dispatch(fetchProofs())
-    publishApi.getProofs(
-      draftId,
-      proofs => dispatch(fetchedProofs(proofs)),
-      error => dispatch(fetchProofsFailed(error))
-    )
-  }
-}
-
-export const FETCH_PROOF = 'FETCH_PROOF'
-export const fetchProof = () => ({
-  type: FETCH_PROOF
-})
-
-export const FETCHED_PROOF = 'FETCHED_PROOF'
-export const fetchedProof = (proof) => ({
-  type: FETCHED_PROOF,
-  payload: {
-    proof
-  }
-})
-
-export const FETCH_PROOF_FAILED = 'FETCH_PROOF_FAILED'
-export const fetchProofFailed = (error) => ({
-  type: FETCH_PROOF_FAILED,
-  payload: {
-    error
-  },
-  error: true
-})
-
-export const getProof = (draftId, version) => {
-  return (dispatch) => {
-    dispatch(fetchProof())
-    publishApi.getProof(
-      draftId, version,
-      proofs => dispatch(fetchedProof(proofs)),
-      error => dispatch(fetchProofFailed(error))
-    )
-  }
-}
-
-export const UPDATE_PROOF = 'UPDATE_PROOF'
-export const updateProof = () => ({
-  type: UPDATE_PROOF
-})
-
-export const UPDATED_PROOF = 'UPDATED_PROOF'
-export const updatedProof = (proof) => ({
-  type: UPDATED_PROOF,
-  payload: {
-    proof
-  }
-})
-
-export const UPDATE_PROOF_FAILED = 'UPDATE_PROOF_FAILED'
-export const updateProofFailed = (error) => ({
-  type: UPDATE_PROOF_FAILED,
-  payload: {
-    error
-  },
-  error: true
-})
-
-export const saveProof = (draftId, version, proofUpdate) => {
-  console.log('publishActions.saveProof', draftId, version, proofUpdate)
-  return (dispatch) => {
-    dispatch(updateProof())
-    publishApi.updateProof(
-      draftId, version, proofUpdate,
-      proof => dispatch(updatedProof(proof)),
-      error => dispatch(updateProofFailed(error))
+    dispatch(saveEdition())
+    publishApi.updateEdition(
+      storyId, editionKey, editionUpdate,
+      edition => dispatch(savedEdition(edition)),
+      error => dispatch(saveEditionFailed(error))
     )
   }
 }
@@ -140,10 +97,10 @@ export const sendPublish = () => ({
 })
 
 export const PUBLISHED = 'PUBLISHED'
-export const published = (proof) => ({
+export const published = (edition) => ({
   type: PUBLISHED,
   payload: {
-    proof
+    edition
   }
 })
 
@@ -156,12 +113,12 @@ export const sendPublishFailed = (error) => ({
   error: true
 })
 
-export const publish = (draftId, version) => {
+export const publish = (storyId, editionKey) => {
   return (dispatch) => {
     dispatch(sendPublish())
     publishApi.publish(
-      draftId, version,
-      proof => dispatch(published(proof)),
+      storyId, editionKey,
+      edition => dispatch(published(edition)),
       error => dispatch(sendPublishFailed(error))
     )
   }

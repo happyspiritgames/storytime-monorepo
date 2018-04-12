@@ -18,7 +18,7 @@ export default class Footer extends Component {
             <li className="list-inline-item"><Link to='/about'>About</Link></li>
             <li className="list-inline-item"><a href="https://happyspiritgames.blog/terms-of-service/">Terms</a></li>
             <li className="list-inline-item"><a href="https://happyspiritgames.blog/privacy-policy/">Privacy Policy</a></li>
-            <li className="list-inline-item"><Link to='/contact'>Contact Us</Link></li>
+            <li className="list-inline-item"><a href='https://happyspiritgames.blog/contact-us/'>Contact Us</a></li>
           </ul>
           <p className="copyright">Happy Spirit Games © 2018</p>
         </footer>

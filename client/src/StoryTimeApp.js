@@ -32,7 +32,7 @@ export default class StoryTimeApp extends Component {
                   <Route path="/admin" component={Admin} />
                   <Route path="/callback" component={LoginCallback} />
                   <Route path="/contact" component={Contact} />
-                  <Route path="/reader/:storyId" component={ReaderPage} />
+                  <Route path="/reader/:editionKey" component={ReaderPage} />
                   <Route path="/writingdesk" component={WritingDesk} />
                   <Route path="/publish" component={WritingDesk} />
                 </Switch>

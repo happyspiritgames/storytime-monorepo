@@ -2,57 +2,57 @@ import { getHeaders } from '../util/authentication'
 
 const draftStoriesBaseURI = '/api/draft-stories'
 
-export const prepareToPublish = (draftId, handleResponse, handleError) => {
-  console.log('publishApi.prepareToPublish', draftId)
+export const createEdition = (storyId, handleResponse, handleError) => {
+  console.log('publishApi.prepareToPublish', storyId)
   const fetchOptions = {
     method: 'POST',
     headers: getHeaders()
   }
   // TODO handle 304
-  fetch(`${draftStoriesBaseURI}/${draftId}/proofs`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/editions`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const getProofs = (draftId, handleResponse, handleError) => {
+export const getEditions = (storyId, handleResponse, handleError) => {
   console.log('publishApi.getProofs')
   const fetchOptions = { headers: getHeaders() }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proofs`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/editions`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const getProof = (draftId, version, handleResponse, handleError) => {
+export const getEdition = (storyId, editionKey, handleResponse, handleError) => {
   console.log('publishApi.getProof')
   const fetchOptions = { headers: getHeaders() }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/editions/${editionKey}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const updateProof = (draftId, version, updates, handleResponse, handleError) => {
-  console.log('publishApi.updateProof', draftId, version, updates)
+export const updateEdition = (storyId, editionKey, editionUpdates, handleResponse, handleError) => {
+  console.log('publishApi.updateProof', storyId, editionKey, editionUpdates)
   const fetchOptions = {
     method: 'PUT',
     headers: getHeaders(),
-    body: JSON.stringify(updates)
+    body: JSON.stringify(editionUpdates)
   }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/editions/${editionKey}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
 
-export const publish = (draftId, version, handleResponse, handleError) => {
-  console.log('publishApi.publish', draftId)
+export const publish = (storyId, editionKey, handleResponse, handleError) => {
+  console.log('publishApi.publish', storyId)
   const fetchOptions = {
     method: 'POST',
     headers: getHeaders()
   }
-  fetch(`${draftStoriesBaseURI}/${draftId}/proofs/${version}`, fetchOptions)
+  fetch(`${draftStoriesBaseURI}/${storyId}/editions/${editionKey}`, fetchOptions)
     .then(res => res.json())
     .then(response => handleResponse(response))
     .catch(error => handleError(error))

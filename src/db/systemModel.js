@@ -23,6 +23,10 @@ const mapTypeToTableName = (type) => {
       tableName = 'rating_codes'
       break
 
+    case 'edition-status':
+      tableName = 'edition_status_codes'
+      break
+
     default:
   }
   return tableName

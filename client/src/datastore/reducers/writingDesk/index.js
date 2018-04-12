@@ -1,4 +1,4 @@
-import * as actions from '../actions'
+import * as actions from '../../actions'
 import activeDraftReducer from './activeDraft'
 
 export const writingDeskStates = {
@@ -20,9 +20,9 @@ export default (state = initialState, action) => {
     case actions.LOAD_DRAFT:
     case actions.LOAD_DRAFT_SCENE:
     case actions.LOAD_DRAFT_SIGNPOST:
-    case actions.START_TO_PUBLISH:
-    case actions.FETCH_PROOFS:
-    case actions.FETCH_PROOF:
+    case actions.CREATE_EDITION:
+    case actions.FETCH_EDITIONS:
+    case actions.FETCH_EDITION:
       return {
         ...state,
         status: writingDeskStates.LOADING
@@ -48,17 +48,6 @@ export default (state = initialState, action) => {
         draftProjects: projectIds,
         status: writingDeskStates.READY
       }
-    case actions.FETCHED_PROOFS:
-      const nextProofs = {}
-      action.payload.proofs.forEach(proof => {
-        const key = `${proof.draftId}-${proof.version}`
-        nextProofs[key] = proof
-      })
-      return {
-        ...state,
-        status: writingDeskStates.READY,
-        proofs: nextProofs
-      }
     case actions.LOADED_DRAFT:
     case actions.LOADED_DRAFT_SCENE:
     case actions.SAVED_DRAFT_SCENE:
@@ -69,24 +58,19 @@ export default (state = initialState, action) => {
         activeDraft: activeDraftReducer(state.activeDraft, action),
         status: writingDeskStates.READY
       }
-    case actions.STARTED_TO_PUBLISH:
-    case actions.FETCHED_PROOF:
-    case actions.UPDATED_PROOF:
+    case actions.CREATED_EDITION:
+    case actions.FETCHED_EDITION:
+    case actions.SAVED_EDITION:
     case actions.PUBLISHED:
-      const proof = action.payload.proof
-      const key = `${proof.draftId}-${proof.version}`
-      const proofs = state.proofs ? { ...state.proofs } : {}
-      proofs[key] = proof
       return {
         ...state,
-        activeProof: key,
-        proofs,
+        activeEdition: action.payload.edition.editionKey,
         status: writingDeskStates.READY
       }
     case actions.SAVE_DRAFT:
     case actions.SAVE_DRAFT_SCENE:
     case actions.SAVE_DRAFT_SIGNPOST:
-    case actions.UPDATE_PROOF:
+    case actions.SAVE_EDITION:
       return {
         ...state,
         status: writingDeskStates.SAVING
@@ -98,10 +82,11 @@ export default (state = initialState, action) => {
     case actions.LOAD_DRAFT_SCENE_FAILED:
     case actions.LOAD_DRAFT_SIGNPOST_FAILED:
     case actions.SAVE_DRAFT_SIGNPOST_FAILED:
-    case actions.START_TO_PUBLISH_FAILED:
-    case actions.FETCH_PROOFS_FAILED:
-    case actions.FETCH_PROOF_FAILED:
-    case actions.UPDATE_PROOF_FAILED:
+    case actions.CREATE_EDITION_FAILED:
+    case actions.FETCHED_EDITIONS:
+    case actions.FETCH_EDITIONS_FAILED:
+    case actions.FETCH_EDITION_FAILED:
+    case actions.SAVE_EDITION_FAILED:
     case actions.PUBLISH_FAILED:
       return {
         ...state,

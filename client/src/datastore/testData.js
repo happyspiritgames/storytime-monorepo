@@ -79,29 +79,98 @@ export const testSignpost = [
   }
 ]
 
-export const testProof = {
-  draftId: 'abcdef',
+export const testEdition = {
+  editionKey: 'aaaaaaaa-1',
+  storyId: 'aaaaaaaa',
   version: '1',
-  storyKey: 'abcdef',
-  author: '8a095fb3-8cd3-475b-a3c2-a842bac9ee39',
-  penName: 'bubba',
-  title: 'Blargy',
-  tagLine: 'Blargy blargy.',
-  about: 'Blargy blargy, blargy blargy',
+  status: 'available',
+  summary: {
+    title: 'Ramona\'s Big Adventure',
+    penName: 'Bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'An adventure to watch with your parents.',
+    firstSceneId: 'a1111111'
+  },
   rating: 'PG',
-  genre: ['scifi'],
-  firstSceneId: 'jhu3248',
+  genre: ['adventure'],
   publishedAt: '2018-01-26T00:02:21.635Z'
 }
 
-export const testProofUpdate = {
-  storyKey: 'updated',
-  penName: 'Update',
-  title: 'Update this',
-  tagLine: 'Big-time update.',
-  about: 'Update me, baby.',
-  rating: 'MA',
-  genre: ['fantasy']
+export const testEditions = [ testEdition ]
+
+export const testEditionScene = {
+  sceneId: 'blargy',
+  title: 'Where Big Things Happen',
+  prose: 'This is the scene where everything goes down.',
+  endPrompt: 'Now you decide how this ends.',
+  signpost: []
+}
+
+export const testEditionsForCatalog = [
+  testEdition,
+  {
+    editionKey: 'bbbbbbbb-1',
+    storyId: 'bbbbbbbb',
+    version: '1',
+    status: 'available',
+    summary: {
+      title: 'The Portal to Mars',
+      penName: 'Bubba',
+      tagLine: 'Blargy blargy.',
+      about: 'A sci-fi, adventure, fantasy to watch with your parents.',
+      firstSceneId: 'b1111111'
+    },
+    rating: 'PG',
+    genre: ['scifi', 'adventure', 'fantasy'],
+    publishedAt: '2018-01-26T00:02:21.635Z'
+  }, {
+    editionKey: 'cccccccc-3',
+    storyId: 'cccccccc',
+    version: '3',
+    status: 'available',
+    summary: {
+      title: 'The Hijinx of Mystery Man',
+      penName: 'Bubba',
+      tagLine: 'Blargy blargy.',
+      about: 'A mystery for mature audiences.',
+      firstSceneId: 'c3333333'
+    },
+    rating: 'MA',
+    genre: ['mystery'],
+    publishedAt: '2018-01-26T00:02:21.635Z'
+  }
+]
+
+export const testEditionVariant1 = {
+  editionKey: 'dddddddd-13',
+  storyId: 'dddddddd',
+  version: '13',
+  status: 'available',
+  summary: {
+    title: 'A Walk Through History',
+    penName: 'Bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'An historical tale for all.',
+    firstSceneId: 'd1313131'
+  },
+  rating: 'G',
+  genre: ['historical'],
+  publishedAt: '2018-01-26T00:02:21.635Z'
+}
+
+export const testEditionVariant2NoRatingNoGenre = {
+  editionKey: 'eeeeeeee-14',
+  storyId: 'eeeeeeee',
+  version: '13',
+  status: 'available',
+  summary: {
+    title: 'Unknown Country',
+    penName: 'Bubba',
+    tagLine: 'Blargy blargy.',
+    about: 'Who knows what this is about or who it\'s for?',
+    firstSceneId: 'e1414141'
+  },
+  publishedAt: '2018-01-26T00:02:21.635Z'
 }
 
 export const testCodes = [

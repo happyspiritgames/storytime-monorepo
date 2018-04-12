@@ -1,16 +1,16 @@
-import writingDesk, { initialState, writingDeskStates } from './writingDesk'
-import * as actions from '../actions'
+import writingDesk, { initialState, writingDeskStates } from './index'
+import * as actions from '../../actions'
 import {
   testDraftSummaries,
   testFullDraft,
   testDraftScene,
   testSignpost,
-  testProof
-} from '../testData'
+  testEdition,
+  testError
+} from '../../testData'
 
 describe('writing desk reducer', () => {
   let nextState
-  let testError = new Error('blah')
 
   it('should provide initial state', () => {
     expect(writingDesk(undefined, {})).toEqual(initialState)
@@ -242,123 +242,106 @@ describe('writing desk reducer', () => {
     })
   })
 
-  it('handles START_TO_PUBLISH', () => {
-    nextState = writingDesk(undefined, actions.startToPublish())
+  it('handles CREATE_EDITION', () => {
+    nextState = writingDesk(undefined, actions.createEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles STARTED_TO_PUBLISH', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.startedToPublish(testProof))
+  it('handles CREATED_EDITION', () => {
+    nextState = writingDesk(undefined, actions.createdEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
-  it('handles START_TO_PUBLISH_FAILED', () => {
-    nextState = writingDesk(undefined, actions.startToPublish())
-    nextState = writingDesk(nextState, actions.startToPublishFailed(testError))
+  it('handles CREATE_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.createEdition())
+    nextState = writingDesk(nextState, actions.createEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
     })
   })
 
-  it('handles FETCH_PROOFS', () => {
-    nextState = writingDesk(undefined, actions.fetchProofs())
+  it('handles FETCH_EDITIONS', () => {
+    nextState = writingDesk(undefined, actions.fetchEditions())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles FETCHED_PROOFS', () => {
-    const expectedKey1 = `${testProof.draftId}-${testProof.version}`
-    const testProof2 = { ...testProof }
-    testProof2.version = '2'
-    const expectedKey2 = `${testProof2.draftId}-${testProof2.version}`
-    nextState = writingDesk(undefined, actions.fetchedProofs([testProof, testProof2]))
-    expect(nextState).toEqual({
-      ...initialState,
-      status: writingDeskStates.READY,
-      proofs: {
-        [expectedKey1]: testProof,
-        [expectedKey2]: testProof2
-      }
-    })
-  })
-
-  it('handles FETCH_PROOFS_FAILED', () => {
-    nextState = writingDesk(undefined, actions.fetchProofs())
-    nextState = writingDesk(nextState, actions.fetchProofsFailed(testError))
+  it('handles FETCHED_EDITIONS', () => {
+    const testEdition2 = { ...testEdition }
+    testEdition2.version = '2'
+    testEdition2.editionKey = `${testEdition2.storyId}-${testEdition2.version}`
+    nextState = writingDesk(undefined, actions.fetchedEditions([testEdition, testEdition2]))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
     })
   })
 
-  it('handles FETCH_PROOF', () => {
-    nextState = writingDesk(undefined, actions.fetchProof())
+  it('handles FETCH_EDITIONS_FAILED', () => {
+    nextState = writingDesk(undefined, actions.fetchEditions())
+    nextState = writingDesk(nextState, actions.fetchEditionsFailed(testError))
+    expect(nextState).toEqual({
+      ...initialState,
+      status: writingDeskStates.READY
+    })
+  })
+
+  it('handles FETCH_EDITION', () => {
+    nextState = writingDesk(undefined, actions.fetchEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.LOADING
     })
   })
 
-  it('handles FETCHED_PROOF', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.fetchedProof(testProof))
+  it('handles FETCHED_EDITION', () => {
+    nextState = writingDesk(undefined, actions.fetchedEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
-  it('handles FETCH_PROOF_FAILED', () => {
-    nextState = writingDesk(undefined, actions.fetchProof())
-    nextState = writingDesk(nextState, actions.fetchProofFailed(testError))
+  it('handles FETCH_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.fetchEdition())
+    nextState = writingDesk(nextState, actions.fetchEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
     })
   })
 
-  it('handles UPDATE_PROOF', () => {
-    nextState = writingDesk(undefined, actions.updateProof())
+  it('handles SAVE_EDITION', () => {
+    nextState = writingDesk(undefined, actions.saveEdition())
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.SAVING
     })
   })
 
-  it('handles UPDATED_PROOF', () => {
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
-    nextState = writingDesk(undefined, actions.updatedProof(testProof))
+  it('handles SAVED_EDITION', () => {
+    nextState = writingDesk(undefined, actions.savedEdition(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 
-  it('handles UPDATE_PROOF_FAILED', () => {
-    nextState = writingDesk(undefined, actions.updateProof())
-    nextState = writingDesk(nextState, actions.updateProofFailed(testError))
+  it('handles SAVE_EDITION_FAILED', () => {
+    nextState = writingDesk(undefined, actions.saveEdition())
+    nextState = writingDesk(nextState, actions.saveEditionFailed(testError))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY
@@ -375,15 +358,11 @@ describe('writing desk reducer', () => {
 
   it('handles PUBLISHED', () => {
     nextState = writingDesk(undefined, actions.sendPublish())
-    nextState = writingDesk(nextState, actions.published(testProof))
-    const expectedKey = `${testProof.draftId}-${testProof.version}`
+    nextState = writingDesk(nextState, actions.published(testEdition))
     expect(nextState).toEqual({
       ...initialState,
       status: writingDeskStates.READY,
-      activeProof: 'abcdef-1',
-      proofs: {
-        [expectedKey]: testProof
-      }
+      activeEdition: testEdition.editionKey
     })
   })
 

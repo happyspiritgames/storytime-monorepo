@@ -1,33 +1,37 @@
 import { connect } from 'react-redux'
 import Reader from './Reader'
-import { play, goToScene } from '../../datastore/actions'
+import { playGame, goToScene } from '../../datastore/actions'
 
 const mapStateToProps = (state, ownProps) => {
-  const { storyId } = ownProps.match.params
-  let summary, scene
-  if (state.stories[storyId]) {
-    summary = state.stories[storyId].summary
+  const { editionKey } = ownProps.match.params
+  const editions = state.editions
+  const { activeEdition, activeScene } = state.reader
+
+  let edition
+  let scene
+
+  // set edition if loaded and what's active matches URL parameter
+  if (editionKey === activeEdition) {
+    edition = editions[editionKey]
+  } else {
+    console.log('URL param editionKey did not match reader.activeEdition; need a cycle to switch games')
   }
-  if (state.stories[storyId] && state.stories[storyId].scenes && state.reader.sceneId) {
-    scene = state.stories[storyId].scenes[state.reader.sceneId]
+
+  // set scene if loaded
+  if (edition && edition.scenes && activeScene) {
+    scene = edition.scenes[activeScene]
   }
+
   return {
-    status: state.reader.status,
-    storyId: state.reader.storyId,
-    summary: summary,
-    scene: scene
+    edition,
+    scene
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlay: storyId => {
-      dispatch(play(storyId))
-    },
-    onGoToScene: sceneId => {
-      dispatch(goToScene(sceneId))
-    },
-    dispatch
+    playGame: (editionKey) => dispatch(playGame(editionKey)),
+    goToScene: (sceneId) => dispatch(goToScene(sceneId))
   }
 }
 

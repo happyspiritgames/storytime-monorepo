@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { draftShape, proofShape, codeLookupShape } from '../../datastore/dataShapes'
+import { draftShape, editionShape, codeLookupShape } from '../../datastore/dataShapes'
 import Desktop from './Desktop'
-import EditPublishingInfo from './EditPublishingInfo'
-import EditStory from './EditStory'
+import EditEdition from './EditEdition'
 import EditScene from './EditScene'
 import EditSignpost from './EditSignpost'
+import EditStory from './EditStory'
 import PublishingSummary from './PublishingSummary'
 
 export default class WritingDesk extends Component {
   static propTypes = {
     draftProjects: PropTypes.array,
     activeDraft: draftShape,
-    proofs: PropTypes.array,
-    activeProof: proofShape,
+    editions: PropTypes.arrayOf(editionShape),
+    activeEdition: editionShape,
     ratingCodes: PropTypes.arrayOf(codeLookupShape),
     genreCodes: PropTypes.arrayOf(codeLookupShape),
     loadDrafts: PropTypes.func,
@@ -24,12 +24,12 @@ export default class WritingDesk extends Component {
     saveDraftScene: PropTypes.func,
     loadDraftSignpost: PropTypes.func,
     updateDraftSignpost: PropTypes.func,
-    prepareToPublish: PropTypes.func,
-    getProofs: PropTypes.func,
-    getProof: PropTypes.func,
+    startNewEdition: PropTypes.func,
+    loadEditions: PropTypes.func,
+    loadEdition: PropTypes.func,
     loadRatingCodes: PropTypes.func,
     loadGenreCodes: PropTypes.func,
-    updateProof: PropTypes.func,
+    saveEdition: PropTypes.func,
     publish: PropTypes.func
   }
 
@@ -37,8 +37,8 @@ export default class WritingDesk extends Component {
     const {
       draftProjects,
       activeDraft,
-      proofs,
-      activeProof,
+      editions,
+      activeEdition,
       ratingCodes,
       genreCodes,
       loadDrafts,
@@ -46,12 +46,12 @@ export default class WritingDesk extends Component {
       saveDraft,
       saveDraftScene,
       updateDraftSignpost,
-      prepareToPublish,
-      getProofs,
-      getProof,
+      startNewEdition,
+      loadEditions,
+      loadEdition,
       loadRatingCodes,
       loadGenreCodes,
-      updateProof,
+      saveEdition,
       publish
     } = this.props
     return (
@@ -101,26 +101,26 @@ export default class WritingDesk extends Component {
           render={
             (props) => <PublishingSummary
               draft={activeDraft}
-              proofs={proofs}
+              editions={editions}
               loadDraft={loadDraftForEdit}
-              loadProofs={getProofs}
-              begin={prepareToPublish}
+              loadEditions={loadEditions}
+              startNewEdition={startNewEdition}
               {...props}
             />
           }
         />
-        <Route exact path="/publish/:draftId/:version"
+        <Route exact path="/publish/:draftId/:editionKey"
           render={
-            (props) => <EditPublishingInfo
+            (props) => <EditEdition
               draft={activeDraft}
-              proof={activeProof}
+              edition={activeEdition}
               ratingCodes={ratingCodes}
               genreCodes={genreCodes}
               loadDraft={loadDraftForEdit}
-              loadProof={getProof}
+              loadEdition={loadEdition}
               loadRatingCodes={loadRatingCodes}
               loadGenreCodes={loadGenreCodes}
-              saveProof={updateProof}
+              saveEdition={saveEdition}
               publish={publish}
               {...props}
             />

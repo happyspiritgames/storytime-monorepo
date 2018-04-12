@@ -1,17 +1,15 @@
 import {
-  FETCHED_SCENE,
   LOADED_DRAFT,
   SAVED_DRAFT_SCENE,
   LOADED_DRAFT_SCENE,
   LOADED_DRAFT_SIGNPOST,
   SAVED_DRAFT_SIGNPOST
-} from '../actions'
+} from '../../actions'
 
 export const initialState = {}
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCHED_SCENE:
     case LOADED_DRAFT_SCENE:
     case SAVED_DRAFT_SCENE:
       const { scene } = action.payload

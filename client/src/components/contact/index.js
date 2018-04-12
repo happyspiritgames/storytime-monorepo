@@ -32,6 +32,7 @@ export default class Contact extends Component {
         <form method="post">
           <h2 className="text-center">Contact us</h2>
           <p className="text-center"><em>Note: Your message will be delivered using your default email client. That's just how it works for now.</em></p>
+          <p className="text-center">You could also use the <a href="https://happyspiritgames.blog/contact-us/">contact form on the website</a>.</p>
           <p className="text-center"><em>Thanks for sharing your thoughts.</em></p>
           <div className="form-group">
             <input
