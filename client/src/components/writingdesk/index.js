@@ -22,9 +22,9 @@ const mapStateToProps = state => {
   const writingDesk = state.writingDesk
   const draftProjects = writingDesk.draftProjects.map(storyId => state.drafts[storyId])
   const activeEdition = state.writingDesk.activeEdition
-    ? state.writingDesk.editions[state.writingDesk.activeEdition]
+    ? state.editions[state.writingDesk.activeEdition]
     : undefined
-  const editions = writingDesk.editions ? Object.values(state.writingDesk.editions) : undefined
+  const editions = state.editions ? Object.values(state.editions) : undefined
   return {
     draftProjects,
     activeDraft: writingDesk.activeDraft,

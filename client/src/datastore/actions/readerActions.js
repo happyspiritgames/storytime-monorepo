@@ -35,22 +35,51 @@ export const visitScene = (sceneId, timestamp = Date.now()) => ({
   }
 })
 
-export const loadAndPlay = (editionKey) => {
-  return (dispatch) => {
-    dispatch(editionActions.fetchEdition())
-    storyApi.getEdition(editionKey,
-      edition => {
-        dispatch(editionActions.fetchedEdition(edition))
-        dispatch(editionActions.fetchEditionScene())
-        storyApi.getEditionScene(editionKey, edition.summary.firstSceneId,
-          scene => {
-            dispatch(editionActions.fetchedEditionScene(editionKey, scene))
-            dispatch(beginStory(editionKey, scene.sceneId))
-          },
-          error => dispatch(editionActions.fetchEditionSceneFailed(error))
-        )
-      },
-      error => dispatch(editionActions.fetchEditionFailed(error))
-    )
+const startScene = (dispatch, editionKey, sceneId) => {
+  dispatch(beginStory(editionKey, sceneId))
+  dispatch(readerReady())
+}
+
+const loadSceneAndPlay = (dispatch, editionKey, sceneId) => {
+  console.log('now fetch the first scene', editionKey, sceneId)
+  dispatch(editionActions.fetchEditionScene())
+  storyApi.getEditionScene(editionKey, sceneId,
+    scene => {
+      dispatch(editionActions.fetchedEditionScene(editionKey, scene))
+      startScene(dispatch, editionKey, sceneId)
+    },
+    error => dispatch(editionActions.fetchEditionSceneFailed(error))
+  )
+}
+
+export const playGame = (editionKey) => {
+  return (dispatch, getState) => {
+    dispatch(readerNotReady())
+
+    const { editions } = getState()
+    const edition = editions[editionKey]
+
+    if (!edition) {
+      // load edition and first scene. then start playing
+      console.log('edition not loaded ==> fetching it', editionKey)
+      dispatch(readerFetching())
+      dispatch(editionActions.fetchEdition())
+      storyApi.getEdition(editionKey,
+        edition => {
+          dispatch(editionActions.fetchedEdition(edition))
+          const { firstSceneId } = edition.summary
+          loadSceneAndPlay(dispatch, editionKey, firstSceneId)
+        },
+        error => dispatch(editionActions.fetchEditionFailed(error))
+      )
+      return
+    }
+
+    const { firstSceneId } = edition.summary
+    const scene = (edition.scenes) ? edition.scenes[firstSceneId] : undefined
+
+    if (!scene) {
+      console.log('scene not loaded ==> fetching it', firstSceneId)
+    }
   }
 }

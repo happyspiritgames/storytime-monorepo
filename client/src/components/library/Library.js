@@ -38,11 +38,20 @@ export default class Library extends Component {
 
     // TODO make use of ratings and genre
 
-    const catalogSummaries = catalog.editions.map(key => editions[key].summary)
+    const catalogEditions = catalog.editions.map(key => editions[key])
+    if (!catalogEditions.length) {
+      return (
+        <div id="library">
+          <p>Looks like the library is empty. Anybody want to publish a game?</p>
+        </div>
+      )
+    }
     return (
       <div id="library">
+        <h1>Welcome to the StoryTime Library.</h1>
+        <h3>Find a story to play.</h3>
         <FeaturedStory key='featured' edition={featured} play={play} />
-        <Catalog key='catalog' summaries={catalogSummaries} play={play} />
+        <Catalog key='catalog' editions={catalogEditions} play={play} />
       </div>
     )
   }

@@ -9,6 +9,9 @@ export default class FeaturedStory extends Component {
   }
 
   render() {
+    if (!this.props.edition) {
+      return null
+    }
     const { edition, play } = this.props
     const { editionKey, summary } = edition
     return (

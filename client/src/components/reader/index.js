@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Reader from './Reader'
-import { loadAndPlay, visitScene } from '../../datastore/actions'
+import { playGame, visitScene } from '../../datastore/actions'
 
 const mapStateToProps = (state, ownProps) => {
   const { editionKey } = ownProps.match.params
@@ -38,7 +38,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadAndPlay: (editionKey) => dispatch(loadAndPlay(editionKey)),
+    play: (editionKey) => dispatch(playGame(editionKey)),
     goToScene: (sceneId) => dispatch(visitScene(sceneId))
   }
 }

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { push } from 'react-router-redux'
 import FormattedProse from './FormattedProse'
 import Signpost from './Signpost'
-import { readerStates } from '../../datastore/reducers/reader'
 import { sceneShape, editionShape } from '../../datastore/dataShapes'
 import './reader.css'
 
@@ -11,7 +9,7 @@ export default class Reader extends Component {
   static propTypes = {
     edition: editionShape,
     scene: sceneShape,
-    loadAndPlay: PropTypes.func.isRequired,
+    play: PropTypes.func.isRequired,
     goToScene: PropTypes.func.isRequired
   }
 
