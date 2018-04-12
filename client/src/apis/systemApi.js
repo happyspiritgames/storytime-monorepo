@@ -1,6 +1,6 @@
 // TODO get codes
 
-const codesBaseURI = '/api/codes/'
+const codesBaseURI = '/api/codes'
 
 const fetchCodes = (type, handleResponse, handleError) => {
   console.log('fetchCodes')
