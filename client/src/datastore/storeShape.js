@@ -101,18 +101,18 @@ export const reduxStoreDataShape = {
     activeEdition: 'abcdefgh-1',
     activeScene: 'kii23i34',
     history: {
-      start: '2018-02-09T17:56:30.176Z',
+      start: 1523493338706,
       moves: [
-        { tick: '20', next: 'ii992kl0' },
-        { tick: '20', next: 'fkj2ijji' },
-        { tick: '333', next: 'wumpus75' },
-        { tick: '467', next: 'kii23i34' }
+        { tick: 20, next: 'ii992kl0' },
+        { tick: 50, next: 'fkj2ijji' },
+        { tick: 333, next: 'wumpus75' },
+        { tick: 467, next: 'kii23i34' }
       ]
     },
     sessionHistory: {
       'abcdefgh-1': [
         {
-          start: '2018-02-09T17:55:09.176Z',
+          start: 1523490134233,
           moves: [
             { tick: '5703', next: 'ii992kl0' },
             { tick: '37', next: 'fkj2ijji' },

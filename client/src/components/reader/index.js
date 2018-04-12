@@ -1,34 +1,31 @@
 import { connect } from 'react-redux'
 import Reader from './Reader'
-import { play, goToScene } from '../../datastore/actions'
+import { loadEdition, loadEditionScene, beginStory, visitScene } from '../../datastore/actions'
 
 const mapStateToProps = (state, ownProps) => {
-  const { storyId } = ownProps.match.params
-  let summary, scene
-  if (state.stories[storyId]) {
-    summary = state.stories[storyId].summary
-  }
-  if (state.stories[storyId] && state.stories[storyId].scenes && state.reader.sceneId) {
-    scene = state.stories[storyId].scenes[state.reader.sceneId]
+  const { editionKey } = ownProps.match.params
+  const edition = state.editions[editionKey]
+  let summary
+  let scene
+  if (edition) {
+    summary = edition.summary
+    if (edition.scenes) {
+      scene = edition.scenes[summary.firstSceneId]
+    }
   }
   return {
-    status: state.reader.status,
-    storyId: state.reader.storyId,
     summary: summary,
     scene: scene
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  // return {
-  //   onPlay: storyId => {
-  //     dispatch(play(storyId))
-  //   },
-  //   onGoToScene: sceneId => {
-  //     dispatch(goToScene(sceneId))
-  //   },
-  //   dispatch
-  // }
+  return {
+    loadEdition: (editionKey) => dispatch(loadEdition(editionKey)),
+    loadEditionScene: (editionKey, sceneId) => dispatch(loadEditionScene(editionKey, sceneId)),
+    beginStory: (editionKey) => dispatch(beginStory(editionKey)),
+    visitScene: (sceneId) => dispatch(visitScene(sceneId))
+  }
 }
 
 const ReaderPage = connect(

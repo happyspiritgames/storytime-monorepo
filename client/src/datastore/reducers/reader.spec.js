@@ -5,15 +5,12 @@ describe('reader reducer', () => {
   let nextState
 
   it('should provide initial state', () => {
-    expect(
-      reader(undefined, {})
-    ).toEqual(initialState)
+    expect(reader(undefined, {})).toEqual(initialState)
   })
 
   it('handles READER_FETCHING', () => {
-    expect(
-      reader(undefined, actions.readerFetching())
-    ).toEqual({
+    expect(reader(undefined, actions.readerFetching()))
+    .toEqual({
       ...initialState,
       status: readerStates.FETCHING
     })
@@ -21,9 +18,8 @@ describe('reader reducer', () => {
 
   it('handles READER_READY', () => {
     nextState = reader(undefined, actions.readerFetching())
-    expect(
-      reader(nextState, actions.readerReady())
-    ).toEqual({
+    expect(reader(nextState, actions.readerReady()))
+    .toEqual({
       ...initialState,
       status: readerStates.READY
     })
@@ -31,39 +27,64 @@ describe('reader reducer', () => {
 
   it('handles READER_NOT_READY', () => {
     nextState = reader(undefined, actions.readerReady())
-    expect(
-      reader(nextState, actions.readerNotReady())
-    ).toEqual({
+    expect(reader(nextState, actions.readerNotReady()))
+    .toEqual({
       ...initialState,
       status: readerStates.NOT_READY
     })
   })
 
   it('handles BEGIN_STORY', () => {
-    expect(
-      reader(undefined, actions.beginStory('abc', '1'))
-    ).toEqual({
+    expect(reader(undefined, actions.beginStory('abc-1', 'alpha')))
+    .toEqual({
       ...initialState,
-      storyId: 'abc',
-      sceneId: '1',
-      history: [ '1' ]
+      activeEdition: 'abc-1',
+      activeScene: 'alpha'
+    })
+  })
+
+  xit('handles BEGIN_STORY with history', () => {
+    let startTime = Date.now()
+    expect(reader(undefined, actions.beginStory('abc-1', 'alpha', startTime)))
+    .toEqual({
+      ...initialState,
+      activeEdition: 'abc-1',
+      activeScene: 'alpha',
+      history: {
+        start: startTime,
+        moves: [
+          { tick: 0, next: 'alpha' }
+        ]
+      }
     })
   })
 
   it('handles VISIT_SCENE', () => {
-    expect (
-      reader(undefined, actions.visitScene('42'))
-    ).toEqual({
+    let nextState = reader(undefined, actions.beginStory('abc-1', 'alpha'))
+    expect (reader(nextState, actions.visitScene('beta')))
+    .toEqual({
       ...initialState,
-      sceneId: '42',
-      history: ['42']
+      activeEdition: 'abc-1',
+      activeScene: 'beta'
     })
   })
 
-  it('handles VISIT_SCENE without sceneId', () => {
-    // TODO use a spy to check console error messages
+  xit('handles VISIT_SCENE with history', () => {
+    let timestamp = Date.now()
+    let nextState = reader(undefined, actions.beginStory('abc-1', 'alpha', timestamp-30))
     expect (
-      reader(undefined, actions.visitScene())
-    ).toEqual(initialState)
+      reader(nextState, actions.visitScene('beta', timestamp))
+    ).toEqual({
+      ...initialState,
+      activeEdition: 'abc-1',
+      activeScene: 'beta',
+      history: {
+        start: timestamp-30,
+        moves: [
+          { tick: 0, next: 'alpha' },
+          { tick: 30, next: 'beta' },
+        ]
+      }
+    })
   })
 })

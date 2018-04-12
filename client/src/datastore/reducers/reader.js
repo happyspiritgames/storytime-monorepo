@@ -34,20 +34,14 @@ export default (state = initialState, action) => {
     case actions.BEGIN_STORY:
       return {
         ...state,
-        storyId: action.payload.storyId,
-        sceneId: action.payload.sceneId,
-        history: [action.payload.sceneId]
+        activeEdition: action.payload.editionKey,
+        activeScene: action.payload.sceneId
       }
 
     case actions.VISIT_SCENE:
-      const sceneToVisit = action.payload.sceneId
-      if (!sceneToVisit) {
-        return state
-      }
       return {
         ...state,
-        sceneId: action.payload.sceneId,
-        history: [...state.history, action.payload.sceneId]
+        activeScene: action.payload.sceneId
       }
 
     default:
