@@ -9,14 +9,19 @@ export default class Reader extends Component {
   static propTypes = {
     edition: editionShape,
     scene: sceneShape,
-    play: PropTypes.func.isRequired,
+    playGame: PropTypes.func.isRequired,
     goToScene: PropTypes.func.isRequired
   }
 
   componentDidMount() {
+    console.log('Reader.componentDidMount', this.props)
     if (!this.props.edition) {
-      this.props.loadAndPlay(this.props.match.params.editionKey)
+      this.props.playGame(this.props.match.params.editionKey)
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('Reader.componentWillReceiveProps', nextProps, this.props)
   }
 
   renderNotReady(message) {
@@ -28,7 +33,7 @@ export default class Reader extends Component {
   }
 
   render() {
-    const { edition, scene, goToScene } = this.props
+    const { edition, scene, goToScene, playGame } = this.props
 
     if (!edition) {
       return this.renderNotReady('Loading...one moment please.')
@@ -37,9 +42,10 @@ export default class Reader extends Component {
     }
 
     const summary = edition.summary
-    const playAgain = () => this.props.loadAndPlay(edition.editionKey)
-    const goToLibrary = () => { /*dispatch(push('/'))*/ console.log('go to library') }
-    const goToContact = () => { /*dispatch(push('/contact'))*/ console.log('go to contact')}
+    const push = this.props.history.push
+    const playAgain = () => playGame(edition.editionKey)
+    const goToLibrary = () => { push('/') }
+    const goToContact = () => { push('/contact') }
 
     return (
       <div id="reader">

@@ -14,7 +14,13 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => 
     prompt = endPrompt || DEFAULT_PROMPT
     signs = signpost.map(sign => {
       let signKey = `${sign.sceneId}|${sign.teaser}`
-      return (<Sign key={signKey} onClick={() => { goToScene(sign.sceneId) }} text={sign.teaser} />)
+      return (
+        <Sign
+          key={signKey}
+          onClick={() => { goToScene(sign.sceneId) }}
+          text={sign.teaser}
+          icon='flash'
+        />)
     })
   } else {
     prompt = endPrompt || DEFAULT_ENDING_PROMPT

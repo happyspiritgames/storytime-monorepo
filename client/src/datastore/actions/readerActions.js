@@ -35,8 +35,13 @@ export const visitScene = (sceneId, timestamp = Date.now()) => ({
   }
 })
 
-const startScene = (dispatch, editionKey, sceneId) => {
+const startPlaying = (dispatch, editionKey, sceneId) => {
   dispatch(beginStory(editionKey, sceneId))
+  dispatch(readerReady())
+}
+
+const beginScene = (dispatch, sceneId) => {
+  dispatch(visitScene(sceneId))
   dispatch(readerReady())
 }
 
@@ -46,7 +51,19 @@ const loadSceneAndPlay = (dispatch, editionKey, sceneId) => {
   storyApi.getEditionScene(editionKey, sceneId,
     scene => {
       dispatch(editionActions.fetchedEditionScene(editionKey, scene))
-      startScene(dispatch, editionKey, sceneId)
+      startPlaying(dispatch, editionKey, sceneId)
+    },
+    error => dispatch(editionActions.fetchEditionSceneFailed(error))
+  )
+}
+
+const loadSceneAndGoTo = (dispatch, editionKey, sceneId) => {
+  console.log('now fetch the first scene', editionKey, sceneId)
+  dispatch(editionActions.fetchEditionScene())
+  storyApi.getEditionScene(editionKey, sceneId,
+    scene => {
+      dispatch(editionActions.fetchedEditionScene(editionKey, scene))
+      beginScene(dispatch, sceneId)
     },
     error => dispatch(editionActions.fetchEditionSceneFailed(error))
   )
@@ -80,6 +97,26 @@ export const playGame = (editionKey) => {
 
     if (!scene) {
       console.log('scene not loaded ==> fetching it', firstSceneId)
+      loadSceneAndPlay(dispatch, editionKey, firstSceneId)
+    } else {
+      console.log('found edition and scene in cache')
+      startPlaying(dispatch, editionKey, firstSceneId)
+    }
+  }
+}
+
+export const goToScene = (sceneId) => {
+  return (dispatch, getState) => {
+    const editionKey = getState().reader.activeEdition
+    const { editions } = getState()
+    const edition = editions[editionKey]
+    const scene = (edition.scenes) ? edition.scenes[sceneId] : undefined
+
+    if (!scene) {
+      console.log('scene not loaded ==> fetching it', sceneId)
+      loadSceneAndGoTo(dispatch, editionKey, sceneId)
+    } else {
+      beginScene(dispatch, sceneId)
     }
   }
 }

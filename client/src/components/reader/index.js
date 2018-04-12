@@ -1,35 +1,27 @@
 import { connect } from 'react-redux'
 import Reader from './Reader'
-import { playGame, visitScene } from '../../datastore/actions'
+import { playGame, goToScene } from '../../datastore/actions'
 
 const mapStateToProps = (state, ownProps) => {
   const { editionKey } = ownProps.match.params
+  const editions = state.editions
   const { activeEdition, activeScene } = state.reader
 
   let edition
   let scene
 
-  /*
-   * try to set props.
-   * if no match or not found, leave undefined.
-   * Reader life cycle methods should look for whatever needs to be loaded,
-   * and trigger fetch actions as needed.
-   */
-
-  if (activeEdition && editionKey !== activeEdition) {
-    console.log('We have changed editions! Re-group!')
+  // set edition if loaded and what's active matches URL parameter
+  if (editionKey === activeEdition) {
+    edition = editions[editionKey]
   } else {
-    edition = state.editions[editionKey]
+    console.log('URL param editionKey did not match reader.activeEdition; need a cycle to switch games')
   }
 
-  if (edition) {
-    if (edition.scenes) {
-      const activeSceneId = activeScene
-        ? state.reader.activeScene
-        : edition.summary.firstSceneId
-      scene = edition.scenes[activeSceneId]
-    }
+  // set scene if loaded
+  if (edition && edition.scenes && activeScene) {
+    scene = edition.scenes[activeScene]
   }
+
   return {
     edition,
     scene
@@ -38,8 +30,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    play: (editionKey) => dispatch(playGame(editionKey)),
-    goToScene: (sceneId) => dispatch(visitScene(sceneId))
+    playGame: (editionKey) => dispatch(playGame(editionKey)),
+    goToScene: (sceneId) => dispatch(goToScene(sceneId))
   }
 }
 
