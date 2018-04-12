@@ -92,7 +92,7 @@ export const loadEditionScene = (editionKey, sceneId) => {
   return (dispatch) => {
     dispatch(fetchEditionScene())
     storyApi.getEditionScene(editionKey, sceneId,
-      edition => dispatch(fetchedEditionScene(edition)),
+      scene => dispatch(fetchedEditionScene(editionKey, scene)),
       error => dispatch(fetchEditionSceneFailed(error))
     )
   }

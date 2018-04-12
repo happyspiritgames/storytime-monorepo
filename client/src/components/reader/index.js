@@ -1,30 +1,45 @@
 import { connect } from 'react-redux'
 import Reader from './Reader'
-import { loadEdition, loadEditionScene, beginStory, visitScene } from '../../datastore/actions'
+import { loadAndPlay, visitScene } from '../../datastore/actions'
 
 const mapStateToProps = (state, ownProps) => {
   const { editionKey } = ownProps.match.params
-  const edition = state.editions[editionKey]
-  let summary
+  const { activeEdition, activeScene } = state.reader
+
+  let edition
   let scene
+
+  /*
+   * try to set props.
+   * if no match or not found, leave undefined.
+   * Reader life cycle methods should look for whatever needs to be loaded,
+   * and trigger fetch actions as needed.
+   */
+
+  if (activeEdition && editionKey !== activeEdition) {
+    console.log('We have changed editions! Re-group!')
+  } else {
+    edition = state.editions[editionKey]
+  }
+
   if (edition) {
-    summary = edition.summary
     if (edition.scenes) {
-      scene = edition.scenes[summary.firstSceneId]
+      const activeSceneId = activeScene
+        ? state.reader.activeScene
+        : edition.summary.firstSceneId
+      scene = edition.scenes[activeSceneId]
     }
   }
   return {
-    summary: summary,
-    scene: scene
+    edition,
+    scene
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadEdition: (editionKey) => dispatch(loadEdition(editionKey)),
-    loadEditionScene: (editionKey, sceneId) => dispatch(loadEditionScene(editionKey, sceneId)),
-    beginStory: (editionKey) => dispatch(beginStory(editionKey)),
-    visitScene: (sceneId) => dispatch(visitScene(sceneId))
+    loadAndPlay: (editionKey) => dispatch(loadAndPlay(editionKey)),
+    goToScene: (sceneId) => dispatch(visitScene(sceneId))
   }
 }
 

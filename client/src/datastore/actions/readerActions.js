@@ -1,4 +1,5 @@
 import * as editionActions from './editionActions'
+import * as storyApi from '../../apis/storyTimeApi'
 
 export const READER_FETCHING = 'READER_FETCHING'
 export const readerFetching = () => ({
@@ -33,3 +34,23 @@ export const visitScene = (sceneId, timestamp = Date.now()) => ({
     timestamp
   }
 })
+
+export const loadAndPlay = (editionKey) => {
+  return (dispatch) => {
+    dispatch(editionActions.fetchEdition())
+    storyApi.getEdition(editionKey,
+      edition => {
+        dispatch(editionActions.fetchedEdition(edition))
+        dispatch(editionActions.fetchEditionScene())
+        storyApi.getEditionScene(editionKey, edition.summary.firstSceneId,
+          scene => {
+            dispatch(editionActions.fetchedEditionScene(editionKey, scene))
+            dispatch(beginStory(editionKey, scene.sceneId))
+          },
+          error => dispatch(editionActions.fetchEditionSceneFailed(error))
+        )
+      },
+      error => dispatch(editionActions.fetchEditionFailed(error))
+    )
+  }
+}
