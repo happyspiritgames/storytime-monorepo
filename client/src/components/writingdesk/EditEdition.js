@@ -76,7 +76,8 @@ export default class EditEdition extends Component {
   }
 
   playStory = () => {
-    alert('Someday this will launch the reader.')
+    const { editionKey } = this.props.match.params
+    this.props.history.push(`/reader/${editionKey}`)
   }
 
   componentDidMount() {
