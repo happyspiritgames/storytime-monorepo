@@ -67,7 +67,7 @@ export default class WritingDesk extends Component {
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <div className="row section">
           <div className="col">
-            <h4 className="text-center">Projects (Work In Progress)</h4>
+            <h4>Your Projects</h4>
             <div className="list-group">
               {draftProjectList}
             </div>

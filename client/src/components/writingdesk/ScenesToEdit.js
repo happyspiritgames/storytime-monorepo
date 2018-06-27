@@ -34,6 +34,7 @@ export default class EditStory extends Component {
         <Breadcrumbs summary={summary} />
         <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={summary} activeTab="scenes" />
+        <h5>Scenes</h5>
         <div id="scenes">
         { draft && Object.values(draft.scenes).length !== 0 &&
           <SceneList scenes={draft.scenes} storyId={draft.summary.storyId} />

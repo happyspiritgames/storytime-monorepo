@@ -89,7 +89,7 @@ export default class WritingDesk extends Component {
             />
           }
         />
-        <Route exact path="/writingdesk/:draftId/:sceneId"
+        <Route exact path="/writingdesk/:draftId/scenes/:sceneId"
           render={
             (props) => <EditScene
               draft={activeDraft}
@@ -99,7 +99,7 @@ export default class WritingDesk extends Component {
             />
           }
         />
-        <Route exact path="/writingdesk/:draftId/:sceneId/signpost"
+        <Route exact path="/writingdesk/:draftId/scenes/:sceneId/signpost"
           render={
             (props) => <EditSignpost
               draft={activeDraft}

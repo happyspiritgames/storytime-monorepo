@@ -21,10 +21,7 @@ const renderTabs = (summary, activeTab) => {
         <Link className={`nav-link ${activeTab==='scenes'?'active':''}`} to={`/writingdesk/${summary.storyId}/scenes`}>Scenes</Link>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href="#">Preview</a>
-      </li>
-      <li className="nav-item">
-      <Link className={`nav-link ${activeTab==='publish'?'active':''}`} to={`/publish/${summary.storyId}`}>Publish</Link>
+      <Link className={`nav-link ${activeTab==='publish'?'active':''}`} to={`/publish/${summary.storyId}`}>Editions</Link>
       </li>
     </ul>
   )

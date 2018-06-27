@@ -13,10 +13,10 @@ export default class SceneList extends Component {
 
     const renderedScenes = Object.values(scenes).map(scene => (
       <li key={scene.sceneId} className="list-group-item">
-        <Link to={`/writingdesk/${storyId}/${scene.sceneId}`}>
+        <Link to={`/writingdesk/${storyId}/scenes/${scene.sceneId}`}>
           {scene.title} [id: {scene.sceneId}]
         </Link>
-        <Link to={`/writingdesk/${storyId}/${scene.sceneId}`}>
+        <Link to={`/writingdesk/${storyId}/scenes/${scene.sceneId}`}>
           <i className="icon ion-edit float-right"></i>
         </Link>
       </li>

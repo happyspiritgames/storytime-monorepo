@@ -33,6 +33,7 @@ export default class EditStory extends Component {
         <Breadcrumbs summary={summary} />
         <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={summary} activeTab="summary" />
+        <h5>Cover Jacket</h5>
         <EditSummary id="summary" draftSummary={summary} save={this.props.saveDraft} />
       </div>
     )

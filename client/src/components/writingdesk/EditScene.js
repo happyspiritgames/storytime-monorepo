@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
+import StoryEditTabs from './StoryEditTabs'
 
 export default class EditScene extends Component {
   static propTypes = {
@@ -135,12 +136,13 @@ export default class EditScene extends Component {
           <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
           <li className="breadcrumb-item">{activeScene.title}</li>
         </ol>
+        <h4 className="text-center">Story Editor</h4>
+        <StoryEditTabs summary={draftSummary} activeTab="scenes" />
         <div className="row section">
           <div className="col">
-            <h3>Scene</h3>
+            <h5>Scene: {activeScene.title}</h5>
             <form>
               <fieldset>
-                <legend className="text-info">Write to your heart's content…</legend>
                 <div className="form-group">
                   <label>Scene Title</label>
                   <input
@@ -182,7 +184,7 @@ export default class EditScene extends Component {
         </div>
         <div className="row section">
           <div className="col">
-            <h3>Signpost</h3>
+            <h5>Signpost</h5>
             <ul className="list-group">
               {signs}
               <li className="list-group-item">
