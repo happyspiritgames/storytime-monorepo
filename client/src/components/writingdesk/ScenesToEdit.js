@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 import Breadcrumbs from './Breadcrumbs'
-import EditSummary from './EditSummary'
 import StoryEditTabs from './StoryEditTabs'
+import SceneList from './SceneList'
+import AddScene from './AddScene'
 
 export default class EditStory extends Component {
   static propTypes = {
@@ -33,7 +34,14 @@ export default class EditStory extends Component {
         <Breadcrumbs summary={summary} />
         <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={summary} />
-        <EditSummary id="summary" draftSummary={summary} save={this.props.saveDraft} />
+        <div id="scenes">
+        { draft && Object.values(draft.scenes).length !== 0 &&
+          <SceneList scenes={draft.scenes} storyId={draft.summary.storyId} />
+        }
+        { summary && summary.storyId &&
+          <AddScene addScene={this.handleAddScene} />
+        }
+        </div>
       </div>
     )
   }

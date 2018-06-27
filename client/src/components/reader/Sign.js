@@ -8,9 +8,9 @@ const Sign = ({ text, icon, onClick }) => {
     renderIcon = (<i className={`icon ion-${icon}`}></i>)
   }
   return (
-    <li className="list-group-item" onClick={onClick}>
+    <a href="#" className="list-group-item" onClick={onClick}>
       {renderIcon} {text}
-    </li>
+    </a>
   )
 }
 

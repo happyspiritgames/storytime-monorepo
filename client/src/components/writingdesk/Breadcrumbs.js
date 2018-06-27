@@ -6,9 +6,9 @@ function Breadcrumbs(props) {
   const crumbs = []
   crumbs.push(<li key="projects" className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>)
   if (summary && summary.title) {
-    crumbs.push(<li key="title" className="breadcrumb-item">{summary.title}</li>)
+    crumbs.push(<li key="title" className="breadcrumb-item active">{summary.title}</li>)
   } else {
-    crumbs.push(<li key="loading" className="breadcrumb-item">Loading...</li>)
+    crumbs.push(<li key="loading" className="breadcrumb-item active">Loading...</li>)
   }
 
   return (

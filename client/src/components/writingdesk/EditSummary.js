@@ -33,7 +33,9 @@ export default class EditSummary extends Component {
   }
 
   componentDidMount() {
-    this.updateState(this.props.draftSummary)
+    if (this.props.draftSummary) {
+      this.updateState(this.props.draftSummary)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,6 +45,9 @@ export default class EditSummary extends Component {
   }
 
   render() {
+    if (!this.props.draftSummary) {
+      return null
+    }
     return (
       <form>
         <fieldset>

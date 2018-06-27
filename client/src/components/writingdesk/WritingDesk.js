@@ -8,6 +8,7 @@ import EditScene from './EditScene'
 import EditSignpost from './EditSignpost'
 import EditStory from './EditStory'
 import PublishingSummary from './PublishingSummary'
+import ScenesToEdit from './ScenesToEdit'
 
 export default class WritingDesk extends Component {
   static propTypes = {
@@ -69,6 +70,17 @@ export default class WritingDesk extends Component {
         <Route exact path="/writingdesk/:draftId"
           render={
             (props) => <EditStory
+              draft={activeDraft}
+              loadDraft={loadDraftForEdit}
+              saveDraft={saveDraft}
+              addScene={saveDraftScene}
+              {...props}
+            />
+          }
+        />
+        <Route exact path="/writingdesk/:draftId/scenes"
+          render={
+            (props) => <ScenesToEdit
               draft={activeDraft}
               loadDraft={loadDraftForEdit}
               saveDraft={saveDraft}

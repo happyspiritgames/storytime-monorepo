@@ -51,9 +51,9 @@ const Signpost = ({ scene, goToScene, playAgain, goToLibrary, goToContact }) => 
         <h5 className="mb-0">{prompt}</h5>
       </div>
       <div className="card-body">
-        <ul className="list-group">
+        <div className="list-group">
           {signs}
-        </ul>
+        </div>
       </div>
     </div>
   )
