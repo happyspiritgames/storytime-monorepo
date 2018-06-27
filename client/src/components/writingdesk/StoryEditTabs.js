@@ -11,32 +11,32 @@ const renderLoading = () => {
   )
 }
 
-const renderTabs = (summary) => {
+const renderTabs = (summary, activeTab) => {
   return (
     <ul className="nav nav-tabs">
       <li className="nav-item">
-        <Link className="nav-link active" to={`/writingdesk/${summary.storyId}`}>Summary</Link>
+        <Link className={`nav-link ${activeTab==='summary'?'active':''}`} to={`/writingdesk/${summary.storyId}`}>Summary</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to={`/writingdesk/${summary.storyId}/scenes`}>Scenes</Link>
+        <Link className={`nav-link ${activeTab==='scenes'?'active':''}`} to={`/writingdesk/${summary.storyId}/scenes`}>Scenes</Link>
       </li>
       <li className="nav-item">
         <a className="nav-link" href="#">Preview</a>
       </li>
       <li className="nav-item">
-      <Link className="nav-link" to={`/publish/${summary.storyId}`}>Publish</Link>
+      <Link className={`nav-link ${activeTab==='publish'?'active':''}`} to={`/publish/${summary.storyId}`}>Publish</Link>
       </li>
     </ul>
   )
 }
 
 function StoryEditTabs(props) {
-  const { summary } = props
+  const { summary, activeTab } = props
 
   if (!summary) {
     return renderLoading()
   } else {
-    return renderTabs(summary)
+    return renderTabs(summary, activeTab)
   }
 }
 

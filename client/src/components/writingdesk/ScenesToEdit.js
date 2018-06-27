@@ -33,7 +33,7 @@ export default class EditStory extends Component {
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <Breadcrumbs summary={summary} />
         <h4 className="text-center">Story Editor</h4>
-        <StoryEditTabs summary={summary} />
+        <StoryEditTabs summary={summary} activeTab="scenes" />
         <div id="scenes">
         { draft && Object.values(draft.scenes).length !== 0 &&
           <SceneList scenes={draft.scenes} storyId={draft.summary.storyId} />

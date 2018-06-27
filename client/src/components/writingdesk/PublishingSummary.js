@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { editionShape, draftShape } from '../../datastore/dataShapes'
 import { formatDateTime } from '../../util/formatter'
+import StoryEditTabs from './StoryEditTabs'
 
 export default class PublishingSummary extends Component {
   static propTypes = {
@@ -92,10 +93,11 @@ export default class PublishingSummary extends Component {
           <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
           <li className="breadcrumb-item">Publish</li>
         </ol>
+        <h4 className="text-center">Story Editor</h4>
+        <StoryEditTabs summary={draft.summary} activeTab="publish" />
         <div className="row section">
           <div className="col">
-            <h3 className="text-center">Publish</h3>
-            <h4 className="text-center">All Story Editions</h4>
+            <h4 className="text-center">Editions</h4>
             {renderedEditions}
           </div>
         </div>
