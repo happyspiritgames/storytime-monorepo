@@ -21,18 +21,10 @@ export default class WritingDesk extends Component {
       return Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
     })
     return sortedProjects.map(draft => (
-      <li key={draft.storyId} className="list-group-item">
-        <span><strong><em>{draft.title}</em></strong></span>
-        <Link to={`/writingdesk/${draft.storyId}`}><i className="icon ion-edit float-right"></i></Link>
-        <div className="row">
-          <div className="col">
-            Last Updated: {formatDateTime(draft.updatedAt)}
-          </div>
-          <div className="col">
-            Started: {formatDateTime(draft.createdAt)}
-          </div>
-        </div>
-      </li>
+      <Link to={`/writingdesk/${draft.storyId}`} key={draft.storyId} className="list-group-item">
+        <span><strong><em>{draft.title}</em></strong></span> (Updated on {formatDateTime(draft.updatedAt)})
+        <i className="icon ion-edit float-right"></i>
+      </Link>
     ))
   }
 
@@ -76,9 +68,9 @@ export default class WritingDesk extends Component {
         <div className="row section">
           <div className="col">
             <h4 className="text-center">Projects (Work In Progress)</h4>
-            <ul className="list-group">
+            <div className="list-group">
               {draftProjectList}
-            </ul>
+            </div>
             <AddStory addStory={this.props.createDraft} />
           </div>
         </div>
