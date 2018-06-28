@@ -48,7 +48,7 @@ export default class EditScene extends Component {
 
   handleGoToEditSignpost = () => {
     const { draftSummary, activeScene } = this.state
-    const signpostPage = `/writingdesk/${draftSummary.storyId}/${activeScene.sceneId}/signpost`
+    const signpostPage = `/writingdesk/${draftSummary.storyId}/scenes/${activeScene.sceneId}/signpost`
     this.props.history.push(signpostPage)
   }
 
@@ -140,7 +140,6 @@ export default class EditScene extends Component {
           <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
           <li className="breadcrumb-item">{activeScene.title}</li>
         </ol>
-        <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={draftSummary} activeTab="scenes" />
         <div className="row section">
           <div className="col">

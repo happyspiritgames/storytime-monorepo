@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { editionShape, draftShape, codeLookupShape } from '../../datastore/dataShapes'
 import { formatDateTime } from '../../util/formatter'
+import StoryEditTabs from './StoryEditTabs'
 
 export default class EditEdition extends Component {
   static propTypes = {
@@ -140,7 +141,7 @@ export default class EditEdition extends Component {
     const genreSelections = this.renderGenreSelections()
     const publishedMessage = edition.publishedAt
       ? `Congratulations! This edition of your story was published on ${formatDateTime(edition.publishedAt)}.`
-      : 'This edition of your story has not been published.'
+      : 'This edition of your story has not been published. When you are ready, click the button below to publish.'
     const editionSummary = edition.summary
 
     return (
@@ -151,17 +152,10 @@ export default class EditEdition extends Component {
           <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
           <li className="breadcrumb-item">Edition {edition.version}</li>
         </ol>
+        <StoryEditTabs summary={draft.summary} activeTab="publish" />
         <div className="row section">
           <div className="col">
-            <h3 className="text-center">Edition {edition.version} of <em>{editionSummary.title}</em></h3>
-            <p>You can publish in three steps.</p>
-            <ol>
-              <li>Classify your story.</li>
-              <li>Proof read everything and make sure it's ready.</li>
-              <li>Publish. This puts your story in the library, ready to play.</li>
-            </ol>
-            <p>You may also re-classify a published story (step 1) at any time.</p>
-            <h4 className="text-center">1. Classify</h4>
+            <h5>Classify</h5>
             <form>
               <fieldset>
                 <div className="form-row">
@@ -187,51 +181,32 @@ export default class EditEdition extends Component {
                 <button className="btn btn-primary" type="button" onClick={this.handleSave}>Save</button>
               </fieldset>
             </form>
-            <h4 className="text-center">2. Proof</h4>
-            <div className="row">
-              <div className="col">
-                <p>This is how your story-game will appear in the library. If it looks good, you are all set.</p>
-                <p>To make changes, you have to <Link to={`/writingdesk/${storyId}`}>return to the draft</Link>.</p>
-                <p>To change your pen name, <Link to="/account">go to your account</Link>.</p>
-              </div>
-              <div className="col">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="card-title"><em>{editionSummary.title}</em></h4>
-                    <h6 className="card-subtitle">by {editionSummary.penName}</h6>
-                    <p className="card-text">{editionSummary.tagLine}</p>
-                    <p className="card-text">{editionSummary.about}</p>
-                    <button className="btn btn-primary" type="button" onClick={this.playStory}>Play</button>
-                  </div>
-                </div>
+          </div>
+          <div className="col">
+            <h5>Review</h5>
+            <p>See your game as players will see it. This is how it will look in the library.</p>
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title"><em>{editionSummary.title}</em></h4>
+                <h6 className="card-subtitle">by {editionSummary.penName}</h6>
+                <p className="card-text">{editionSummary.tagLine}</p>
+                <p className="card-text">{editionSummary.about}</p>
+                <button className="btn btn-primary" type="button" onClick={this.playStory}>Play</button>
               </div>
             </div>
-            <div className="row">
-              <div className="col">
-                <h4 className="text-center">3. Publish</h4>
-                <p>{publishedMessage}</p>
-              { !edition.publishedAt &&
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  onClick={this.handlePublish}
-                >Publish Now - Do It - Make it so!</button>
-              }
-                <p>(Note: publishing happens once. After that, classifications can change, but you cannot re-publish. Can always go through the publishing cycle again and publish a new version. Should make it easy to delete non-current published versions.)</p>
-              </div>
-            </div>
-            <div>
-              <h3>Improvement Ideas</h3>
-              <ul>
-                <li>Need a way to refresh read-only summary and scenes when author makes updates during proofing.</li>
-                <li>Need a way to delete "out-of-print" editions.</li>
-                <li>Split this into more pages so that it's less confusing.</li>
-                <li>Only show first step (of the newly split pages) for published editions.</li>
-                <li>Would be nice to edit pen name in place.</li>
-                <li>Would be nice to change edition key.</li>
-                <li>Would be nice to copy rating, genre and edition key (with version number) from latest published version on creation of new edition.</li>
-              </ul>
-            </div>
+          </div>
+        </div>
+        <div className="row section">
+          <div className="col">
+            <h5>Publish</h5>
+            <p>{publishedMessage}</p>
+          { !edition.publishedAt &&
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={this.handlePublish}
+            >All set? Publish Now</button>
+          }
           </div>
         </div>
       </div>

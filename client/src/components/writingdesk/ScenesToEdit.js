@@ -32,7 +32,6 @@ export default class EditStory extends Component {
       <div id="edit-story">
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <Breadcrumbs summary={summary} />
-        <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={summary} activeTab="scenes" />
         <h5>Scenes</h5>
         <div id="scenes">

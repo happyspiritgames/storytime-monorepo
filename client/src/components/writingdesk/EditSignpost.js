@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
+import StoryEditTabs from './StoryEditTabs'
 
 export default class EditSignpost extends Component {
   static propTypes = {
@@ -342,12 +343,13 @@ export default class EditSignpost extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}`}>{draftSummary.title}</Link></li>
-          <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}/${activeScene.sceneId}`}>{activeScene.title}</Link></li>
+          <li className="breadcrumb-item"><Link to={`/writingdesk/${draftSummary.storyId}/scenes/${activeScene.sceneId}`}>{activeScene.title}</Link></li>
           <li className="breadcrumb-item">Signpost</li>
         </ol>
+        <StoryEditTabs summary={draftSummary} activeTab="scenes" />
         <div className="row section">
           <div className="col">
-            <h3>Signpost</h3>
+            <h5>Signpost</h5>
             {this.renderAddSign()}
             {this.renderEditSigns()}
           </div>
