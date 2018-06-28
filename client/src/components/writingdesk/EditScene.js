@@ -87,9 +87,13 @@ export default class EditScene extends Component {
         && draft
         && this.state.activeScene !== draft.scenes[nextSceneId]) {
       this.establishInitialDraftState(draft, nextSceneId)
+      return
     }
 
-    if (draft && this.state.activeScene.signpost !== nextProps.draft.scenes[nextSceneId].signpost) {
+    if (draft 
+        && draft.scenes[nextSceneId]
+        && this.state.activeScene
+        && this.state.activeScene.signpost !== draft.scenes[nextSceneId].signpost) {
       this.establishInitialDraftState(draft, nextSceneId)
     }
   }
@@ -159,6 +163,7 @@ export default class EditScene extends Component {
                   <textarea
                     className="form-control"
                     id="prose"
+                    rows="10"
                     value={activeScene.prose}
                     onChange={this.handleChangeScene}
                   ></textarea>
@@ -181,14 +186,12 @@ export default class EditScene extends Component {
               </fieldset>
             </form>
           </div>
-        </div>
-        <div className="row section">
           <div className="col">
             <h5>Signpost</h5>
             <ul className="list-group">
               {signs}
               <li className="list-group-item">
-                <button className="btn btn-primary" type="button" onClick={this.handleGoToEditSignpost}>Change Signpost</button>
+                <button className="btn btn-primary" type="button" onClick={this.handleGoToEditSignpost}>Change Signs</button>
               </li>
             </ul>
           </div>

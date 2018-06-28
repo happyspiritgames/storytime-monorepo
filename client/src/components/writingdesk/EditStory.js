@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 import Breadcrumbs from './Breadcrumbs'
-import EditSummary from './EditSummary'
+import EditCover from './EditCover'
 import StoryEditTabs from './StoryEditTabs'
 
 export default class EditStory extends Component {
@@ -34,7 +33,7 @@ export default class EditStory extends Component {
         <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={summary} activeTab="summary" />
         <h5>Cover Jacket</h5>
-        <EditSummary id="summary" draftSummary={summary} save={this.props.saveDraft} />
+        <EditCover id="cover-fields" draftSummary={summary} save={this.props.saveDraft} />
       </div>
     )
   }
