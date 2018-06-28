@@ -90,14 +90,13 @@ export default class PublishingSummary extends Component {
         <h3 className="text-center">StoryTime Writing Desk</h3>
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
-          <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
-          <li className="breadcrumb-item">Editions</li>
+          <li className="breadcrumb-item">{title}</li>
         </ol>
         <h4 className="text-center">Story Editor</h4>
         <StoryEditTabs summary={draft.summary} activeTab="publish" />
         <div className="row section">
           <div className="col">
-            <h4 className="text-center">Editions</h4>
+            <h5>Editions</h5>
             {renderedEditions}
           </div>
         </div>

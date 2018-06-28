@@ -12,14 +12,10 @@ export default class SceneList extends Component {
     const { storyId, scenes } = this.props
 
     const renderedScenes = Object.values(scenes).map(scene => (
-      <li key={scene.sceneId} className="list-group-item">
-        <Link to={`/writingdesk/${storyId}/scenes/${scene.sceneId}`}>
-          {scene.title} [id: {scene.sceneId}]
-        </Link>
-        <Link to={`/writingdesk/${storyId}/scenes/${scene.sceneId}`}>
-          <i className="icon ion-edit float-right"></i>
-        </Link>
-      </li>
+      <Link to={`/writingdesk/${storyId}/scenes/${scene.sceneId}`} key={scene.sceneId} className="list-group-item">
+        {scene.title} [id: {scene.sceneId}]
+        <i className="icon ion-edit float-right"></i>
+      </Link>
     ))
 
     return (

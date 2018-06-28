@@ -149,7 +149,6 @@ export default class EditEdition extends Component {
         <ol className="breadcrumb">
           <li className="breadcrumb-item"><Link to="/writingdesk">Projects</Link></li>
           <li className="breadcrumb-item"><Link to={`/writingdesk/${storyId}`}>{title}</Link></li>
-          <li className="breadcrumb-item"><Link to={`/publish/${storyId}`}>Publish</Link></li>
           <li className="breadcrumb-item">Edition {edition.version}</li>
         </ol>
         <div className="row section">
