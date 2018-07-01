@@ -83,7 +83,7 @@ export default class PublishingSummary extends Component {
         <h1>Loading...</h1>
       )
     }
-    const { storyId, title } = draft.summary
+    const { title } = draft.summary
     const renderedEditions = this.renderEditions()
     return (
       <div id="publishing">

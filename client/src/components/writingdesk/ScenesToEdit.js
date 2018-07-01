@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { draftShape } from '../../datastore/dataShapes'
 import Breadcrumbs from './Breadcrumbs'
 import StoryEditTabs from './StoryEditTabs'
