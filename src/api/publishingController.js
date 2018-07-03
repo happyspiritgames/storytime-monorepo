@@ -95,6 +95,7 @@ exports.updateEdition = async (req, res) => {
     }
     await publishingModel.updateEdition(editionKey, editionUpdate)
     const updatedEdition = await publishingModel.getEdition(editionKey)
+    console.log('after edition update', updatedEdition)
     res.status(202).json(updatedEdition)
   } catch (e) {
     console.error('Problem updating edition', e)

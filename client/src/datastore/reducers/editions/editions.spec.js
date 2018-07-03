@@ -45,4 +45,15 @@ describe('account reducer', () => {
       }
     })
   })
+
+  it('handles SAVED_EDITION', () => {
+    nextState = editionsReducer(undefined, actions.fetchedEdition(testEdition))
+    let editionUpdate = Object.assign({}, nextState[testEdition.editionKey], { rating: 'XYZ', genre: ['suspense', 'danger'] })
+    console.log('savedEdition', nextState)
+    console.log('editionUpdate', editionUpdate)
+    nextState = editionsReducer(nextState, actions.savedEdition(editionUpdate))
+    expect(nextState).toEqual({
+        [editionUpdate.editionKey] : editionUpdate
+      })
+  })
 })

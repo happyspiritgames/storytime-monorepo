@@ -1,4 +1,4 @@
-import { FETCHED_EDITIONS, FETCHED_EDITION, FETCHED_EDITION_SCENE, FETCH_EDITIONS } from '../../actions'
+import { FETCHED_EDITIONS, FETCHED_EDITION, FETCHED_EDITION_SCENE, FETCH_EDITIONS, SAVED_EDITION } from '../../actions'
 import editionReducer from './edition'
 
 export const initialState = {}
@@ -22,6 +22,14 @@ export default (state = initialState, action) => {
         ...state,
         [edition.editionKey]: edition
       }
+    case SAVED_EDITION:
+      const updatedEdition = action.payload.edition
+      const out = {
+        ...state,
+        [updatedEdition.editionKey]: editionReducer(state[updatedEdition.editionKey], updatedEdition)
+      }
+      console.log('returning', out)
+      return out
     case FETCHED_EDITION_SCENE:
       const { editionKey } = action.payload
       return {

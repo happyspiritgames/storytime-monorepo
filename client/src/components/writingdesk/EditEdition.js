@@ -25,6 +25,7 @@ export default class EditEdition extends Component {
   }
 
   establishInitialState = (edition) => {
+    console.log('setting initial state', edition)
     this.setState({
       rating: edition.rating || '',
       genre: edition.genre ? [...edition.genre] : []
@@ -99,6 +100,7 @@ export default class EditEdition extends Component {
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps')
     if (nextProps.edition) {
+      console.log('will receive', nextProps.edition)
       this.establishInitialState(nextProps.edition)
     }
   }
