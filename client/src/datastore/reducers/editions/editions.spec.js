@@ -9,6 +9,12 @@ describe('account reducer', () => {
     expect(editionsReducer(undefined, {})).toEqual(initialState)
   })
 
+  it('handles FETCH_EDITIONS', () => {
+    nextState = editionsReducer(undefined, actions.fetchedEditions(testEditions))
+    nextState = editionsReducer(nextState, actions.fetchEditions())
+    expect(nextState).toEqual(initialState)
+  })
+
   it('handles FETCHED_EDITIONS', () => {
     nextState = editionsReducer(undefined, actions.fetchedEditions(testEditions))
     expect(nextState).toEqual({

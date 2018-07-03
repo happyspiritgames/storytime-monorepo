@@ -3,7 +3,7 @@ import { getHeaders } from '../util/authentication'
 const draftStoriesBaseURI = '/api/draft-stories'
 
 export const createEdition = (storyId, handleResponse, handleError) => {
-  console.log('publishApi.prepareToPublish', storyId)
+  console.log('publishApi.createEdition', storyId)
   const fetchOptions = {
     method: 'POST',
     headers: getHeaders()
@@ -16,7 +16,7 @@ export const createEdition = (storyId, handleResponse, handleError) => {
 }
 
 export const getEditions = (storyId, handleResponse, handleError) => {
-  console.log('publishApi.getProofs')
+  console.log('publishApi.getEditions')
   const fetchOptions = { headers: getHeaders() }
   fetch(`${draftStoriesBaseURI}/${storyId}/editions`, fetchOptions)
     .then(res => res.json())
@@ -25,7 +25,7 @@ export const getEditions = (storyId, handleResponse, handleError) => {
 }
 
 export const getEdition = (storyId, editionKey, handleResponse, handleError) => {
-  console.log('publishApi.getProof')
+  console.log('publishApi.getEdition')
   const fetchOptions = { headers: getHeaders() }
   fetch(`${draftStoriesBaseURI}/${storyId}/editions/${editionKey}`, fetchOptions)
     .then(res => res.json())
@@ -34,7 +34,7 @@ export const getEdition = (storyId, editionKey, handleResponse, handleError) => 
 }
 
 export const updateEdition = (storyId, editionKey, editionUpdates, handleResponse, handleError) => {
-  console.log('publishApi.updateProof', storyId, editionKey, editionUpdates)
+  console.log('publishApi.updateEdition', storyId, editionKey, editionUpdates)
   const fetchOptions = {
     method: 'PUT',
     headers: getHeaders(),
