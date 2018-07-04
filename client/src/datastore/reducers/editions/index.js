@@ -17,19 +17,12 @@ export default (state = initialState, action) => {
         ...nextEditions
       }
     case FETCHED_EDITION:
+    case SAVED_EDITION:
       const { edition } = action.payload
       return {
         ...state,
         [edition.editionKey]: edition
       }
-    case SAVED_EDITION:
-      const updatedEdition = action.payload.edition
-      const out = {
-        ...state,
-        [updatedEdition.editionKey]: editionReducer(state[updatedEdition.editionKey], updatedEdition)
-      }
-      console.log('returning', out)
-      return out
     case FETCHED_EDITION_SCENE:
       const { editionKey } = action.payload
       return {
